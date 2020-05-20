@@ -12,6 +12,9 @@ js/lib/
 # Karma tests coverage
 js/coverage/
 
+# Beaker
+/beakerx_tabledisplay/beakerx_tabledisplay/static/
+
 # Node modules
 node_modules/
 
