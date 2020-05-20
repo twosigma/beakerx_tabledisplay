@@ -1,6 +1,7 @@
 .idea/
 beakerx_tabledisplay/static/
-js/css/beakerx_tabledisplay.css
+js/css/table_display.css
+js/css/table_display.css.map
 js/dist/
 js/lib/
 js/coverage/
