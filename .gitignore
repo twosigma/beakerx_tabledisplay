@@ -3,3 +3,5 @@ beakerx_tabledisplay/static/
 js/css/beakerx_tabledisplay.css
 
 node_modules/
+
+yarn-error.log
