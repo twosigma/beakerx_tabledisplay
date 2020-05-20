@@ -1,5 +1,6 @@
 # IntelliJ IDEA configuration files
 .idea/
+.iml
 
 # Javascript compiled files
 beakerx_tabledisplay/static/
@@ -15,3 +16,8 @@ js/coverage/
 node_modules/
 
 yarn-error.log
+
+# Python
+*.py[cod]
+__pycache__/
+*.egg-info
