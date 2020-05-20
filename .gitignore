@@ -1,6 +1,7 @@
 .idea/
 beakerx_tabledisplay/static/
 js/css/beakerx_tabledisplay.css
+js/dist/
 
 node_modules/
 
