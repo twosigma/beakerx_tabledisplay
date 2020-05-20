@@ -1,0 +1,76 @@
+{
+  "name": "beakerx_tabledisplay",
+  "version": "1.5.0",
+  "description": "BeakerX: Beaker TableDisplay Extension for Jupyter",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab notebook",
+    "jupyterlab-extension"
+  ],
+  "author": "Two Sigma Open Source, LLC",
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twosigma/beakerx_tabledisplay.git"
+  },
+  "scripts": {
+    "build": "yarn run build:css && yarn run build:js && webpack",
+    "build:css": "sass sass/table_display.scss css/table_display.css",
+    "build:js": "tsc",
+    "watch:js": "tsc --watch",
+    "prepublish": "yarn run build",
+    "test": "karma start --single-run"
+  },
+  "devDependencies": {
+    "@jupyter-widgets/base": "^1.2.5 || ^2.0.2",
+    "@jupyter-widgets/controls": "^1.5.3",
+    "@types/chai": "^4.2.11",
+    "@types/expect.js": "^0.3.29",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.13.5",
+    "@types/sinon": "^9.0.0",
+    "chai": "^4.2.0",
+    "css-loader": "^3.5.3",
+    "istanbul-instrumenter-loader": "^3.0.1",
+    "karma": "^5.0.5",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-coverage": "^2.0.2",
+    "karma-mocha": "^2.0.1",
+    "karma-sinon-chai": "^2.0.2",
+    "karma-spec-reporter": "^0.0.32",
+    "karma-typescript": "^5.0.2",
+    "karma-typescript-es6-transform": "^5.0.2",
+    "karma-webpack": "^4.0.2",
+    "mocha": "^7.1.2",
+    "resize-observer": "^1.0.0",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "sinon": "^9.0.2",
+    "sinon-chai": "^3.5.0",
+    "style-loader": "^1.2.1",
+    "to-string-loader": "^1.1.6",
+    "ts-loader": "^7.0.4",
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "@phosphor/datagrid": "0.1.10",
+    "@phosphor/datastore": "0.7.1",
+    "@phosphor/widgets": "1.8.1",
+    "d3-scale": "2",
+    "katex": "^0.11.1",
+    "moment-timezone": "^0.5.28",
+    "reselect": "^4.0.0"
+  },
+  "files": [
+    "dist/",
+    "css/",
+    "lib/"
+  ],
+  "jupyterlab": {
+    "extension": "lib/jupyterlab-plugin"
+  }
+}
