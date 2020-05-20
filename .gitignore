@@ -1,11 +1,17 @@
+# IntelliJ IDEA configuration files
 .idea/
+
+# Javascript compiled files
 beakerx_tabledisplay/static/
 js/css/table_display.css
 js/css/table_display.css.map
 js/dist/
 js/lib/
+
+# Karma tests coverage
 js/coverage/
 
+# Node modules
 node_modules/
 
 yarn-error.log
