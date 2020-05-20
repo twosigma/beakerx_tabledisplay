@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "noEmitOnError": true,
+    "noUnusedLocals": true,
+    "outDir": "lib",
+    "preserveWatchOutput": true,
+    "rootDir": "src",
+    "inlineSourceMap": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "target": "ES2017",
+    "types": ["mocha", "node"]
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
