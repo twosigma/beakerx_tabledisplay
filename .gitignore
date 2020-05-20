@@ -2,6 +2,7 @@
 beakerx_tabledisplay/static/
 js/css/beakerx_tabledisplay.css
 js/dist/
+js/coverage/
 
 node_modules/
 
