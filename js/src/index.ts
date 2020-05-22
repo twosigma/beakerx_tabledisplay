@@ -17,4 +17,4 @@
 export * from './TableDisplayModel';
 export * from './TableDisplayView';
 
-export const version = require('../package.json').version;
+export const version = '*';
