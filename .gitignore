@@ -24,3 +24,7 @@ yarn-error.log
 *.py[cod]
 __pycache__/
 *.egg-info
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+*Untitled*.ipynb
