@@ -281,7 +281,7 @@ def install_node_modules(path=None, build_dir=None, source_dir=None, build_cmd='
 
             if not which("yarn"):
                 log.error("`yarn` unavailable.  If you're running this command "
-                          "using sudo, make sure `yarn` is availble to sudo")
+                          "using sudo, make sure `yarn` is available to sudo")
                 return
             if force or is_stale(node_modules, os.path.join(node_package, 'package.json')):
                 log.info('Installing build dependencies with yarn.  This may '
