@@ -57,13 +57,13 @@ def make_parser():
 
 def install(args):
     _install_nbextension()
-    if args.lab:
+    if hasattr(args, 'lab') and args.lab:
         _install_labextensions()
 
 
 def uninstall(args):
     _uninstall_nbextension()
-    if args.lab:
+    if hasattr(args, 'lab') and args.lab:
         _uninstall_labextensions()
 
 
