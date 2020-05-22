@@ -16,12 +16,13 @@
     "url": "https://github.com/twosigma/beakerx_tabledisplay.git"
   },
   "scripts": {
-    "build": "yarn run build:css && yarn run build:js && webpack",
+    "build": "yarn run clean && yarn run build:css && yarn run build:js && webpack",
     "build:css": "sass sass/table_display.scss css/table_display.css",
     "build:js": "tsc",
     "watch:js": "tsc --watch",
     "prepublish": "yarn run build",
-    "test": "karma start --single-run"
+    "test": "karma start --single-run",
+    "clean": "rimraf lib css dist"
   },
   "devDependencies": {
     "@jupyter-widgets/base": "^1.2.5 || ^2.0.2",
