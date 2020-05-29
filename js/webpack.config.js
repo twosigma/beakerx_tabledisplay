@@ -21,6 +21,7 @@ module.exports = [
       path: path.resolve(__dirname, '../beakerx_tabledisplay/beakerx_tabledisplay/static'),
       libraryTarget: 'amd',
     },
+    devtool: 'inline-source-map',
     externals: ['@jupyter-widget/base'],
     mode: 'production'
   },
@@ -32,7 +33,7 @@ module.exports = [
       path: path.resolve(__dirname, '../beakerx_tabledisplay/beakerx_tabledisplay/static'),
       libraryTarget: 'amd',
     },
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     module: {
       rules: rules
     },
@@ -47,7 +48,7 @@ module.exports = [
       path: path.resolve(__dirname, './dist/'),
       libraryTarget: 'amd',
     },
-    devtool: 'source-map',
+    devtool: 'inline-source-map',
     module: {
       rules: rules
     },
