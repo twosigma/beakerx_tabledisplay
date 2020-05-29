@@ -15,32 +15,32 @@
  */
 
 import * as widgets from '@jupyter-widgets/base';
-import { DataGridScope } from "./dataGrid/DataGridScope";
+import { DataGridScope } from "./dataGrid";
 import { TableDisplayWidget } from "./TableDisplayWidget";
 
 export class TableDisplayView extends widgets.DOMWidgetView implements TableDisplayWidget {
   private _currentScope: DataGridScope;
 
-  async render(): Promise<void> {
+  render(): void {
     this._currentScope = null;
     this.$el.addClass('beaker-table-display');
 
-    await this.displayed;
+    this.displayed.then(() => {
+      const tableModel = this.model.get('model');
 
-    const tableModel = this.model.get('model');
+      if (tableModel.tooManyRows) {
+        this.showWarning(tableModel);
+      }
 
-    if (tableModel.tooManyRows) {
-      this.showWarning(tableModel);
-    }
+      this.initDataGridTable(tableModel);
 
-    this.initDataGridTable(tableModel);
+      this.listenTo(this.model, 'beakerx-tabSelected', () => {
+        this._currentScope?.setInitialSize();
+      });
 
-    this.listenTo(this.model, 'beakerx-tabSelected', () => {
-      this._currentScope?.setInitialSize();
+      this.listenTo(this.model, 'change:updateData', this.handleUpdateData);
+      this.listenTo(this.model, 'change:model', this.handleModelUpdate);
     });
-
-    this.listenTo(this.model, 'change:updateData', this.handleUpdateData);
-    this.listenTo(this.model, 'change:model', this.handleModelUpdate);
   }
 
   handleModelUpdate(): void {
