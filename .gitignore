@@ -1,6 +1,6 @@
 # IntelliJ IDEA configuration files
 .idea/
-.iml
+*.iml
 
 # Javascript compiled files
 beakerx_tabledisplay/static/
