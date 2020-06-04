@@ -1,2 +1,0 @@
--e ../beakerx_base
--e .
