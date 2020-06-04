@@ -17,7 +17,9 @@ import sys
 
 import beakerx_tabledisplay
 from notebook import notebookapp as app
+
 from .install import install, uninstall
+
 
 def install_subparser(subparser):
     install_parser = subparser.add_parser('install', help='installs BeakerX tabledisplay extensions')
@@ -30,6 +32,7 @@ def install_subparser(subparser):
                                 action='store_true')
     return subparser
 
+
 def uninstall_subparser(subparser):
     uninstall_parser = subparser.add_parser('uninstall', help='uninstalls BeakerX tabledisplay extensions')
     uninstall_parser.set_defaults(func=uninstall)
@@ -37,6 +40,7 @@ def uninstall_subparser(subparser):
                                   help="location of the environment to uninstall from",
                                   default=sys.prefix)
     return subparser
+
 
 def run_jupyter(jupyter_commands):
     app.launch_new_instance(jupyter_commands)
@@ -51,6 +55,7 @@ def init_parser():
     install_subparser(subparsers)
     uninstall_subparser(subparsers)
     return parser
+
 
 def parse():
     parser = init_parser()

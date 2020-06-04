@@ -24,11 +24,13 @@ def _uninstall_nbextension():
     subprocess.check_call(["jupyter", "nbextension", "uninstall", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "disable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
 
+
 def _install_nbextension():
     if sys.platform == 'win32':
         subprocess.check_call(["jupyter", "nbextension", "install", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     else:
-        subprocess.check_call(["jupyter", "nbextension", "install", "beakerx_tabledisplay", "--py", "--symlink", "--sys-prefix"])
+        subprocess.check_call(
+            ["jupyter", "nbextension", "install", "beakerx_tabledisplay", "--py", "--symlink", "--sys-prefix"])
 
     subprocess.check_call(["jupyter", "nbextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])

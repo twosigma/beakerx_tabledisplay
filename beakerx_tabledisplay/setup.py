@@ -16,7 +16,6 @@
 # limitations under the License.
 
 import os
-from setuptools import setup, find_packages
 
 from setupbase import (
     create_cmdclass,
@@ -24,6 +23,7 @@ from setupbase import (
     get_version,
     here
 )
+from setuptools import setup, find_packages
 
 cmdclass = create_cmdclass(develop_wrappers=[
     'js'

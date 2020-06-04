@@ -206,7 +206,7 @@ class Table(BaseObject):
     def setFontColorProvider(self, colorProvider):
         self.startIndex = 0
         self.endIndex = Table.PAGE_SIZE
-        self.fontColor=[]
+        self.fontColor = []
         for row_ind in range(0, len(self.values)):
             row = self.values[row_ind]
             row_font_colors = []

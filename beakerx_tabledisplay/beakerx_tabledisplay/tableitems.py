@@ -167,7 +167,6 @@ class TableDisplayCellHighlighter:
 
 
 class ThreeColorHeatmapHighlighter(HeatmapHighlighter):
-
     type = "ThreeColorHeatmapHighlighter"
 
     def __init__(self, colName, style, minVal, midVal, maxVal, minColor, midColor, maxColor):

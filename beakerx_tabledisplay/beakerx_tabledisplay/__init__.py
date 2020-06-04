@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .tableitems import *
-from .tabledisplay import *
 from ._version import version_info, __version__
-from .handlers import load_jupyter_server_extension
 from .commands import parse
+from .handlers import load_jupyter_server_extension
+from .tabledisplay import *
+from .tableitems import *
+
 
 def _jupyter_nbextension_paths():
     return [{
@@ -30,6 +31,7 @@ def _jupyter_nbextension_paths():
 
 def _jupyter_server_extension_paths():
     return [dict(module="beakerx_tabledisplay")]
+
 
 def run():
     try:
