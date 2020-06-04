@@ -25,8 +25,7 @@ def _jupyter_nbextension_paths():
         'src': 'static',
         'dest': 'beakerx_tabledisplay',
         'require': 'beakerx_tabledisplay/extension'
-    }
-    ]
+    }]
 
 
 def _jupyter_server_extension_paths():
