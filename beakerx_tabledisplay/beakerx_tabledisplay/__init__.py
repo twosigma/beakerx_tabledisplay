@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from ._version import version_info, __version__
-from .commands import parse
+from .commands import beakerx_parse
 from .handlers import load_jupyter_server_extension
 from .tabledisplay import *
 from .tableitems import *
@@ -34,7 +34,7 @@ def _jupyter_server_extension_paths():
 
 def run():
     try:
-        parse()
+        beakerx_parse()
     except KeyboardInterrupt:
         return 130
     return 0

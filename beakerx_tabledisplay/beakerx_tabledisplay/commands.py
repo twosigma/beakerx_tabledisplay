@@ -22,19 +22,16 @@ from .install import install, uninstall
 
 
 def install_subparser(subparser):
-    install_parser = subparser.add_parser('install', help='installs BeakerX tabledisplay extensions')
+    install_parser = subparser.add_parser('install', help='Installs BeakerX tabledisplay extensions')
     install_parser.set_defaults(func=install)
     install_parser.add_argument("--prefix",
                                 help="location of the environment to install into",
                                 default=sys.prefix)
-    install_parser.add_argument("--lab",
-                                help="install lab extension",
-                                action='store_true')
     return subparser
 
 
 def uninstall_subparser(subparser):
-    uninstall_parser = subparser.add_parser('uninstall', help='uninstalls BeakerX tabledisplay extensions')
+    uninstall_parser = subparser.add_parser('uninstall', help='Uninstalls BeakerX tabledisplay extensions')
     uninstall_parser.set_defaults(func=uninstall)
     uninstall_parser.add_argument("--prefix",
                                   help="location of the environment to uninstall from",
@@ -48,7 +45,9 @@ def run_jupyter(jupyter_commands):
 
 def init_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--version', action='version', version=beakerx_tabledisplay.__version__)
+    parser.add_argument('-v', '--version',
+                        action='version',
+                        version=beakerx_tabledisplay.__version__)
     parser.set_defaults(func=run_jupyter)
 
     subparsers = parser.add_subparsers()
@@ -57,12 +56,12 @@ def init_parser():
     return parser
 
 
-def parse():
+def beakerx_parse():
     parser = init_parser()
     args, jupyter_commands = parser.parse_known_args()
     if args.func == run_jupyter:
         args.func(jupyter_commands)
     elif not jupyter_commands:
-        args.func(args)
+        args.func()
     else:
         parser.parse_args(jupyter_commands)

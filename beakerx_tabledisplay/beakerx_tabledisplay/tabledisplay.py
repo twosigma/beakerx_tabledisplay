@@ -73,6 +73,8 @@ class Table(BaseObject):
         self.endIndex = Table.PAGE_SIZE
         self.loadingMode = 'ALL'
         self.rowsToShow = RowsToShow.SHOW_25
+        self.auto_link_table_links = self._get_settings().get("auto_link_table_links")
+        self.show_publication = self._get_settings().get("show_publication")
 
     def validate_args(self, args):
         if len(args) > 2 and len(args[1]) != len(args[2]):
@@ -260,6 +262,15 @@ class Table(BaseObject):
         self.startIndex = self.endIndex
         self.endIndex = self.endIndex + Table.PAGE_SIZE
         return self.transform()
+
+    @staticmethod
+    def _get_settings():
+        # TODO load from file
+        settings = {
+            "auto_link_table_links": False,
+            "show_publication": True
+        }
+        return settings
 
 
 class TableDisplay(BeakerxDOMWidget):
