@@ -14,16 +14,19 @@
  *  limitations under the License.
  */
 
-import { BeakerXApi } from "../../BeakerXApi";
-import { BkoContextMenu } from "../../contextMenu/BkoContextMenu";
+import { BkoContextMenu } from "../../contextMenu";
 import { createHeaderContextMenuItems } from './createHeaderContextMenuItems';
 import { createCellContextMenuItems } from './createCellContextMenuItems';
 import { createPublishMenuItems } from "./createPublishMenuItem";
 import { DataGridScope } from "../DataGridScope";
+import { selectShowPublication } from "../model/selectors";
 
 export class DataGridContextMenu extends BkoContextMenu {
+  private readonly showPublication: boolean = true;
+
   constructor(scope: DataGridScope) {
-    super({ ...scope, element: [scope.dataGrid.node], dataGrid: scope.dataGrid });
+    super({...scope, element: [scope.dataGrid.node], dataGrid: scope.dataGrid});
+    this.showPublication = selectShowPublication(scope.dataGrid.store.state);
   }
 
   protected buildMenu(): void {
@@ -34,22 +37,10 @@ export class DataGridContextMenu extends BkoContextMenu {
       ...createCellContextMenuItems(this.scope.dataGrid, this)
     ];
 
-    let baseUrl;
-
-    try {
-      baseUrl = `${(Jupyter.notebook_list || Jupyter.notebook).base_url}`;
-    } catch (e) {
-      baseUrl = `${window.location.origin}/`;
+    if (this.showPublication) {
+      menuItems.push(...createPublishMenuItems(this.scope.dataGrid, this));
     }
-
-    new BeakerXApi(baseUrl)
-      .loadSettings()
-      .then(ret => {
-        if (ret.ui_options.show_publication) {
-          menuItems.push(...createPublishMenuItems(this.scope.dataGrid, this));
-        }
-        this.createItems(menuItems, this.contextMenu);
-        this.bindEvents();
-      }).catch(() => {});
+    this.createItems(menuItems, this.contextMenu);
+    this.bindEvents();
   }
 }

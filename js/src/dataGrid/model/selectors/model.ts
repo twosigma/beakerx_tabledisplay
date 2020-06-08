@@ -53,3 +53,5 @@ export const selectColumnOrder = (state) => selectModel(state).columnOrder;
 export const selectColumnsVisible = (state) => selectModel(state).columnsVisible || {};
 export const selectColumnsFrozen = (state) => selectModel(state).columnsFrozen || {};
 export const selectRowsToShow = (state) => selectModel(state).rowsToShow || consts.DEFAULT_PAGE_LENGTH;
+export const selectAutoLinkTableLinks = (state) => selectModel(state).auto_link_table_links;
+export const selectShowPublication = (state) => selectModel(state).show_publication;

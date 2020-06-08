@@ -18,11 +18,9 @@ import { CellRenderer, DataGrid, DataModel, GraphicsContext } from "@phosphor/da
 import { SectionList } from "@phosphor/datagrid/lib/sectionlist";
 import { Signal } from '@phosphor/signaling';
 import { Widget } from "@phosphor/widgets";
-import { BeakerXApi } from "../BeakerXApi";
 import { TableDisplayView } from "../TableDisplayView";
 import { TableDisplayWidget } from "../TableDisplayWidget";
-import { Common } from "../utils/Common";
-import { Theme } from "../utils/Theme";
+import { Common, Theme } from "../utils";
 import { CellFocusManager } from "./cell/CellFocusManager";
 import { CellManager } from "./cell/CellManager";
 import { CellRendererFactory } from "./cell/CellRendererFactory";
@@ -40,7 +38,7 @@ import { HighlighterManager } from "./highlighter/HighlighterManager";
 import { ICellData } from "./interface/ICell";
 import { IDataGridModelState } from "./interface/IDataGridModelState";
 import { BeakerXDataGridModel } from "./model/BeakerXDataGridModel";
-import { selectHasIndex, selectRowsToShow } from "./model/selectors/model";
+import { selectHasIndex, selectRowsToShow } from "./model/selectors";
 import { RowManager } from "./row/RowManager";
 import { BeakerXDataStore } from "./store/BeakerXDataStore";
 
@@ -73,7 +71,6 @@ export class BeakerXDataGrid extends DataGrid {
   focused: boolean;
   wrapperId: string;
   tableDisplayView: TableDisplayWidget & TableDisplayView;
-  api: BeakerXApi;
 
   cellHovered = new Signal<this, { data: ICellData | null, event: MouseEvent }>(this);
   commSignal = new Signal<this, {}>(this);
@@ -82,7 +79,6 @@ export class BeakerXDataGrid extends DataGrid {
 
   constructor(options: DataGrid.IOptions, dataStore: BeakerXDataStore, tableDisplayView: TableDisplayWidget & TableDisplayView) {
     super(options);
-    this.initApi();
 
     //this is hack to use private DataGrid properties
     this.viewport = this['_viewport'];
@@ -94,18 +90,6 @@ export class BeakerXDataGrid extends DataGrid {
     this.tableDisplayView = tableDisplayView;
     this.resize = DataGridHelpers.throttle(this.resize, 150, this);
     this.init(dataStore);
-  }
-
-  private initApi() {
-    let baseUrl;
-
-    try {
-      baseUrl = `${(Jupyter.notebook_list || Jupyter.notebook).base_url}`;
-    } catch (e) {
-      baseUrl = `${window.location.origin}/`;
-    }
-
-    this.api = new BeakerXApi(baseUrl);
   }
 
   init(store: BeakerXDataStore) {

@@ -47,5 +47,7 @@ export interface IDataGridModelState {
   type?: string,
   types: string[],
   values: any,
-  rowsToShow: number
+  rowsToShow: number,
+  auto_link_table_links: boolean,
+  show_publication: boolean
 }

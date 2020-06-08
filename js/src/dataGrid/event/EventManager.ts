@@ -22,7 +22,7 @@ import { COLUMN_TYPES } from "../column/enums";
 import { DataGridHelpers } from "../Helpers";
 import { ICellData } from "../interface/ICell";
 import { HIGHLIGHTER_TYPE } from "../interface/IHighlighterState";
-import { selectDoubleClickTag, selectHasDoubleClickAction } from "../model/selectors";
+import { selectAutoLinkTableLinks, selectDoubleClickTag, selectHasDoubleClickAction } from "../model/selectors";
 import { BeakerXDataStore } from "../store/BeakerXDataStore";
 import { KEYBOARD_KEYS } from "./enums";
 import { EventHelpers } from "./helpers";
@@ -142,7 +142,7 @@ export class EventManager {
     this.dataGrid.columnPosition.dropColumn();
   }
 
-  private async handleBodyClick(event: MouseEvent) {
+  private handleBodyClick(event: MouseEvent) {
     if (this.isOverHeader(event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
@@ -154,9 +154,7 @@ export class EventManager {
       return;
     }
 
-    const settings = await this.dataGrid.api.loadSettings();
-
-    if (!settings.ui_options.auto_link_table_links) {
+    if (!selectAutoLinkTableLinks(this.store.state)) {
       return;
     }
 
