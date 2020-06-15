@@ -1,15 +1,62 @@
 const path = require('path');
 
 var rules = [
-  { test: /\.css$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }]},
-  { test: /\.scss$/, use: [{ loader: "style-loader" }, { loader: "css-loader" }, { loader: "sass-loader" }]},
-  { test: /\.(jpg|png|gif)$/, use: "file" },
-  // required to load font-awesome
-  { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, use: "url?limit=10000&mimetype=application/font-woff" },
-  { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, use: "url?limit=10000&mimetype=application/font-woff" },
-  { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use: "url?limit=10000&mimetype=application/octet-stream" },
-  { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, use: "file" },
-  { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, use: "url?limit=10000&mimetype=image/svg+xml" }
+  {
+    test: /\.css$/i,
+    use: [{ loader: "style-loader" }, { loader: "css-loader" }],
+    exclude: [/katex\.css$/i]
+  },
+  {
+    test: /katex\.css$/i,
+    use: [{ loader: 'to-string-loader'}, { loader: "css-loader" }],
+  },
+  {
+    test: /\.scss$/,
+    use: [{ loader: "style-loader" }, { loader: "css-loader" }, { loader: "sass-loader" }]
+  },
+  {
+    test: /\.(jpg|png|gif)$/,
+    use: { loader: "file-loader" }
+  },
+  {
+    test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+    use: {
+      loader: 'url-loader',
+      options: {
+        limit: 10000,
+        mimetype: 'application/font-woff',
+        name: './css/fonts/[name].[ext]',
+      }
+    },
+  },
+  {
+    test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+    use: {
+      loader: 'url-loader',
+      options: {
+        limit: 10000,
+        mimetype: 'application/octet-stream',
+        name: "./css/fonts/[name].[ext]",
+      }
+    }
+  },
+  {
+    test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+    use: {
+      loader: "file-loader"
+    }
+  },
+  {
+    test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+    use: {
+      loader: "url-loader",
+      options: {
+        limit: 10000,
+        mimetype: "image/svg+xml",
+        name: './css/fonts/[name].[ext]',
+      }
+    }
+  }
 ];
 
 module.exports = [

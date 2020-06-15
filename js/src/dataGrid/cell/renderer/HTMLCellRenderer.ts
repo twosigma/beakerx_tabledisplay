@@ -18,11 +18,8 @@ import { CellRenderer, GraphicsContext, TextRenderer } from "@phosphor/datagrid"
 import { BeakerXCellRenderer } from "./BeakerXCellRenderer";
 import { LatexCellRenderer } from './LatexCellRenderer';
 
-// const LatoRegular = require('../../../shared/fonts/lato/Lato-Regular.woff');
-// const LatoBlack = require('../../../shared/fonts/lato/Lato-Black.woff');
-// todo
-const LatoRegular = '';
-const LatoBlack = '';
+import LatoRegular from "./../../../../fonts/lato/Lato-Regular.woff";
+import LatoBlack from "./../../../../fonts/lato/Lato-Black.woff";
 
 export class HTMLCellRenderer extends BeakerXCellRenderer {
   dataCache = new Map<string, string>();
