@@ -399,21 +399,9 @@ class TableDisplay(BeakerxDOMWidget):
         if params['event'] == 'CONTEXT_MENU_CLICK':
             func = self.contextMenuListeners.get(params['itemKey'])
             if func is not None:
-                if isinstance(func, str):
-                    self._run_by_tag(func)
-                else:
-                    func(params['row'], params['column'], tabledisplay)
-                    self.model = self.chart.transform()
-        if params['event'] == 'actiondetails':
-            if params['params']['actionType'] == 'DOUBLE_CLICK':
-                self._run_by_tag(self.chart.doubleClickTag)
+                func(params['row'], params['column'], tabledisplay)
+                self.model = self.chart.transform()
 
-    def _run_by_tag(self, tag):
-        arguments = dict(target_name='beakerx.tag.run')
-        comm = Comm(**arguments)
-        msg = {'runByTag': tag}
-        state = {'state': msg}
-        comm.send(data=state, buffers=[])
 
     def updateCell(self, row, columnName, value):
         row = self.chart.values[row]
