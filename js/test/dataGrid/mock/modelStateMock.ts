@@ -48,5 +48,7 @@ export const modelStateMock: IDataGridModelState = {
   timeStrings: null,
   timeZone: 'UTC',
   tooManyRows: false,
-  type: 'Tabledisplay'
+  type: 'Tabledisplay',
+  auto_link_table_links: false,
+  show_publication: false,
 };
