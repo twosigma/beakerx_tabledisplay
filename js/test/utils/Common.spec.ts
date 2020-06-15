@@ -26,15 +26,25 @@ describe('Common', () => {
       expect(formated).to.equal('20200512 20:29:41.269 +0000');
     });
 
-    it('should apply timezone', () => {
+    it('should apply timezone CET', () => {
       let timestamp = 1589315381269;
       let formated;
       formated = Common.formatTimestamp(timestamp, 'CET', 'YYYYMMDD HH:mm:ss.SSS ZZ');
       expect(formated).to.equal('20200512 22:29:41.269 +0200');
+    });
+
+    it('should apply timezone EST', () => {
+      let timestamp = 1589315381269;
+      let formated;
       formated = Common.formatTimestamp(timestamp, 'EST', 'YYYYMMDD HH:mm:ss.SSS ZZ');
       expect(formated).to.equal('20200512 15:29:41.269 -0500');
+    });
+
+    it('should apply timezone GMT+1', () => {
+      let timestamp = 1589315381269;
+      let formated;
       formated = Common.formatTimestamp(timestamp, 'GMT+1', 'YYYYMMDD HH:mm:ss.SSS ZZ');
-      expect(formated).to.equal('20200512 22:29:41.269 +0200');
+      expect(formated).to.equal('20200512 20:29:41.269 +0000');
     });
 
   });

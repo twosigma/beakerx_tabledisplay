@@ -3,6 +3,7 @@
 // var path = require('path');
 // const process = require('process');
 process.env.LANGUAGE = 'en_US';
+process.env.TZ = 'UTC';
 
 module.exports = function(config) {
   config.set({

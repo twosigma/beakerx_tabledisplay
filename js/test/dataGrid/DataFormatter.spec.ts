@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-import { assert, expect } from 'chai';
+import {assert, expect} from 'chai';
 import * as moment from 'moment-timezone/builds/moment-timezone-with-data';
 import * as sinon from 'sinon';
-import { consts } from "../../src/dataGrid/consts";
-import { DataFormatter } from "../../src/dataGrid/DataFormatter";
-import { ALL_TYPES } from "../../src/dataGrid/dataTypes";
-import { createStore } from "../../src/dataGrid/store/BeakerXDataStore";
-import { Common } from "../../src/utils";
-import { cellConfigMock, modelStateMock } from "./mock";
+import {consts} from "../../src/dataGrid/consts";
+import {DataFormatter} from "../../src/dataGrid/DataFormatter";
+import {ALL_TYPES} from "../../src/dataGrid/dataTypes";
+import {createStore} from "../../src/dataGrid/store/BeakerXDataStore";
+import {Common} from "../../src/utils";
+import {cellConfigMock, modelStateMock} from "./mock";
 
 describe('DataFormatter', () => {
   const dataStore = createStore(modelStateMock);
@@ -105,12 +105,10 @@ describe('DataFormatter', () => {
         .to.equal('&test<>"Works"Ok/<>');
     });
 
-    /*
-        it('should convert to date', () => {
-          expect(stringFormatFn({ ...cellConfig, value: { timestamp: 1516697673043, type: 'Date' }}))
-            .to.equal('20180123 03:54:33.043 -0500');
-        });
-    */
+    it('should convert to date', () => {
+      expect(stringFormatFn({...cellConfig, value: {timestamp: 1516697673043, type: 'Date'}}))
+        .to.equal('20180123 08:54:33.043 +0000');
+    });
 
     it('should return given value', () => {
       expect(stringFormatFn({...cellConfig, value: 1})).to.equal(1);
