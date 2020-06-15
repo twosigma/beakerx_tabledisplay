@@ -28,3 +28,14 @@ __pycache__/
 # Jupyter notebook checkpoints
 .ipynb_checkpoints/
 *Untitled*.ipynb
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+/build/
+*/build/
+
+# conda
+dist
