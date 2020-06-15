@@ -1,7 +1,8 @@
-var webpackConfig =  require('./webpack.config.js');
-var webpack = require('webpack');
+// var webpackConfig =  require('./webpack.config.js');
+// var webpack = require('webpack');
 // var path = require('path');
 // const process = require('process');
+process.env.LANGUAGE = 'en_US';
 
 module.exports = function(config) {
   config.set({
@@ -11,7 +12,6 @@ module.exports = function(config) {
     files: [
       { pattern: 'src/**/*.ts' },
       { pattern: 'test/**/*.ts' },
-      { pattern: 'src/**/*.scss', included: false, watched: false }
     ],
     preprocessors: {
       'src/**/!(Sanitize).ts': ['karma-typescript', "coverage"],
