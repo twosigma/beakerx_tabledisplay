@@ -67,7 +67,9 @@ setup_args = dict(
         ]
     },
     install_requires=[
-        'beakerx_base'
+        'beakerx_base',
+        'numpy',
+        'pandas'
     ],
     python_requires='>=3',
     zip_safe=False,
