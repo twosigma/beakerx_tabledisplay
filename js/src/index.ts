@@ -16,5 +16,3 @@
 
 export * from './TableDisplayModel';
 export * from './TableDisplayView';
-
-export const version = '*';

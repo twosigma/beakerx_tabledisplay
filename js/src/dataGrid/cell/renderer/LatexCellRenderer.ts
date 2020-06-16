@@ -16,7 +16,7 @@
 
 import * as katex from 'katex';
 
-const katexCss = require('katex/dist/katex.css');
+const katexCss = require('!css-loader!katex/dist/katex.css').toString();
 
 const latexFormulaRegex = /^(?:\$)(.+)(?:\$)$/; // match strings like '$e^{i\pi} + 1 = 0$'
 const latexCache = {};

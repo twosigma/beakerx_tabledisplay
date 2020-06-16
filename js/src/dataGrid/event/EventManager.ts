@@ -38,6 +38,7 @@ export class EventManager {
     this.store = dataGrid.store;
     this.dataGrid = dataGrid;
 
+    this.handleEvent = this.handleEvent.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
