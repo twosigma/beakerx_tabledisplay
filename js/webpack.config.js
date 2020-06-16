@@ -8,7 +8,7 @@ var rules = [
   },
   {
     test: /katex\.css$/i,
-    use: [{ loader: 'to-string-loader'}, { loader: "css-loader" }],
+    use: [{ loader: "css-loader" }],
   },
   {
     test: /\.scss$/,
