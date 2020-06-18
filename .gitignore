@@ -1,0 +1,41 @@
+# IntelliJ IDEA configuration files
+.idea/
+*.iml
+
+# Javascript compiled files
+beakerx_tabledisplay/static/
+js/css/table_display.css
+js/css/table_display.css.map
+js/dist/
+js/lib/
+
+# Karma tests coverage
+js/coverage/
+
+# Beaker
+/beakerx_tabledisplay/beakerx_tabledisplay/static/
+
+# Node modules
+node_modules/
+
+yarn-error.log
+
+# Python
+*.py[cod]
+__pycache__/
+*.egg-info
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+*Untitled*.ipynb
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+/build/
+*/build/
+
+# conda
+dist
