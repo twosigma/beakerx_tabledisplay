@@ -13,11 +13,13 @@
 # limitations under the License.
 
 import copy
+import json
 import types
+from os import makedirs, path, fdopen, open as os_open, O_RDWR, O_CREAT
 
 import numpy as np
 from beakerx_base import BaseObject, BeakerxDOMWidget
-from ipykernel.comm import Comm
+from jupyter_core import paths
 from pandas import DataFrame, RangeIndex, MultiIndex, DatetimeIndex
 from traitlets import Unicode, Dict
 
@@ -73,8 +75,8 @@ class Table(BaseObject):
         self.endIndex = Table.PAGE_SIZE
         self.loadingMode = 'ALL'
         self.rowsToShow = RowsToShow.SHOW_25
-        self.auto_link_table_links = self._get_settings().get("auto_link_table_links")
-        self.show_publication = self._get_settings().get("show_publication")
+        self.auto_link_table_links = self.get_option("auto_link_table_links")
+        self.show_publication = self.get_option("show_publication")
 
     def validate_args(self, args):
         if len(args) > 2 and len(args[1]) != len(args[2]):
@@ -264,13 +266,8 @@ class Table(BaseObject):
         return self.transform()
 
     @staticmethod
-    def _get_settings():
-        # TODO load from file
-        settings = {
-            "auto_link_table_links": False,
-            "show_publication": True
-        }
-        return settings
+    def get_option(name):
+        return TableSettings().load_options().get(name)
 
 
 class TableDisplay(BeakerxDOMWidget):
@@ -402,7 +399,6 @@ class TableDisplay(BeakerxDOMWidget):
                 func(params['row'], params['column'], tabledisplay)
                 self.model = self.chart.transform()
 
-
     def updateCell(self, row, columnName, value):
         row = self.chart.values[row]
         col_index = self.chart.columnNames.index(columnName)
@@ -463,3 +459,57 @@ class TableActionDetails:
 
     def __str__(self):
         return '{} {} {} {}'.format(self.actionType, self.row, self.col, self.tag)
+
+
+class TableSettings:
+
+    def __init__(self):
+        pass
+
+    def save(self, content):
+        makedirs(paths.jupyter_config_dir(), exist_ok=True)
+        with fdopen(os_open(self.__config_path, O_RDWR | O_CREAT, 0o600), 'w+') as json_file:
+            json_file.seek(0)
+            json_file.truncate()
+            json_file.write(
+                json.dumps(self.__dict_merge(self.__default_config.copy(), content), indent=2, sort_keys=True))
+
+    def load(self):
+        try:
+            json_file = open(self.__config_path)
+            data = self.__dict_merge(self.__default_config, json.load(json_file))
+        except:
+            data = self.__default_config
+            self.save(data)
+
+        return data
+
+    def load_options(self):
+        return self.load().get('beakerx_tabledisplay').get('options')
+
+    __default_config = {
+        "beakerx_tabledisplay": {
+            "version": 1,
+            "options": {
+                "auto_link_table_links": False,
+                "show_publication": True
+            }
+        }
+    }
+
+    __config_path = path.join(paths.jupyter_config_dir(), 'beakerx_tabledisplay.json')
+
+    def __dict_merge(self, target, *args):
+        if len(args) > 1:
+            for obj in args:
+                self.__dict_merge(target, obj)
+            return target
+        obj = args[0]
+        if not isinstance(obj, dict):
+            return obj
+        for k, v in obj.items():
+            if k in target and isinstance(target[k], dict):
+                self.__dict_merge(target[k], v)
+            else:
+                target[k] = copy.deepcopy(v)
+        return target
