@@ -33,9 +33,8 @@ jobs:
         repository: twosigma/beakerx_base
         path: beakerx_base
     - name: Update conda package
-      shell: bash -l {0}
-      run: |
-        cd $GITHUB_WORKSPACE/beakerx_tabledisplay
+      shell: bash
+      run:
         conda env create -n beakerx -f configuration.yml
     - name: Build BeakerX Base
       shell: bash -l {0}
@@ -47,6 +46,6 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate beakerx
-        cd $GITHUB_WORKSPACE/beakerx_tabledisplay/beakerx_tabledisplay
+        cd beakerx_tabledisplay
         pip install -e .
         beakerx_tabledisplay install
