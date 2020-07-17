@@ -32,6 +32,11 @@ jobs:
       with:
         repository: twosigma/beakerx_base
         path: beakerx_base
+    - name: Checkout beakerx_tests repo
+      uses: actions/checkout@v2
+      with:
+        repository: twosigma/beakerx_tests
+        path: beakerx_tests
     - name: Update conda package
       shell: bash
       run:
@@ -49,3 +54,22 @@ jobs:
         cd beakerx_tabledisplay
         pip install -e .
         beakerx_tabledisplay install
+    - name: Run e2e tests (TableDisplay)
+      shell: bash -l {0}
+      run: |
+        cd $GITHUB_WORKSPACE/beakerx_tests/autotests
+        chmod +x gradlew
+        conda activate beakerx
+        python ci_tests.py --app=notebook --tst=python.TableAPI*
+    - name: Archive screenshot results
+      uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: screenshots
+        path: ${{ github.workspace }}/beakerx_tests/autotests/resources/img/python
+    - name: Publish Test Report
+      if: always()
+      uses: scacap/action-surefire-report@v1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        report_paths: "**/test-results/test/TEST-*.xml" 
