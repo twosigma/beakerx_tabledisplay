@@ -17,7 +17,8 @@ from .commands import beakerx_parse
 from .handlers import load_jupyter_server_extension
 from .tabledisplay import *
 from .tableitems import *
-
+from .object import beakerx_tabledisplay
+from beakerx_base import *
 
 def _jupyter_nbextension_paths():
     return [{
