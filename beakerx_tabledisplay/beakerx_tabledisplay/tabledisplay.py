@@ -16,6 +16,7 @@ import copy
 import json
 import types
 from os import makedirs, path, fdopen, open as os_open, O_RDWR, O_CREAT
+from ipykernel.comm import Comm
 
 import numpy as np
 from beakerx_base import BaseObject, BeakerxDOMWidget
@@ -396,8 +397,18 @@ class TableDisplay(BeakerxDOMWidget):
         if params['event'] == 'CONTEXT_MENU_CLICK':
             func = self.contextMenuListeners.get(params['itemKey'])
             if func is not None:
-                func(params['row'], params['column'], tabledisplay)
-                self.model = self.chart.transform()
+                if isinstance(func, str):
+                    self._run_by_tag(func)
+                else:
+                    func(params['row'], params['column'], tabledisplay)
+                    self.model = self.chart.transform()
+
+    def _run_by_tag(self, tag):
+        arguments = dict(target_name='beakerx.tag.run')
+        comm = Comm(**arguments)
+        msg = {'runByTag': tag}
+        state = {'state': msg}
+        comm.send(data=state, buffers=[])
 
     def updateCell(self, row, columnName, value):
         row = self.chart.values[row]
