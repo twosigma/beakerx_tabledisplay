@@ -33,6 +33,4 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
 };
 
-export default {
-  plugin,
-};
+export default [plugin] as JupyterFrontEndPlugin<any>[];
