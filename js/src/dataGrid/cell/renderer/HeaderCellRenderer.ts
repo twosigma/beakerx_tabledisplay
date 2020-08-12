@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext } from "@phosphor/datagrid";
-import { Theme } from "../../../utils/Theme";
-import { selectHeadersVertical } from "../../model/selectors";
-import { BeakerXCellRenderer } from "./BeakerXCellRenderer";
+import { CellRenderer, GraphicsContext } from '@phosphor/datagrid';
+import { Theme } from '../../../utils/Theme';
+import { selectHeadersVertical } from '../../model/selectors';
+import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 
 export class HeaderCellRenderer extends BeakerXCellRenderer {
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getBackgroundColor(config: CellRenderer.ICellConfig): string {
     return Theme.DEFAULT_CELL_BACKGROUND;
   }
@@ -28,17 +28,12 @@ export class HeaderCellRenderer extends BeakerXCellRenderer {
   drawText(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
     const options = this.getOptions(config);
 
-    if (
-      !options.font
-      || !options.color
-      || options.boxHeight <= 0
-      || options.text === null
-    ) {
+    if (!options.font || !options.color || options.boxHeight <= 0 || options.text === null) {
       return;
     }
 
     // Set up the text position variables.
-    let {textX, textY} = this.getTextPosition(config, options, true);
+    let { textX, textY } = this.getTextPosition(config, options, true);
 
     // Clip the cell if the text is taller than the text box height.
     if (options.textHeight > options.boxHeight) {
@@ -47,7 +42,7 @@ export class HeaderCellRenderer extends BeakerXCellRenderer {
       gc.clip();
     }
 
-    let verticalHeader = selectHeadersVertical(this.store.state);
+    const verticalHeader = selectHeadersVertical(this.store.state);
 
     // Set the gc state.
     gc.textBaseline = 'bottom';

@@ -14,40 +14,39 @@
  *  limitations under the License.
  */
 
-
-import { IHighlighterState } from "./IHighlighterState";
+import { IHighlighterState } from './IHighlighterState';
 
 export interface IDataGridModelState {
-  alignmentForColumn?: {},
-  alignmentForType?: {},
-  cellHighlighters: IHighlighterState[],
-  columnNames: string[],
-  columnOrder: string[],
-  columnsFrozen?: {},
-  columnsVisible: {},
-  contextMenuItems?: string[],
-  contextMenuTags?: {},
-  dataFontSize?: number | null,
-  doubleClickTag?: string | null,
-  fontColor?: string[],
-  filteredValues?: any[],
-  hasDoubleClickAction?: boolean,
-  hasIndex: boolean,
-  headerFontSize?: number | null,
-  headersVertical?: boolean,
-  rendererForColumn?: {},
-  rendererForType?: {},
-  stringFormatForColumn: {},
-  stringFormatForType?: {},
-  subtype?: string,
-  timeZone?: string,
-  timeStrings?: any,
-  tooManyRows?: boolean,
-  tooltips: string[][],
-  type?: string,
-  types: string[],
-  values: any,
-  rowsToShow: number,
-  auto_link_table_links: boolean,
-  show_publication: boolean
+  alignmentForColumn?: Record<string, string>;
+  alignmentForType?: Record<string, string>;
+  cellHighlighters: IHighlighterState[];
+  columnNames: string[];
+  columnOrder: string[];
+  columnsFrozen?: Record<string, boolean>;
+  columnsVisible: Record<string, boolean>;
+  contextMenuItems?: string[];
+  contextMenuTags?: unknown;
+  dataFontSize?: number | null;
+  doubleClickTag?: string | null;
+  fontColor?: string[];
+  filteredValues?: any[];
+  hasDoubleClickAction?: boolean;
+  hasIndex: boolean;
+  headerFontSize?: number | null;
+  headersVertical?: boolean;
+  rendererForColumn?: Record<string, any>;
+  rendererForType?: Record<string, any>;
+  stringFormatForColumn: unknown;
+  stringFormatForType?: unknown;
+  subtype?: string;
+  timeZone?: string;
+  timeStrings?: any;
+  tooManyRows?: boolean;
+  tooltips: string[][];
+  type?: string;
+  types: string[];
+  values: any;
+  rowsToShow: number;
+  auto_link_table_links: boolean;
+  show_publication: boolean;
 }

@@ -15,7 +15,7 @@
  */
 
 import * as widgets from '@jupyter-widgets/base';
-import { BEAKERX_MODULE_VERSION } from "./version";
+import { BEAKERX_MODULE_VERSION } from './version';
 
 export class TableDisplayModel extends widgets.DOMWidgetModel {
   defaults() {

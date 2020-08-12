@@ -14,12 +14,11 @@
  *  limitations under the License.
  */
 
-
-import { CellRenderer } from "@phosphor/datagrid";
-import { Theme } from "../../utils/Theme";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { HIGHLIGHTER_STYLE, IHighlighterState } from "../interface/IHighlighterState";
-import { BeakerXDataGridModel } from "../model/BeakerXDataGridModel";
+import { CellRenderer } from '@phosphor/datagrid';
+import { Theme } from '../../utils/Theme';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { HIGHLIGHTER_STYLE, IHighlighterState } from '../interface/IHighlighterState';
+import { BeakerXDataGridModel } from '../model/BeakerXDataGridModel';
 
 export class Highlighter {
   column: DataGridColumn;
@@ -31,19 +30,20 @@ export class Highlighter {
 
     this.column = column;
     this.model = column.dataGrid.model;
-    this.state = {...state};
+    this.state = { ...state };
     this.state.style = state.style || HIGHLIGHTER_STYLE.SINGLE_COLUMN;
     this.state.minVal = valueResolver(Number.isFinite(this.state.minVal) ? this.state.minVal : this.column.minValue);
     this.state.maxVal = valueResolver(Number.isFinite(this.state.maxVal) ? this.state.maxVal : this.column.maxValue);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getBackgroundColor(config: CellRenderer.ICellConfig) {
     return Theme.DEFAULT_CELL_BACKGROUND;
   }
 
   getValueToHighlight(config: CellRenderer.ICellConfig) {
     let value = config.value;
-    let valueResolver = this.model.getColumnValueResolver(this.column.getDataType());
+    const valueResolver = this.model.getColumnValueResolver(this.column.getDataType());
 
     if (this.state.style === HIGHLIGHTER_STYLE.FULL_ROW) {
       value = this.model.rowManager.getValueByColumn(config.row, this.column.index, this.column.type);

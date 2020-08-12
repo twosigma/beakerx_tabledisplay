@@ -1,5 +1,5 @@
 /*
- *  Copyright 2017 TWO SIGMA OPEN SOURCE, LLC
+ *  Copyright 2018 TWO SIGMA OPEN SOURCE, LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,20 +14,19 @@
  *  limitations under the License.
  */
 
-import { createIndexMenuItems } from './createIndexMenuItems';
-import { HeaderMenu } from './HeaderMenu';
+import { CommSignalMessage } from './CommSignalMessage';
 
-export class IndexMenu extends HeaderMenu {
-  protected buildMenu(): void {
-    this.menu.addClass('bko-header-menu');
-    this.menu.addClass('bko-table-menu');
-    this.menu.addClass('dropdown');
+export class ContextMenuClickMessage extends CommSignalMessage {
+  constructor(row: number, column: number, protected itemKey: string) {
+    super('CONTEXT_MENU_CLICK', row, column);
+  }
 
-    this.menu.contentNode.classList.add('dropdown-menu');
-    this.menu.contentNode.classList.add('bko-table-menu-content');
-
-    const items = createIndexMenuItems(this.column);
-
-    this.createItems(items, this.menu);
+  toObject() {
+    return {
+      event: this.event,
+      row: this.row,
+      column: this.col,
+      itemKey: this.itemKey,
+    };
   }
 }

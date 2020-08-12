@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-import { DataModel } from "@phosphor/datagrid";
+import { DataModel } from '@phosphor/datagrid';
 import { MessageLoop } from '@phosphor/messaging';
-import { ResizeObserver } from "resize-observer";
-import { BeakerXDataGrid } from "./BeakerXDataGrid";
-import { DataGridColumn } from "./column/DataGridColumn";
-import { selectColumnWidth } from "./column/selectors";
-import { ALL_TYPES } from "./dataTypes";
-import { DataGridHelpers } from "./Helpers";
-import { selectDataFontSize, selectHeaderFontSize, selectHeadersVertical } from "./model/selectors";
-import { DataGridStyle } from "./style/DataGridStyle";
+import { ResizeObserver } from 'resize-observer';
+import { BeakerXDataGrid } from './BeakerXDataGrid';
+import { DataGridColumn } from './column/DataGridColumn';
+import { selectColumnWidth } from './column/selectors';
+import { ALL_TYPES } from './dataTypes';
+import { DataGridHelpers } from './Helpers';
+import { selectDataFontSize, selectHeaderFontSize, selectHeadersVertical } from './model/selectors';
+import { DataGridStyle } from './style/DataGridStyle';
 
 const DEFAULT_RESIZE_SECTION_SIZE_IN_PX = 6;
 const DEFAULT_ROW_PADDING = 4;
@@ -31,11 +31,11 @@ const SCROLLBAR_WIDTH = 16;
 
 export class DataGridResize {
   dataGrid: BeakerXDataGrid;
-  resizeStartRect: { width: number, height: number, x: number, y: number };
+  resizeStartRect: { width: number; height: number; x: number; y: number };
   resizeMode: 'h' | 'v' | 'both' | null;
-  resizing: boolean = false;
-  resizedHorizontally: boolean = false;
-  private maxWidth: number = 0;
+  resizing = false;
+  resizedHorizontally = false;
+  private maxWidth = 0;
 
   constructor(dataGrid: BeakerXDataGrid) {
     this.dataGrid = dataGrid;
@@ -83,9 +83,9 @@ export class DataGridResize {
       return;
     }
     const spacing = 2 * (DataGridStyle.DEFAULT_GRID_PADDING + DataGridStyle.DEFAULT_GRID_BORDER_WIDTH) + 1;
-    const hasVScroll = (
-      this.dataGrid.rowManager.rowsToShow !== -1 && this.dataGrid.rowManager.rowsToShow <= this.dataGrid.model.rowCount('body')
-    );
+    const hasVScroll =
+      this.dataGrid.rowManager.rowsToShow !== -1 &&
+      this.dataGrid.rowManager.rowsToShow <= this.dataGrid.model.rowCount('body');
     const vScrollWidth = hasVScroll ? SCROLLBAR_WIDTH : 0;
     const width = this.dataGrid.totalWidth + spacing + vScrollWidth;
 
@@ -108,24 +108,30 @@ export class DataGridResize {
 
   setInitialSectionWidths(): void {
     for (let index = this.dataGrid.columnSections.sectionCount - 1; index >= 0; index--) {
-      this.setInitialSectionWidth({index}, 'body');
+      this.setInitialSectionWidth({ index }, 'body');
     }
 
     for (let index = this.dataGrid.rowHeaderSections.sectionCount - 1; index >= 0; index--) {
-      this.setInitialSectionWidth({index}, 'row-header');
+      this.setInitialSectionWidth({ index }, 'row-header');
     }
   }
 
   setInitialSectionWidth(section, region: DataModel.ColumnRegion): void {
-    const column = this.dataGrid.columnPosition.getColumnByPosition({region, value: section.index});
+    const column = this.dataGrid.columnPosition.getColumnByPosition({ region, value: section.index });
     const area = region === 'row-header' ? 'row-header' : 'column';
 
     this.setSectionWidth(area, column, this.getSectionWidth(column));
   }
 
   fillEmptyDataGridSpace() {
-    const space = this.dataGrid.node.clientWidth - this.dataGrid.totalWidth - 2 * DataGridStyle.DEFAULT_GRID_PADDING - this.dataGrid['_vScrollBar'].node.clientWidth;
-    const value = Math.round(space / (this.dataGrid.columnSections.sectionCount + this.dataGrid.rowHeaderSections.sectionCount));
+    const space =
+      this.dataGrid.node.clientWidth -
+      this.dataGrid.totalWidth -
+      2 * DataGridStyle.DEFAULT_GRID_PADDING -
+      this.dataGrid['_vScrollBar'].node.clientWidth;
+    const value = Math.round(
+      space / (this.dataGrid.columnSections.sectionCount + this.dataGrid.rowHeaderSections.sectionCount),
+    );
 
     this.dataGrid.columnSections['_sections'].forEach(this.fillEmptySpaceResizeFn('body', value));
     this.dataGrid.rowHeaderSections['_sections'].forEach(this.fillEmptySpaceResizeFn('row-header', value));
@@ -133,12 +139,12 @@ export class DataGridResize {
     this.fitViewport();
   }
 
-  updateColumnWidth(region: DataModel.ColumnRegion): Function {
-    return ({index, size}) => {
-      let columnOnPosition = this.dataGrid.columnManager.getColumnByPosition({region, value: index});
+  updateColumnWidth(region: DataModel.ColumnRegion): ({ index, size }) => void {
+    return ({ index, size }) => {
+      const columnOnPosition = this.dataGrid.columnManager.getColumnByPosition({ region, value: index });
 
       columnOnPosition.setWidth(size);
-    }
+    };
   }
 
   startResizing(event: MouseEvent) {
@@ -149,7 +155,7 @@ export class DataGridResize {
     const width = this.dataGrid.viewport.node.clientWidth + this.dataGrid['_vScrollBar'].node.clientWidth + 3;
     const height = this.dataGrid.viewport.node.clientHeight + this.dataGrid['_hScrollBar'].node.clientHeight + 3;
 
-    this.resizeStartRect = {width, height, x: event.clientX, y: event.clientY};
+    this.resizeStartRect = { width, height, x: event.clientX, y: event.clientY };
     this.resizing = true;
 
     this.dataGrid.node.parentElement.addEventListener('mouseup', this.handleMouseUp, true);
@@ -172,13 +178,13 @@ export class DataGridResize {
   }
 
   shouldResizeDataGrid(event: MouseEvent): boolean {
-    const {horizontal, vertical} = this.getDataGridResizeConfig(event);
+    const { horizontal, vertical } = this.getDataGridResizeConfig(event);
 
     return vertical || horizontal;
   }
 
   setResizeMode(event: MouseEvent): void {
-    const {horizontal, vertical} = this.getDataGridResizeConfig(event);
+    const { horizontal, vertical } = this.getDataGridResizeConfig(event);
 
     if (!horizontal && !vertical) {
       this.setCursorStyle('auto');
@@ -218,25 +224,25 @@ export class DataGridResize {
 
   private fillEmptySpaceResizeFn(region: DataModel.ColumnRegion, value: number) {
     return (section) => {
-      let column = this.dataGrid.columnManager.getColumnByPosition({
+      const column = this.dataGrid.columnManager.getColumnByPosition({
         value: section.index,
-        region
+        region,
       });
-      let minValue = this.getSectionWidth(column);
-      let curValue = selectColumnWidth(this.dataGrid.store.state, column);
+      const minValue = this.getSectionWidth(column);
+      const curValue = selectColumnWidth(this.dataGrid.store.state, column);
 
       this.setSectionWidth('column', column, curValue + value < minValue ? minValue : curValue + value);
     };
   }
 
-  private getDataGridResizeConfig(event: MouseEvent): { vertical: boolean, horizontal: boolean } {
+  private getDataGridResizeConfig(event: MouseEvent): { vertical: boolean; horizontal: boolean } {
     const viewportRect = this.dataGrid.viewport.node.getBoundingClientRect();
     const verticalOffset = event.clientY - viewportRect.bottom - this.dataGrid['_hScrollBar'].node.clientHeight;
     const horizontalOffset = event.clientX - viewportRect.right - this.dataGrid['_vScrollBar'].node.clientWidth;
     const vertical = verticalOffset >= 0 && verticalOffset <= DEFAULT_RESIZE_SECTION_SIZE_IN_PX;
     const horizontal = horizontalOffset >= 0 && horizontalOffset <= DEFAULT_RESIZE_SECTION_SIZE_IN_PX;
 
-    return {vertical, horizontal};
+    return { vertical, horizontal };
   }
 
   private handleMouseMove(event: MouseEvent): void {
@@ -262,13 +268,14 @@ export class DataGridResize {
   }
 
   private getResizedWidth(event: MouseEvent): number {
-    let width = this.resizeStartRect.width + event.clientX - this.resizeStartRect.x + 2 * DataGridStyle.DEFAULT_GRID_PADDING;
+    const width =
+      this.resizeStartRect.width + event.clientX - this.resizeStartRect.x + 2 * DataGridStyle.DEFAULT_GRID_PADDING;
 
     return width < 2 * this.dataGrid.baseColumnSize ? 2 * this.dataGrid.baseColumnSize : Math.min(width, this.maxWidth);
   }
 
   private getResizedHeight(event: MouseEvent): number {
-    let height = this.resizeStartRect.height + event.clientY - this.resizeStartRect.y;
+    const height = this.resizeStartRect.height + event.clientY - this.resizeStartRect.y;
 
     return height < this.dataGrid.baseRowSize ? this.dataGrid.baseRowSize : height;
   }
@@ -325,22 +332,25 @@ export class DataGridResize {
   private resizeHeader(): void {
     let bodyColumnNamesWidths: number[] = [];
     let indexColumnNamesWidths: number[] = [];
-    let headerFontSize = selectHeaderFontSize(this.dataGrid.store.state);
-    let headerRowSize = isFinite(headerFontSize)
+    const headerFontSize = selectHeaderFontSize(this.dataGrid.store.state);
+    const headerRowSize = isFinite(headerFontSize)
       ? headerFontSize + 2 * DEFAULT_ROW_PADDING
       : this.dataGrid.baseRowSize;
 
     if (selectHeadersVertical(this.dataGrid.store.state)) {
-      const mapNameToWidth = name => DataGridHelpers.getStringSize(name, selectHeaderFontSize(this.dataGrid.store.state)).width;
+      const mapNameToWidth = (name) =>
+        DataGridHelpers.getStringSize(name, selectHeaderFontSize(this.dataGrid.store.state)).width;
 
       bodyColumnNamesWidths = this.dataGrid.columnManager.bodyColumnNames.map(mapNameToWidth);
       indexColumnNamesWidths = this.dataGrid.columnManager.indexColumnNames.map(mapNameToWidth);
     }
 
-    this.dataGrid.baseColumnHeaderSize = Math.max.apply(
-      null,
-      [...bodyColumnNamesWidths, ...indexColumnNamesWidths, headerRowSize, DataGridStyle.DEFAULT_ROW_HEIGHT]
-    );
+    this.dataGrid.baseColumnHeaderSize = Math.max.apply(null, [
+      ...bodyColumnNamesWidths,
+      ...indexColumnNamesWidths,
+      headerRowSize,
+      DataGridStyle.DEFAULT_ROW_HEIGHT,
+    ]);
   }
 
   private setBaseRowSize() {
@@ -368,12 +378,16 @@ export class DataGridResize {
 
   private calculateSectionWidth(column: DataGridColumn) {
     const position = column.getPosition();
-    const value = String(column.formatFn(this.dataGrid.cellManager.createCellConfig({
-      region: position.region,
-      value: column.longestStringValue || column.maxValue,
-      column: position.value,
-      row: 0,
-    })));
+    const value = String(
+      column.formatFn(
+        this.dataGrid.cellManager.createCellConfig({
+          region: position.region,
+          value: column.longestStringValue || column.maxValue,
+          column: position.value,
+          row: 0,
+        }),
+      ),
+    );
     const nameSize = DataGridHelpers.getStringSize(column.name, selectHeaderFontSize(this.dataGrid.store.state));
     const valueSize = DataGridHelpers.getStringSize(value, selectDataFontSize(this.dataGrid.store.state));
     const nameSizeProp = selectHeadersVertical(this.dataGrid.store.state) ? 'height' : 'width';
@@ -395,12 +409,11 @@ export class DataGridResize {
     }
 
     if (msg.type === 'after-attach') {
-      const robs = new ResizeObserver(entries => {
+      const robs = new ResizeObserver((entries) => {
         this.maxWidth = this.calculateMaxWidth(entries[0].contentRect.width);
         this.updateWidgetWidth();
       });
       robs.observe(this.dataGrid.tableDisplayView.$el.parents('.jp-OutputArea-child, .output_area')[0]);
-
     }
 
     if (!this.dataGrid || handler !== this.dataGrid.viewport) {
@@ -424,8 +437,8 @@ export class DataGridResize {
   }
 
   private calculateMaxWidth(width: number): number {
-    let outputEl = this.dataGrid.tableDisplayView.$el.parents('.jp-OutputArea-child, .output_area');
-    let maxWidth = outputEl.width() - outputEl.find('.jp-OutputArea-prompt, .prompt').width();
+    const outputEl = this.dataGrid.tableDisplayView.$el.parents('.jp-OutputArea-child, .output_area');
+    const maxWidth = outputEl.width() - outputEl.find('.jp-OutputArea-prompt, .prompt').width();
     return Math.min(width, maxWidth);
   }
 }

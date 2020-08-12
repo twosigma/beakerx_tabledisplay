@@ -14,46 +14,46 @@
  *  limitations under the License.
  */
 
-import { DataModel, TextRenderer } from "@phosphor/datagrid";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { COLUMN_TYPES, SORT_ORDER } from "../column/enums";
-import { ALL_TYPES } from "../dataTypes";
+import { DataModel, TextRenderer } from '@phosphor/datagrid';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { COLUMN_TYPES, SORT_ORDER } from '../column/enums';
+import { ALL_TYPES } from '../dataTypes';
 
 export interface IColumn {
-  index: number,
-  type: COLUMN_TYPES
+  index: number;
+  type: COLUMN_TYPES;
 }
 
 export interface IColumnOptions {
-  index: number,
-  name: string,
-  type: COLUMN_TYPES
+  index: number;
+  name: string;
+  type: COLUMN_TYPES;
 }
 
 export interface IColumns {
-  [key: number]: DataGridColumn[]
+  [key: number]: DataGridColumn[];
 }
 
 export type IColumnsState = Map<string, IColumnState>;
 
 export interface IColumnState {
-  name: string,
-  index: number,
-  columnType: COLUMN_TYPES,
-  dataTypeName: string,
-  dataType: ALL_TYPES,
-  displayType: ALL_TYPES|string,
-  keepTrigger: boolean,
-  horizontalAlignment: TextRenderer.HorizontalAlignment,
-  formatForTimes: any,
-  sortOrder: SORT_ORDER,
-  filter: string|null,
-  position: IColumnPosition,
-  width?: number
-  renderer?: number
+  name: string;
+  index: number;
+  columnType: COLUMN_TYPES;
+  dataTypeName: string;
+  dataType: ALL_TYPES;
+  displayType: ALL_TYPES | string;
+  keepTrigger: boolean;
+  horizontalAlignment: TextRenderer.HorizontalAlignment;
+  formatForTimes: any;
+  sortOrder: SORT_ORDER;
+  filter: string | null;
+  position: IColumnPosition;
+  width?: number;
+  renderer?: number;
 }
 
 export interface IColumnPosition {
-  value: number,
-  region: DataModel.ColumnRegion
+  value: number;
+  region: DataModel.ColumnRegion;
 }

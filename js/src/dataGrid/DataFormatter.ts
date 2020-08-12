@@ -14,23 +14,23 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from "@phosphor/datagrid";
-import Big from "big.js";
+import { CellRenderer } from '@phosphor/datagrid';
+import Big from 'big.js';
 import moment from 'moment-timezone';
 import * as _ from 'underscore';
-import { consts } from './consts';
 import { ALL_TYPES, getDoublePrecisionByType, isDoubleWithPrecision } from './dataTypes';
-import { DataGridHelpers } from "./Helpers";
-import { IColumnState } from "./interface/IColumn";
+import { DataGridHelpers } from './Helpers';
+import { IColumnState } from './interface/IColumn';
 import {
   selectColumnNames,
   selectFormatForTimes,
   selectStringFormatForColumn,
   selectStringFormatForType,
   selectTimeStrings,
-  selectTimeZone
-} from "./model/selectors";
-import { BeakerXDataStore } from "./store/BeakerXDataStore";
+  selectTimeZone,
+} from './model/selectors';
+import { BeakerXDataStore } from './store/BeakerXDataStore';
+import { TIME_UNIT_FORMATS } from './consts';
 
 export const DEFAULT_TIME_FORMAT = 'YYYYMMDD HH:mm:ss.SSS ZZ';
 
@@ -126,7 +126,7 @@ export class DataFormatter {
       }
 
       return <string>formatFn(config);
-    }
+    };
   }
 
   private rawValue(config: CellRenderer.ICellConfig) {
@@ -134,10 +134,10 @@ export class DataFormatter {
   }
 
   private value(config: CellRenderer.ICellConfig): string {
-    let columnName = this.columnNames[config.column];
+    const columnName = this.columnNames[config.column];
 
     return this.stringFormatForColumn[columnName].values[columnName][config.row];
-  };
+  }
 
   private string(config: CellRenderer.ICellConfig) {
     const objectValue = _.isObject(config.value);
@@ -149,9 +149,10 @@ export class DataFormatter {
     }
 
     if (objectValue) {
-      formattedValue = config.value.type === 'Date' ?
-        moment(config.value.timestamp).format(DEFAULT_TIME_FORMAT) :
-        JSON.stringify(config.value);
+      formattedValue =
+        config.value.type === 'Date'
+          ? moment(config.value.timestamp).format(DEFAULT_TIME_FORMAT)
+          : JSON.stringify(config.value);
     }
 
     return DataGridHelpers.truncateString(formattedValue);
@@ -170,7 +171,7 @@ export class DataFormatter {
       return config.value;
     }
 
-    let x = parseInt(config.value);
+    const x = parseInt(config.value);
 
     if (!isNaN(x)) {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -184,16 +185,16 @@ export class DataFormatter {
       return config.value;
     }
 
-    let doubleValue = parseFloat(config.value);
-    let colFormat = this.stringFormatForColumn[this.columnNames[config.column]];
-    let typeFormat = this.stringFormatForType['double'];
-    let format = colFormat && colFormat.type === 'decimal' ? colFormat : typeFormat;
+    const doubleValue = parseFloat(config.value);
+    const colFormat = this.stringFormatForColumn[this.columnNames[config.column]];
+    const typeFormat = this.stringFormatForType['double'];
+    const format = colFormat && colFormat.type === 'decimal' ? colFormat : typeFormat;
 
     if (!format || format.type !== 'decimal') {
       return doubleValue;
     }
 
-    let precision = doubleValue.toString().split('.')[1];
+    const precision = doubleValue.toString().split('.')[1];
     if (precision && precision.length >= format.maxDecimals) {
       return doubleValue.toFixed(format.maxDecimals);
     }
@@ -227,7 +228,7 @@ export class DataFormatter {
     if (this.timeStrings) {
       return this.timeStrings[config.row];
     }
-    let value = config.value;
+    const value = config.value;
     if (value === 'NaT') {
       return value;
     }
@@ -235,7 +236,7 @@ export class DataFormatter {
   }
 
   private formatDatetime(value: any, formatForTimes: any) {
-    let format = consts.TIME_UNIT_FORMATS.DATETIME.format;
+    let format = TIME_UNIT_FORMATS.DATETIME.format;
     let valueModifier = 1000;
 
     if (formatForTimes) {
@@ -244,21 +245,17 @@ export class DataFormatter {
     }
 
     if (_.isObject(value) && value.type === 'Date') {
-      let tz = value.hasOwnProperty('tz') ? value.tz : this.timeZone;
+      const tz = Object.prototype.hasOwnProperty.call(value, 'tz') ? value.tz : this.timeZone;
       return DataGridHelpers.formatTimestamp(value.timestamp, tz, format);
     }
 
-    let milli = isNaN(value) ?
-      value :
-      new Big(value).times(valueModifier);
+    const milli = isNaN(value) ? value : new Big(value).times(valueModifier);
 
     return DataGridHelpers.formatTimestamp(milli, this.timeZone, format);
   }
 
   private getTimeFormatForColumn(columnState?: IColumnState) {
-    return columnState && columnState.formatForTimes
-      ? columnState.formatForTimes
-      : this.formatForTimes;
+    return columnState && columnState.formatForTimes ? columnState.formatForTimes : this.formatForTimes;
   }
 
   private datetimeWithFormat(formatForTimes?: any) {
@@ -266,13 +263,11 @@ export class DataFormatter {
   }
 
   private boolean(config: CellRenderer.ICellConfig): string {
-    return (
-      this.isNull(config.value) ||
+    return this.isNull(config.value) ||
       config.value === false ||
       (typeof config.value === 'number' && isNaN(config.value))
-    ) ?
-      'false' :
-      'true';
+      ? 'false'
+      : 'true';
   }
 
   private html(config: CellRenderer.ICellConfig): string {
@@ -294,6 +289,6 @@ export class DataFormatter {
       return 'NaN';
     }
 
-    return value.toLocaleString(undefined, {style: 'percent', minimumFractionDigits: 2});
+    return value.toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 });
   }
 }

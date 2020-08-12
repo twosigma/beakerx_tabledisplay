@@ -14,25 +14,24 @@
  *  limitations under the License.
  */
 
-import * as $ from "jquery";
+import * as $ from 'jquery';
 
 const CONFIG = {
   gistsUrl: 'https://api.github.com/gists',
-  nbviewerBaseUrl: 'https://nbviewer.jupyter.org/'
+  nbviewerBaseUrl: 'https://nbviewer.jupyter.org/',
 };
 
 export class GistPublisher {
-
   public static doPublish(
     personalAccessToken: string,
     notebookName: string,
     content: any,
-    onErrorCb: (errorMessage: string) => void
+    onErrorCb: (errorMessage: string) => void,
   ) {
     const filedata = {};
 
     filedata[notebookName] = {
-      content : JSON.stringify(content)
+      content: JSON.stringify(content),
     };
 
     let gistsUrl = CONFIG.gistsUrl;
@@ -41,20 +40,20 @@ export class GistPublisher {
     }
 
     const settings = {
-      type : 'POST',
-      headers : {},
-      data : JSON.stringify({
-        public : true,
-        files : filedata
+      type: 'POST',
+      headers: {},
+      data: JSON.stringify({
+        public: true,
+        files: filedata,
       }),
-      success : (data, status) => {
-        console.log("gist successfully published: " + data.id);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      success: (data, status) => {
+        console.log('gist successfully published: ' + data.id);
         window.open(CONFIG.nbviewerBaseUrl + data.id);
-      }
+      },
     };
 
-    $.ajax(gistsUrl, settings)
-      .catch((jqXHR, status, err) => {
+    $.ajax(gistsUrl, settings).catch((jqXHR, status, err) => {
       let errorMsg = jqXHR.readyState === 0 && !err ? 'NETWORK ERROR!' : err;
 
       if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
@@ -65,9 +64,8 @@ export class GistPublisher {
       onErrorCb(errorMsg);
     });
   }
-
 }
 
 export default {
   GistPublisher,
-}
+};

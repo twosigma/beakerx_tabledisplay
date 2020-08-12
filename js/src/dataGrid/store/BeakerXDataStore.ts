@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-import { combineReducers, DataStore } from "@phosphor/datastore";
-import { COLUMN_TYPES, SORT_ORDER } from "../column/enums";
-import { columnReducer } from "../column/reducer";
-import { getDisplayType, getTypeByName } from "../dataTypes";
-import { IColumnsState, IColumnState } from "../interface/IColumn";
-import { IDataGridModelState } from "../interface/IDataGridModelState";
-import { BeakerXDataGridModel } from "../model/BeakerXDataGridModel";
-import { dataGridModelReducer } from "../model/reducer";
+import { combineReducers, DataStore } from '@phosphor/datastore';
+import { COLUMN_TYPES, SORT_ORDER } from '../column/enums';
+import { columnReducer } from '../column/reducer';
+import { getDisplayType, getTypeByName } from '../dataTypes';
+import { IColumnsState, IColumnState } from '../interface/IColumn';
+import { IDataGridModelState } from '../interface/IDataGridModelState';
+import { BeakerXDataGridModel } from '../model/BeakerXDataGridModel';
+import { dataGridModelReducer } from '../model/reducer';
 import {
   DEFAULT_INDEX_COLUMN_NAME,
   selectColumnFixedWidth,
@@ -33,32 +33,35 @@ import {
   selectInitialColumnPositions,
   selectStringFormatForColumn,
   selectStringFormatForType,
-} from "../model/selectors";
+} from '../model/selectors';
 
 export interface IBeakerXDataGridState {
-  model: IDataGridModelState,
-  columns: IColumnsState
+  model: IDataGridModelState;
+  columns: IColumnsState;
 }
 
 export type BeakerXDataStore = DataStore<IBeakerXDataGridState>;
 
 export function createStore(initialState: IDataGridModelState) {
-  return new DataStore(combineReducers({
-    model: dataGridModelReducer,
-    columns: columnReducer
-  }), {model: initialState, columns: createInitialColumnsState(initialState)});
+  return new DataStore(
+    combineReducers({
+      model: dataGridModelReducer,
+      columns: columnReducer,
+    }),
+    { model: initialState, columns: createInitialColumnsState(initialState) },
+  );
 }
 
 export function createInitialColumnsState(initialState: IDataGridModelState): IColumnsState {
   const initialColumnsState: IColumnsState = new Map<string, IColumnState>();
-  const state = {model: initialState, columns: initialColumnsState};
+  const state = { model: initialState, columns: initialColumnsState };
   const names = addColumnNamesState(state);
   const types = addColumnTypesState(state);
   const positions = addColumnsPositions(state);
 
   const addColumnState = (columnType: COLUMN_TYPES) => (name, index) => {
-    let key = `${columnType}_${index}`;
-    let dataType = getTypeByName(types[columnType][index]);
+    const key = `${columnType}_${index}`;
+    const dataType = getTypeByName(types[columnType][index]);
 
     initialColumnsState.set(key, {
       name,
@@ -73,11 +76,7 @@ export function createInitialColumnsState(initialState: IDataGridModelState): IC
       position: positions[columnType][index],
       dataTypeName: types[columnType][index],
       width: selectColumnFixedWidth(state, name, types[columnType][index]),
-      displayType: getDisplayType(
-        dataType,
-        selectStringFormatForType(state),
-        selectStringFormatForColumn(state)[name]
-      )
+      displayType: getDisplayType(dataType, selectStringFormatForType(state), selectStringFormatForColumn(state)[name]),
     });
   };
 
@@ -88,35 +87,44 @@ export function createInitialColumnsState(initialState: IDataGridModelState): IC
 }
 
 function addColumnsPositions(state: IBeakerXDataGridState) {
-  return createColumnsState({
-    value: selectInitialColumnPositions(state),
-    defaultValue: [{region: 'row-header', value: 0}]
-  }, state);
+  return createColumnsState(
+    {
+      value: selectInitialColumnPositions(state),
+      defaultValue: [{ region: 'row-header', value: 0 }],
+    },
+    state,
+  );
 }
 
 function addColumnNamesState(state: IBeakerXDataGridState) {
   const value = selectColumnNames(state);
 
-  return createColumnsState({
-    value,
-    defaultValue: [DEFAULT_INDEX_COLUMN_NAME]
-  }, state);
+  return createColumnsState(
+    {
+      value,
+      defaultValue: [DEFAULT_INDEX_COLUMN_NAME],
+    },
+    state,
+  );
 }
 
 function addColumnTypesState(state: IBeakerXDataGridState) {
   const value = selectColumnTypes(state);
 
-  return createColumnsState({
-    value,
-    defaultValue: [BeakerXDataGridModel.DEFAULT_INDEX_COLUMN_TYPE]
-  }, state);
+  return createColumnsState(
+    {
+      value,
+      defaultValue: [BeakerXDataGridModel.DEFAULT_INDEX_COLUMN_TYPE],
+    },
+    state,
+  );
 }
 
-function createColumnsState({value, defaultValue}, state) {
+function createColumnsState({ value, defaultValue }, state) {
   const hasIndex = selectHasIndex(state);
 
   return {
     [COLUMN_TYPES.body]: hasIndex ? value.slice(1) : value,
-    [COLUMN_TYPES.index]: hasIndex ? value.slice(0, 1) : defaultValue
+    [COLUMN_TYPES.index]: hasIndex ? value.slice(0, 1) : defaultValue,
   };
 }

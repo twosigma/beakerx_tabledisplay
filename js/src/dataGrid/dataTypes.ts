@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { consts } from "./consts";
+import { scopeData } from './consts';
 
 export enum ALL_TYPES {
   'string',
@@ -61,7 +61,7 @@ export function getDisplayType(type: ALL_TYPES, stringFormatForType?: any, strin
   }
 
   if (type === ALL_TYPES.double) {
-    if (stringFormatForType && stringFormatForType.double || stringFormatForColumn) {
+    if ((stringFormatForType && stringFormatForType.double) || stringFormatForColumn) {
       return ALL_TYPES.double;
     }
 
@@ -71,40 +71,40 @@ export function getDisplayType(type: ALL_TYPES, stringFormatForType?: any, strin
   return ALL_TYPES.string;
 }
 
-export function isDoubleWithPrecision(type: string|number) {
-  let parts = type.toString().split(".");
+export function isDoubleWithPrecision(type: string | number) {
+  const parts = type.toString().split('.');
 
   return parts.length > 1 && parts[0] === '4';
 }
 
-export function getDoublePrecisionByType(type: string|number): string {
-  return type.toString().split(".")[1];
+export function getDoublePrecisionByType(type: string | number): string {
+  return type.toString().split('.')[1];
 }
 
 export function getAllowedTypesByType(type) {
   if (type === undefined) {
-    return consts.scopeData.allTypes;
+    return scopeData.allTypes;
   }
 
   if (type === ALL_TYPES.string) {
-    return consts.scopeData.allStringTypes;
+    return scopeData.allStringTypes;
   }
 
   if (type === ALL_TYPES.double) {
-    return consts.scopeData.allDoubleTypes;
+    return scopeData.allDoubleTypes;
   }
 
   if (type === ALL_TYPES.integer || type === ALL_TYPES.int64) {
-    return consts.scopeData.allIntTypes;
+    return scopeData.allIntTypes;
   }
 
   if (type === ALL_TYPES.time || type === ALL_TYPES.datetime) {
-    return consts.scopeData.allTimeTypes;
+    return scopeData.allTimeTypes;
   }
 
   if (type === ALL_TYPES.boolean) {
-    return consts.scopeData.allBoolTypes;
+    return scopeData.allBoolTypes;
   }
 
-  return consts.scopeData.allStringTypes;
+  return scopeData.allStringTypes;
 }

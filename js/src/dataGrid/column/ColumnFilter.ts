@@ -14,14 +14,15 @@
  *  limitations under the License.
  */
 
-import { Widget } from "@phosphor/widgets";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { KEYBOARD_KEYS } from "../event/enums";
-import { DataGridHelpers } from "../Helpers";
-import { DataGridColumn } from "./DataGridColumn";
-import { selectColumnWidth } from "./selectors";
+import { Widget } from '@phosphor/widgets';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { KEYBOARD_KEYS } from '../event/enums';
+import { DataGridHelpers } from '../Helpers';
+import { DataGridColumn } from './DataGridColumn';
+import { selectColumnWidth } from './selectors';
 
-export const FILTER_INPUT_TOOLTIP = 'filter with an expression with a variable defined for each column and $ means the current column.  eg "$ > 5".';
+export const FILTER_INPUT_TOOLTIP =
+  'filter with an expression with a variable defined for each column and $ means the current column.  eg "$ > 5".';
 export const SEARCH_INPUT_TOOLTIP = 'search for a substring, show only matching rows.';
 
 export class ColumnFilter {
@@ -39,12 +40,10 @@ export class ColumnFilter {
   }
 
   static escapeColumnName(columnName: string): string {
-    return String(columnName)
-      .replace(/\s+/g, '_')
-      .replace(/\W+/g, '');
+    return String(columnName).replace(/\s+/g, '_').replace(/\W+/g, '');
   }
 
-  constructor(dataGrid: BeakerXDataGrid, column: DataGridColumn, options: { x, y, width, height }) {
+  constructor(dataGrid: BeakerXDataGrid, column: DataGridColumn, options: { x; y; width; height }) {
     this.dataGrid = dataGrid;
     this.column = column;
 
@@ -100,10 +99,7 @@ export class ColumnFilter {
 
   private updateInputPosition() {
     const position = this.column.getPosition();
-    const offset = this.dataGrid.getColumnOffset(
-      position.value,
-      position.region
-    );
+    const offset = this.dataGrid.getColumnOffset(position.value, position.region);
 
     this.filterNode.style.left = `${offset}px`;
     this.filterNode.style.top = `${this.dataGrid.baseColumnHeaderSize - 1}px`;
@@ -135,10 +131,7 @@ export class ColumnFilter {
       return;
     }
 
-    if (
-      keyCode === KEYBOARD_KEYS.Enter
-      || !this.filterInput
-    ) {
+    if (keyCode === KEYBOARD_KEYS.Enter || !this.filterInput) {
       return;
     }
 
@@ -158,20 +151,20 @@ export class ColumnFilter {
   }
 
   private createFilterExpression(value: any): string {
-    return value.split("$").join(`${ColumnFilter.getColumnNameVarPrefix(this.column.name)}${ColumnFilter.escapeColumnName(this.column.name)}`);
+    return value
+      .split('$')
+      .join(
+        `${ColumnFilter.getColumnNameVarPrefix(this.column.name)}${ColumnFilter.escapeColumnName(this.column.name)}`,
+      );
   }
 
   private createSearchExpression(value: any) {
-    const cellValueFormatter = DataGridHelpers.hasUpperCaseLetter(value)
-      ? 'String($)'
-      : 'String($).toLowerCase()';
+    const cellValueFormatter = DataGridHelpers.hasUpperCaseLetter(value) ? 'String($)' : 'String($).toLowerCase()';
 
-    return this.createFilterExpression(
-      `${cellValueFormatter}.indexOf("${String(value)}") !== -1`
-    );
+    return this.createFilterExpression(`${cellValueFormatter}.indexOf("${String(value)}") !== -1`);
   }
 
-  private addInputNode(options: { x, y, width, height }): void {
+  private addInputNode(options: { x; y; width; height }): void {
     this.filterWidget = new Widget();
     this.filterNode = this.filterWidget.node;
 

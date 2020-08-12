@@ -15,20 +15,20 @@
  */
 
 import { iter, MapIterator } from '@phosphor/algorithm';
-import { DataModel } from "@phosphor/datagrid";
-import { ColumnManager } from "../column/ColumnManager";
-import { COLUMN_TYPES } from "../column/enums";
-import { selectColumnIndexByPosition, selectVisibleBodyColumns } from "../column/selectors";
+import { DataModel } from '@phosphor/datagrid';
+import { ColumnManager } from '../column/ColumnManager';
+import { COLUMN_TYPES } from '../column/enums';
+import { selectColumnIndexByPosition, selectVisibleBodyColumns } from '../column/selectors';
 import { DataFormatter } from '../DataFormatter';
 import { ALL_TYPES } from '../dataTypes';
-import { IColumn } from "../interface/IColumn";
+import { IColumn } from '../interface/IColumn';
 import { IDataGridModelState } from '../interface/IDataGridModelState';
-import { DataGridRow } from "../row/DataGridRow";
-import { RowManager } from "../row/RowManager";
-import { BeakerXDataStore } from "../store/BeakerXDataStore";
-import { DataGridAction } from "../store/DataGridAction";
-import { UPDATE_MODEL_DATA, UPDATE_MODEL_FONT_COLOR, UPDATE_MODEL_VALUES } from "./reducer";
-import { selectColumnsVisible, selectHasIndex, selectRowsToShow, selectVisibleColumnsFrozenCount } from "./selectors";
+import { DataGridRow } from '../row/DataGridRow';
+import { RowManager } from '../row/RowManager';
+import { BeakerXDataStore } from '../store/BeakerXDataStore';
+import { DataGridAction } from '../store/DataGridAction';
+import { UPDATE_MODEL_DATA, UPDATE_MODEL_FONT_COLOR, UPDATE_MODEL_VALUES } from './reducer';
+import { selectColumnsVisible, selectHasIndex, selectRowsToShow, selectVisibleColumnsFrozenCount } from './selectors';
 
 export class BeakerXDataGridModel extends DataModel {
   store: BeakerXDataStore;
@@ -59,7 +59,7 @@ export class BeakerXDataGridModel extends DataModel {
   }
 
   reset() {
-    this.emitChanged({type: 'model-reset'});
+    this.emitChanged({ type: 'model-reset' });
   }
 
   emitChanged(args: DataModel.ChangedArgs) {
@@ -76,7 +76,7 @@ export class BeakerXDataGridModel extends DataModel {
     // this._data = selectValues(store.state);
 
     this.setState({
-      columnsVisible: selectColumnsVisible(this.store.state) || {}
+      columnsVisible: selectColumnsVisible(this.store.state) || {},
     });
   }
 
@@ -117,24 +117,22 @@ export class BeakerXDataGridModel extends DataModel {
     const frozenColumnsCount = selectVisibleColumnsFrozenCount(this.store.state);
 
     if (region === 'row-header') {
-      return frozenColumnsCount + 1
+      return frozenColumnsCount + 1;
     }
 
-    return region === 'body'
-      ? selectVisibleBodyColumns(this.store.state).length - frozenColumnsCount
-      : 1;
+    return region === 'body' ? selectVisibleBodyColumns(this.store.state).length - frozenColumnsCount : 1;
   }
 
   data(region: DataModel.CellRegion, row: number, position: number): any {
-    const columnRegion = ColumnManager.getColumnRegionByCell({region});
-    const index = selectColumnIndexByPosition(this.store.state, {region: columnRegion, value: position});
-    const dataGridRow = this.rowManager.getRow(row) || {index: row, cells: [], getValue: (index) => []};
+    const columnRegion = ColumnManager.getColumnRegionByCell({ region });
+    const index = selectColumnIndexByPosition(this.store.state, { region: columnRegion, value: position });
+    const dataGridRow = this.rowManager.getRow(row) || { index: row, cells: [], getValue: () => [] };
 
     if (region === 'row-header' && position === 0) {
       return dataGridRow.index;
     }
 
-    if (region === 'column-header' || region === 'corner-header' && position > 0) {
+    if (region === 'column-header' || (region === 'corner-header' && position > 0)) {
       return row === 0 ? this.columnManager.bodyColumnNames[index] : '';
     }
 
@@ -146,13 +144,13 @@ export class BeakerXDataGridModel extends DataModel {
   }
 
   metadata(region: DataModel.CellRegion, position: number): DataModel.Metadata {
-    let column = this.columnManager.getColumnByPosition({
+    const column = this.columnManager.getColumnByPosition({
       value: position,
-      region: ColumnManager.getColumnRegionByCell({region})
+      region: ColumnManager.getColumnRegionByCell({ region }),
     });
 
     return {
-      dataType: ALL_TYPES[column.getDisplayType()]
+      dataType: ALL_TYPES[column.getDisplayType()],
     };
   }
 
@@ -174,11 +172,11 @@ export class BeakerXDataGridModel extends DataModel {
   }
 
   setHeaderTextVertical(headersVertical: boolean) {
-    this.setState({headersVertical});
+    this.setState({ headersVertical });
     this.reset();
   }
 
-  getColumnValueResolver(dataType: ALL_TYPES): Function {
+  getColumnValueResolver(dataType: ALL_TYPES): (value: any) => any {
     switch (dataType) {
       case ALL_TYPES.datetime:
       case ALL_TYPES.time:

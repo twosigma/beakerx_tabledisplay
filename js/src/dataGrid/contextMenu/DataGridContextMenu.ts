@@ -14,18 +14,18 @@
  *  limitations under the License.
  */
 
-import { BkoContextMenu } from "../../contextMenu";
+import { ContextMenu } from '../../contextMenu';
 import { createHeaderContextMenuItems } from './createHeaderContextMenuItems';
 import { createCellContextMenuItems } from './createCellContextMenuItems';
-import { createPublishMenuItems } from "./createPublishMenuItem";
-import { DataGridScope } from "../DataGridScope";
-import { selectShowPublication } from "../model/selectors";
+import { createPublishMenuItems } from './createPublishMenuItem';
+import { DataGridScope } from '../DataGridScope';
+import { selectShowPublication } from '../model/selectors';
 
-export class DataGridContextMenu extends BkoContextMenu {
+export class DataGridContextMenu extends ContextMenu {
   private readonly showPublication: boolean = true;
 
   constructor(scope: DataGridScope) {
-    super({...scope, element: [scope.dataGrid.node], dataGrid: scope.dataGrid});
+    super({ ...scope, element: [scope.dataGrid.node], dataGrid: scope.dataGrid });
     this.showPublication = selectShowPublication(scope.dataGrid.store.state);
   }
 
@@ -34,11 +34,11 @@ export class DataGridContextMenu extends BkoContextMenu {
 
     const menuItems = [
       ...createHeaderContextMenuItems(this.scope.dataGrid, this),
-      ...createCellContextMenuItems(this.scope.dataGrid, this)
+      ...createCellContextMenuItems(this.scope.dataGrid, this),
     ];
 
     if (this.showPublication) {
-      menuItems.push(...createPublishMenuItems(this.scope.dataGrid, this));
+      menuItems.push(...createPublishMenuItems(this.scope.dataGrid));
     }
     this.createItems(menuItems, this.contextMenu);
     this.bindEvents();

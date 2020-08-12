@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { ALL_TYPES } from "../dataTypes";
-import { DefaultCellRenderer, HeaderCellRenderer, HTMLCellRenderer, ImageCellRenderer } from "./renderer";
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { ALL_TYPES } from '../dataTypes';
+import { DefaultCellRenderer, HeaderCellRenderer, HTMLCellRenderer, ImageCellRenderer } from './renderer';
 
 export class CellRendererFactory {
   static getRenderer(dataGrid: BeakerXDataGrid, dataType?: ALL_TYPES) {

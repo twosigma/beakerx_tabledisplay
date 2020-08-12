@@ -14,26 +14,26 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext, TextRenderer } from "@phosphor/datagrid";
-import { Theme } from "../../../utils/Theme";
-import { BeakerXDataGrid } from "../../BeakerXDataGrid";
-import { DEFAULT_ALIGNMENT } from "../../column/ColumnAlignment";
-import { DataGridHelpers } from "../../Helpers";
-import { IRenderer, RENDERER_TYPE } from "../../interface/IRenderer";
-import { selectRenderer } from "../../model/selectors/column";
-import { selectDataFontSize, selectHeaderFontSize } from "../../model/selectors/model";
-import { BeakerXDataStore } from "../../store/BeakerXDataStore";
-import { DataGridStyle } from "../../style/DataGridStyle";
-import { DataGridCell } from "../DataGridCell";
+import { CellRenderer, GraphicsContext, TextRenderer } from '@phosphor/datagrid';
+import { Theme } from '../../../utils/Theme';
+import { BeakerXDataGrid } from '../../BeakerXDataGrid';
+import { DEFAULT_ALIGNMENT } from '../../column/ColumnAlignment';
+import { DataGridHelpers } from '../../Helpers';
+import { IRenderer, RENDERER_TYPE } from '../../interface/IRenderer';
+import { selectRenderer } from '../../model/selectors/column';
+import { selectDataFontSize, selectHeaderFontSize } from '../../model/selectors/model';
+import { BeakerXDataStore } from '../../store/BeakerXDataStore';
+import { DataGridStyle } from '../../style/DataGridStyle';
+import { DataGridCell } from '../DataGridCell';
 
 export interface ICellRendererOptions {
-  font?: string,
-  color?: string,
-  text?: any,
-  vAlign?: string,
-  hAlign?: string,
-  boxHeight?: number,
-  textHeight?: number
+  font?: string;
+  color?: string;
+  text?: any;
+  vAlign?: string;
+  hAlign?: string;
+  boxHeight?: number;
+  textHeight?: number;
 }
 
 const TEXT_WIDTH_OFFSET = 8;
@@ -66,21 +66,22 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     const isHeaderCell = DataGridCell.isHeaderCell(config);
 
     if (renderer && renderer.type === RENDERER_TYPE.DataBars && !isHeaderCell) {
-      const barWidth = config.width / 2 * renderer.percent;
+      const barWidth = (config.width / 2) * renderer.percent;
 
       gc.fillStyle = Theme.DEFAULT_HIGHLIGHT_COLOR;
       gc.fillRect(
         config.x + config.width / 2 - (renderer.direction === 'RIGHT' ? 0 : barWidth),
         config.y,
         barWidth,
-        config.height - 1
+        config.height - 1,
       );
     }
   }
 
   drawTextUnderline(gc: GraphicsContext, textConfig, config) {
-    let {text, textX, textY, color} = textConfig;
-    let url = DataGridHelpers.retrieveUrl(text);
+    const { text, textY, color } = textConfig;
+    let { textX } = textConfig;
+    const url = DataGridHelpers.retrieveUrl(text);
 
     if (!url) {
       return;
@@ -88,12 +89,12 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
 
     let underlineEndX: number;
     let underlineStartX: number;
-    let urlIndex = text.indexOf(url);
-    let firstPart = urlIndex > 0 ? text.slice(0, urlIndex) : '';
-    let fontSize = selectDataFontSize(this.store.state);
-    let textWidth: number = DataGridHelpers.getStringSize(text, fontSize).width - TEXT_WIDTH_OFFSET;
-    let firstPartWidth = DataGridHelpers.getStringSize(firstPart, fontSize).width - TEXT_WIDTH_OFFSET;
-    let hAlign = CellRenderer.resolveOption(this.horizontalAlignment, config);
+    const urlIndex = text.indexOf(url);
+    const firstPart = urlIndex > 0 ? text.slice(0, urlIndex) : '';
+    const fontSize = selectDataFontSize(this.store.state);
+    const textWidth: number = DataGridHelpers.getStringSize(text, fontSize).width - TEXT_WIDTH_OFFSET;
+    const firstPartWidth = DataGridHelpers.getStringSize(firstPart, fontSize).width - TEXT_WIDTH_OFFSET;
+    const hAlign = CellRenderer.resolveOption(this.horizontalAlignment, config);
 
     // Compute the X position for the underline.
     switch (hAlign) {
@@ -123,37 +124,40 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
   }
 
   getBackgroundColor(config: CellRenderer.ICellConfig): string {
-    let selectionColor = this.dataGrid.cellSelectionManager.getBackgroundColor(config);
-    let highlighterColor = this.dataGrid.highlighterManager.getCellBackground(config);
-    let focusedColor = this.dataGrid.cellFocusManager.getFocussedCellBackground(config);
-    let initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
+    const selectionColor = this.dataGrid.cellSelectionManager.getBackgroundColor(config);
+    const highlighterColor = this.dataGrid.highlighterManager.getCellBackground(config);
+    const focusedColor = this.dataGrid.cellFocusManager.getFocussedCellBackground(config);
+    const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
 
-    return focusedColor && initialColor && DataGridStyle.darken(initialColor) ||
+    return (
+      (focusedColor && initialColor && DataGridStyle.darken(initialColor)) ||
       focusedColor ||
       initialColor ||
       highlighterColor ||
       selectionColor ||
-      Theme.DEFAULT_CELL_BACKGROUND;
+      Theme.DEFAULT_CELL_BACKGROUND
+    );
   }
 
   getHorizontalAlignment(config: CellRenderer.ICellConfig): string {
-    let column = this.dataGrid.getColumn(config);
+    const column = this.dataGrid.getColumn(config);
 
     return column ? column.getAlignment() : DEFAULT_ALIGNMENT;
   }
 
   getFormat(config: CellRenderer.ICellConfig) {
-    let column = this.dataGrid.getColumn(config);
+    const column = this.dataGrid.getColumn(config);
 
     return DataGridCell.isHeaderCell(config) ? config.value : column.formatFn(config);
   }
 
-  getFont({region}): string {
-    let fontSize = (region === 'column-header' || region === 'corner-header')
-      ? selectHeaderFontSize(this.store.state)
-      : selectDataFontSize(this.store.state);
+  getFont({ region }): string {
+    const fontSize =
+      region === 'column-header' || region === 'corner-header'
+        ? selectHeaderFontSize(this.store.state)
+        : selectDataFontSize(this.store.state);
 
-    return `normal ${fontSize || DataGridStyle.DEFAULT_DATA_FONT_SIZE}px Lato, Helvetica, sans-serif`
+    return `normal ${fontSize || DataGridStyle.DEFAULT_DATA_FONT_SIZE}px Lato, Helvetica, sans-serif`;
   }
 
   getTextColor(config): string {
@@ -161,11 +165,12 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
       return Theme.DEFAULT_DATA_FONT_COLOR;
     }
 
-    let dataFontColor = this.dataGrid.rowManager.rows[config.row] && this.dataGrid.rowManager.rows[config.row].cells
-      ? DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
-      : Theme.DEFAULT_DATA_FONT_COLOR;
+    const dataFontColor =
+      this.dataGrid.rowManager.rows[config.row] && this.dataGrid.rowManager.rows[config.row].cells
+        ? DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
+        : Theme.DEFAULT_DATA_FONT_COLOR;
 
-    return config.region === 'column-header' || config.region === "corner-header"
+    return config.region === 'column-header' || config.region === 'corner-header'
       ? Theme.DEFAULT_HEADER_FONT_COLOR
       : dataFontColor;
   }
@@ -177,13 +182,13 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
 
     return {
       ...renderer,
-      percent: (Math.abs(parseFloat(valueResolver(config.value))) / column.maxValue),
-      direction: valueResolver(config.value) > 0 ? 'RIGHT' : 'LEFT'
+      percent: Math.abs(parseFloat(valueResolver(config.value))) / column.maxValue,
+      direction: valueResolver(config.value) > 0 ? 'RIGHT' : 'LEFT',
     };
   }
 
   getOptions(config: CellRenderer.ICellConfig): ICellRendererOptions {
-    let result: ICellRendererOptions = {};
+    const result: ICellRendererOptions = {};
 
     // Resolve the font for the cell.
     result.font = CellRenderer.resolveOption(this.font, config);
@@ -202,7 +207,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     }
 
     // Format the cell value to text.
-    let format = this.format;
+    const format = this.format;
     result.text = format(config);
 
     if (result.text === null) {
@@ -230,8 +235,8 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
   getTextPosition(
     config: CellRenderer.ICellConfig,
     options: ICellRendererOptions,
-    isHeaderCell: boolean = false
-  ): { textX: number, textY: number } {
+    isHeaderCell = false,
+  ): { textX: number; textY: number } {
     let textX: number;
     let textY: number;
 
@@ -265,6 +270,6 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
         throw 'unreachable';
     }
 
-    return {textX, textY};
+    return { textX, textY };
   }
 }

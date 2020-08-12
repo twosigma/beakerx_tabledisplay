@@ -15,7 +15,7 @@
  */
 
 import { createColumnMenuItems } from './createColumnMenuItems';
-import { HeaderMenu } from "./HeaderMenu";
+import { HeaderMenu } from './HeaderMenu';
 
 export class ColumnMenu extends HeaderMenu {
   protected buildMenu(): void {
@@ -25,7 +25,7 @@ export class ColumnMenu extends HeaderMenu {
     this.menu.contentNode.classList.add('dropdown-menu');
     this.menu.contentNode.classList.add('bko-table-menu-content');
 
-    let items = createColumnMenuItems(this.column);
+    const items = createColumnMenuItems(this.column);
 
     this.createItems(items, this.menu);
   }

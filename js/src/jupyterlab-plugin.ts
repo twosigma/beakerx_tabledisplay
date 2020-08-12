@@ -16,9 +16,9 @@
 
 import * as beakerx_tabledisplay from './index';
 require('../css/table_display.css');
-import {JupyterFrontEnd, JupyterFrontEndPlugin} from '@jupyterlab/application';
-import {IJupyterWidgetRegistry} from "@jupyter-widgets/base";
-import {BEAKERX_MODULE_VERSION} from "./version";
+import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
+import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
+import { BEAKERX_MODULE_VERSION } from './version';
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'beakerx_tabledisplay:plugin',
@@ -27,11 +27,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
     widgets.registerWidget({
       name: 'beakerx_tabledisplay',
       version: BEAKERX_MODULE_VERSION,
-      exports: beakerx_tabledisplay
+      exports: beakerx_tabledisplay,
     });
   },
-  autoStart: true
-}
-export default [
+  autoStart: true,
+};
+
+export default {
   plugin,
-];
+};

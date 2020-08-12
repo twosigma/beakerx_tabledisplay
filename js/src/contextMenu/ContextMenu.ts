@@ -14,20 +14,20 @@
  *  limitations under the License.
  */
 
-declare var lab: { contextMenu: ContextMenu };
+declare let lab: { contextMenu: PhosphorContextMenu };
 
 import { CommandRegistry } from '@phosphor/commands';
 import { IDisposable } from '@phosphor/disposable';
-import { ContextMenu, Menu } from '@phosphor/widgets';
-import { IContextMenuItem } from "./IContextMenuItem";
-import { IMenu } from "./IMenu";
-import { IMenuItem } from "./IMenuItem";
+import { ContextMenu as PhosphorContextMenu, Menu } from '@phosphor/widgets';
+import { IContextMenuItem } from './IContextMenuItem';
+import { IMenu } from './IMenu';
+import { IMenuItem } from './IMenuItem';
 
 export interface addItem {
-  addItem: Function
+  addItem: (item: any) => Menu.IItem | IDisposable;
 }
 
-export abstract class BkoContextMenu implements IMenu {
+export abstract class ContextMenu implements IMenu {
   event: MouseEvent;
 
   protected scope: any;
@@ -36,7 +36,7 @@ export abstract class BkoContextMenu implements IMenu {
   protected inLab: boolean;
   protected disposables: IDisposable[] = [];
 
-  public contextMenu: ContextMenu;
+  public contextMenu: PhosphorContextMenu;
 
   constructor(scope: any) {
     this.inLab = this.isInLab();
@@ -52,9 +52,9 @@ export abstract class BkoContextMenu implements IMenu {
     let inLab = false;
 
     try {
-      inLab = lab && lab.contextMenu instanceof ContextMenu;
-    } catch (e) {
-    }
+      inLab = lab && lab.contextMenu instanceof PhosphorContextMenu;
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     return inLab;
   }
@@ -72,8 +72,8 @@ export abstract class BkoContextMenu implements IMenu {
     this.open(event);
   }
 
-  open(e: MouseEvent): void {
-    this.contextMenu.open(e);
+  open(e: MouseEvent): boolean {
+    return this.contextMenu.open(e);
   }
 
   protected buildLabMenu(): void {
@@ -83,7 +83,7 @@ export abstract class BkoContextMenu implements IMenu {
 
   protected buildBkoMenu(): void {
     this.commands = new CommandRegistry();
-    this.contextMenu = new ContextMenu({commands: this.commands});
+    this.contextMenu = new PhosphorContextMenu({ commands: this.commands });
     this.contextMenu.menu.addClass('bko-table-menu');
   }
 
@@ -94,31 +94,31 @@ export abstract class BkoContextMenu implements IMenu {
   }
 
   protected createMenuItem(menuItem: IContextMenuItem, menu: addItem): void {
-    const subitems = (typeof menuItem.items == 'function') ? menuItem.items() : menuItem.items;
-    const hasSubitems = Array.isArray(subitems) && subitems.length;
+    const submenuItems = typeof menuItem.items == 'function' ? menuItem.items() : menuItem.items;
+    const hasSubmenuItems = Array.isArray(submenuItems) && submenuItems.length;
 
     menuItem.separator && this.addSeparatorItem(menuItem, menu);
-    !hasSubitems && this.menuItems.push(this.addMenuItem(menuItem, menu));
-    hasSubitems && this.menuItems.push(this.addSubmenuItem(menuItem, menu, subitems));
+    !hasSubmenuItems && this.menuItems.push(this.addMenuItem(menuItem, menu));
+    hasSubmenuItems && this.menuItems.push(this.addSubmenuItem(menuItem, menu, submenuItems));
   }
 
   protected addMenuItem(menuItem: IContextMenuItem, menu: addItem): Menu.IItem {
     this.addCommand(menuItem);
     this.addKeyBinding(menuItem);
 
-    return menu.addItem({command: menuItem.id, selector: menuItem.selector});
+    return menu.addItem({ command: menuItem.id, selector: menuItem.selector }) as Menu.IItem;
   }
 
   protected addSeparatorItem(menuItem: IContextMenuItem, menu: addItem): Menu.IItem {
-    return menu.addItem({type: 'separator', selector: menuItem.selector});
+    return menu.addItem({ type: 'separator', selector: menuItem.selector }) as Menu.IItem;
   }
 
-  protected addSubmenuItem(menuItem: IContextMenuItem, menu: addItem, subitems: IContextMenuItem[]): Menu.IItem {
+  protected addSubmenuItem(menuItem: IContextMenuItem, menu: addItem, submenuItems: IContextMenuItem[]): Menu.IItem {
     return menu.addItem({
       type: 'submenu',
-      submenu: this.createSubmenu(menuItem, subitems),
-      selector: menuItem.selector
-    });
+      submenu: this.createSubmenu(menuItem, submenuItems),
+      selector: menuItem.selector,
+    }) as Menu.IItem;
   }
 
   protected addCommand(menuItem: IMenuItem): void {
@@ -129,18 +129,21 @@ export abstract class BkoContextMenu implements IMenu {
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
-    this.disposables.push(this.commands.addCommand(menuItem.id, {
-      label: menuItem.title,
-      usage: menuItem.tooltip || '',
-      iconClass: () => menuItem.icon ? menuItem.icon : '',
-      isVisible: menuItem.isVisible,
-      execute: (): void => {
-        if (menuItem.action && typeof menuItem.action == 'function') {
-          menuItem.action(self.event);
-        }
-      }
-    }));
+    this.disposables.push(
+      this.commands.addCommand(menuItem.id, {
+        label: menuItem.title,
+        usage: menuItem.tooltip || '',
+        iconClass: () => (menuItem.icon ? menuItem.icon : ''),
+        isVisible: menuItem.isVisible,
+        execute: (): void => {
+          if (menuItem.action && typeof menuItem.action == 'function') {
+            menuItem.action(self.event);
+          }
+        },
+      }),
+    );
   }
 
   protected addKeyBinding(menuItem: IContextMenuItem): void {
@@ -148,21 +151,23 @@ export abstract class BkoContextMenu implements IMenu {
       return;
     }
 
-    this.disposables.push(this.commands.addKeyBinding({
-      keys: [menuItem.shortcut],
-      selector: menuItem.selector,
-      command: menuItem.id
-    }));
+    this.disposables.push(
+      this.commands.addKeyBinding({
+        keys: [menuItem.shortcut],
+        selector: menuItem.selector,
+        command: menuItem.id,
+      }),
+    );
   }
 
-  protected createSubmenu(menuItem: IMenuItem, subitems: IContextMenuItem[]): Menu {
-    const submenu = new Menu({commands: this.commands});
+  protected createSubmenu(menuItem: IMenuItem, submenuItems: IContextMenuItem[]): Menu {
+    const submenu = new Menu({ commands: this.commands });
 
     !this.inLab && submenu.addClass('bko-table-menu');
     submenu.title.label = menuItem.title;
     submenu.setHidden(false);
 
-    this.createItems(subitems, submenu);
+    this.createItems(submenuItems, submenu);
 
     return submenu;
   }
@@ -178,11 +183,11 @@ export abstract class BkoContextMenu implements IMenu {
   }
 
   removeMenuItems(): void {
-    this.menuItems.forEach(item => this.contextMenu.menu.removeItem(item));
+    this.menuItems.forEach((item) => this.contextMenu.menu.removeItem(item));
   }
 
   dispose(): void {
-    this.disposables.forEach(disposable => disposable.dispose());
+    this.disposables.forEach((disposable) => disposable.dispose());
   }
 
   unbind(): void {

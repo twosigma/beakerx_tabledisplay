@@ -14,30 +14,27 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext } from "@phosphor/datagrid";
-import { RENDERER_TYPE } from "../../interface/IRenderer";
-import { DataGridCell } from "../DataGridCell";
-import { BeakerXCellRenderer } from "./BeakerXCellRenderer";
+import { CellRenderer, GraphicsContext } from '@phosphor/datagrid';
+import { RENDERER_TYPE } from '../../interface/IRenderer';
+import { DataGridCell } from '../DataGridCell';
+import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 
 export class DefaultCellRenderer extends BeakerXCellRenderer {
-
   drawText(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
     const options = this.getOptions(config);
     const renderer = this.getRenderer(config);
 
     if (
-      !options.font
-      || !options.color
-      || options.boxHeight <= 0
-      || options.text === null
-      || (renderer
-      && renderer.type === RENDERER_TYPE.DataBars
-      && !renderer.includeText)
+      !options.font ||
+      !options.color ||
+      options.boxHeight <= 0 ||
+      options.text === null ||
+      (renderer && renderer.type === RENDERER_TYPE.DataBars && !renderer.includeText)
     ) {
       return;
     }
 
-    const {textX, textY} = this.getTextPosition(config, options);
+    const { textX, textY } = this.getTextPosition(config, options);
 
     // Clip the cell if the text is taller than the text box height.
     if (options.textHeight > options.boxHeight) {
@@ -53,10 +50,9 @@ export class DefaultCellRenderer extends BeakerXCellRenderer {
     gc.fillStyle = options.color;
 
     if (DataGridCell.isCellHovered(this.dataGrid.cellManager.hoveredCellData, config)) {
-      this.drawTextUnderline(gc, {text: options.text, textX, textY, color: options.color}, config);
+      this.drawTextUnderline(gc, { text: options.text, textX, textY, color: options.color }, config);
     }
 
     gc.fillText(options.text, textX, textY);
   }
-
 }

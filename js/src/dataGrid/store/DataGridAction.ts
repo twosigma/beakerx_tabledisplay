@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { Action } from "@phosphor/datastore";
-import { COLUMN_TYPES } from "../column/enums";
+import { Action } from '@phosphor/datastore';
+import { COLUMN_TYPES } from '../column/enums';
 
 export class DataGridAction extends Action<string> {
   payload: any;
@@ -29,11 +29,11 @@ export class DataGridAction extends Action<string> {
 
 export class DataGridColumnsAction extends DataGridAction {
   payload: {
-    value: any,
-    hasIndex?: boolean,
-    defaultValue?: any,
-    columnsFrozenNames?: string[],
-    columnsVisible?: {},
+    value: any;
+    hasIndex?: boolean;
+    defaultValue?: any;
+    columnsFrozenNames?: string[];
+    columnsVisible?: Record<string, boolean>;
   };
 
   constructor(type: string, payload: any) {
@@ -45,11 +45,11 @@ export class DataGridColumnsAction extends DataGridAction {
 
 export class DataGridColumnAction extends DataGridAction {
   payload: {
-    columnType: COLUMN_TYPES,
-    columnIndex: number,
-    columnName?: string,
-    hasIndex?: boolean,
-    value: any
+    columnType: COLUMN_TYPES;
+    columnIndex: number;
+    columnName?: string;
+    hasIndex?: boolean;
+    value: any;
   };
 
   constructor(type: string, payload: any) {

@@ -14,19 +14,19 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, DataModel } from "@phosphor/datagrid";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { COLUMN_TYPES } from "../column/enums";
-import { DataGridHelpers } from "../Helpers";
-import { ICellData } from "../interface/ICell";
-import { selectHasIndex } from "../model/selectors";
-import { IRangeCells } from "./CellSelectionManager";
+import { CellRenderer, DataModel } from '@phosphor/datagrid';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { COLUMN_TYPES } from '../column/enums';
+import { DataGridHelpers } from '../Helpers';
+import { ICellData } from '../interface/ICell';
+import { selectHasIndex } from '../model/selectors';
+import { IRangeCells } from './CellSelectionManager';
 
 export interface ICellDataOptions {
-  row: number,
-  column: number,
-  value: any,
-  region: DataModel.CellRegion
+  row: number;
+  column: number;
+  value: any;
+  region: DataModel.CellRegion;
 }
 
 export class CellManager {
@@ -35,10 +35,11 @@ export class CellManager {
 
   static cellsEqual(cellData: ICellData, secondCellData: ICellData): boolean {
     return (
-      cellData && secondCellData
-      && cellData.row === secondCellData.row
-      && cellData.column === secondCellData.column
-      && cellData.type === secondCellData.type
+      cellData &&
+      secondCellData &&
+      cellData.row === secondCellData.row &&
+      cellData.column === secondCellData.column &&
+      cellData.type === secondCellData.type
     );
   }
 
@@ -54,21 +55,11 @@ export class CellManager {
   }
 
   repaintRow(cellData) {
-    if (
-      !cellData
-      || isNaN(cellData.offset)
-      || isNaN(cellData.offsetTop)
-      || this.dataGrid.columnPosition.isDragging()
-    ) {
+    if (!cellData || isNaN(cellData.offset) || isNaN(cellData.offsetTop) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
-    this.dataGrid.repaint(
-      cellData.offset,
-      cellData.offsetTop,
-      this.dataGrid.bodyWidth,
-      this.dataGrid.baseRowSize
-    );
+    this.dataGrid.repaint(cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.baseRowSize);
   }
 
   setHoveredCellData(data: ICellData | null) {
@@ -94,7 +85,7 @@ export class CellManager {
         type: COLUMN_TYPES.index,
         delta: 0,
         offset: 0,
-        offsetTop: 0
+        offsetTop: 0,
       },
       endCell: {
         row: this.dataGrid.rowManager.rows.length - 1,
@@ -102,8 +93,8 @@ export class CellManager {
         type: COLUMN_TYPES.body,
         delta: 0,
         offset: 0,
-        offsetTop: 0
-      }
+        offsetTop: 0,
+      },
     };
     const columnsRange = rowsRange;
 
@@ -124,27 +115,35 @@ export class CellManager {
     }
 
     if (rows.length !== 1 || columns.length !== 1) {
-      cells.push(columns.map(column => column.name));
+      cells.push(columns.map((column) => column.name));
     }
 
-    rows.forEach(row => {
-      let result: any[] = [];
+    rows.forEach((row) => {
+      const result: any[] = [];
 
-      columns.forEach(column => {
+      columns.forEach((column) => {
         if (column.type === COLUMN_TYPES.index) {
-          result.push(column.formatFn(this.createCellConfig({
-            region: 'row-header',
-            row: row.index,
-            column: column.index,
-            value: row.index
-          })));
+          result.push(
+            column.formatFn(
+              this.createCellConfig({
+                region: 'row-header',
+                row: row.index,
+                column: column.index,
+                value: row.index,
+              }),
+            ),
+          );
         } else {
-          result.push(column.formatFn(this.createCellConfig({
-            region: 'body',
-            row: row.index,
-            column: column.index,
-            value: row.getValue(column.index)
-          })));
+          result.push(
+            column.formatFn(
+              this.createCellConfig({
+                region: 'body',
+                row: row.index,
+                column: column.index,
+                value: row.getValue(column.index),
+              }),
+            ),
+          );
         }
       });
 
@@ -180,18 +179,21 @@ export class CellManager {
     const target = '_black';
     const filename = 'tableRows.csv';
     const anchor = document.createElement('a');
-    const event = document.createEvent("MouseEvents");
+    const event = document.createEvent('MouseEvents');
 
     anchor.href = href;
     anchor.target = target;
     anchor.download = filename;
-    event.initEvent("click", true, false);
+    event.initEvent('click', true, false);
     anchor.dispatchEvent(event);
-  };
+  }
 
-  createCellConfig(
-    {row = 0, column = 0, value = 0, region = 'body'}: ICellDataOptions | ICellData
-  ): CellRenderer.ICellConfig {
+  createCellConfig({
+    row = 0,
+    column = 0,
+    value = 0,
+    region = 'body',
+  }: ICellDataOptions | ICellData): CellRenderer.ICellConfig {
     return {
       row,
       column,
@@ -201,18 +203,18 @@ export class CellManager {
       y: 0,
       metadata: {},
       width: 0,
-      height: 0
-    }
+      height: 0,
+    };
   }
 
-  private handleCellHovered(sender: BeakerXDataGrid, {data}) {
-    let cursor = this.dataGrid.viewport.node.style.cursor;
+  private handleCellHovered(sender: BeakerXDataGrid, { data }) {
+    const cursor = this.dataGrid.viewport.node.style.cursor;
 
     if (cursor.indexOf('resize') !== -1 || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
-    let value = data && data.value;
+    const value = data && data.value;
     this.updateViewportCursor(value);
 
     if (CellManager.cellsEqual(data, this.hoveredCellData)) {
@@ -260,34 +262,30 @@ export class CellManager {
 
   private exportCellsTo(cells, format, has_index) {
     let fix = (s) => s.replace(/"/g, '""');
-    let exportOptions = {
+    const exportOptions = {
       sep: ',',
       qot: '"',
-      eol: '\n'
+      eol: '\n',
     };
 
     function getStartIndex(has_index) {
-      return (has_index) ? 0 : 1;
+      return has_index ? 0 : 1;
     }
 
     function exportCells(cells, exportOptions) {
-      let out = [];
+      const out = [];
 
       for (let i = 0; i < cells.length; i++) {
-        let row = cells[i];
+        const row = cells[i];
 
         for (let j = getStartIndex(has_index); j < row.length; j++) {
-          let cellData = row[j];
+          const cellData = row[j];
 
-          out.push(`${
-            j !== getStartIndex(has_index) ? exportOptions.sep : ''
-          }${
-            exportOptions.qot
-          }${
-            (cellData !== undefined && cellData !== null ? fix(cellData + '') : '')
-          }${
-            exportOptions.qot
-          }`);
+          out.push(
+            `${j !== getStartIndex(has_index) ? exportOptions.sep : ''}${exportOptions.qot}${
+              cellData !== undefined && cellData !== null ? fix(cellData + '') : ''
+            }${exportOptions.qot}`,
+          );
         }
 
         out.push(exportOptions.eol);
@@ -307,5 +305,5 @@ export class CellManager {
     }
 
     return exportCells(cells, exportOptions);
-  };
+  }
 }

@@ -14,38 +14,35 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from "@phosphor/datagrid";
-import { SectionList } from "@phosphor/datagrid/lib/sectionlist";
+import { CellRenderer } from '@phosphor/datagrid';
+import { SectionList } from '@phosphor/datagrid/lib/sectionlist';
 import moment from 'moment-timezone';
-import { Sanitize, Theme } from "../utils";
-import { BeakerXDataGrid } from "./BeakerXDataGrid";
-import { DataGridColumn } from "./column/DataGridColumn";
-import { KEYBOARD_KEYS } from "./event/enums";
-import { DataGridStyle } from "./style/DataGridStyle";
+import { SanitizeUtils, Theme } from '../utils';
+import { BeakerXDataGrid } from './BeakerXDataGrid';
+import { DataGridColumn } from './column/DataGridColumn';
+import { KEYBOARD_KEYS } from './event/enums';
+import { DataGridStyle } from './style/DataGridStyle';
 
-export namespace DataGridHelpers {
-  const urlRegex = /((https?|ftp|file):\/\/)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i;
-  const htmlCharactersReplacementMap = {
+export class DataGridHelpers {
+  public static readonly urlRegex = /((https?|ftp|file):\/\/)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i;
+  public static readonly htmlCharactersReplacementMap = {
     '"': '&quot;',
     '&': '&amp;',
-    '\'': '&#39;',
+    "'": '&#39;',
     '/': '&#47;',
     '<': '&lt;',
-    '>': '&gt;'
+    '>': '&gt;',
   };
 
-  export function escapeHTML(text: any): any {
+  public static escapeHTML(text: any): any {
     if (typeof text === 'string') {
-      return text.replace(
-        /[\'&'\/<>]/g,
-        (a) => htmlCharactersReplacementMap[a]
-      );
+      return text.replace(/['&/<>]/g, (a) => DataGridHelpers.htmlCharactersReplacementMap[a]);
     }
 
     return text;
   }
 
-  export function truncateString(text, limit = 1000): string {
+  public static truncateString(text, limit = 1000): string {
     if (text && text.length > limit) {
       text = text.substring(0, limit);
       text += '...';
@@ -54,33 +51,31 @@ export namespace DataGridHelpers {
     return text;
   }
 
-  export function disableKeyboardManager() {
+  public static disableKeyboardManager(): void {
     try {
       Jupyter.keyboard_manager.enabled = false;
-    } catch (e) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
   }
 
-  export function enableKeyboardManager() {
+  public static enableKeyboardManager(): void {
     try {
       Jupyter.keyboard_manager.enabled = true;
-    } catch (e) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
   }
 
-  export function enableNotebookEditMode() {
+  public static enableNotebookEditMode() {
     try {
       Jupyter.notebook.edit_mode();
-    } catch (e) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
   }
 
-  export function getStringSize(value: any, fontSize: Number | null | undefined) {
-    let divEl: HTMLSpanElement = document.createElement('div');
-    let width: number;
-    let height: number;
+  public static getStringSize(value: any, fontSize: number | null | undefined) {
+    const divEl: HTMLSpanElement = document.createElement('div');
 
-    divEl.innerHTML = Sanitize.sanitizeHTML(value, true);
+    divEl.innerHTML = SanitizeUtils.sanitizeHTML(value, true);
     divEl.style.fontFamily = 'Lato, Helvetica, sans-serif';
     divEl.style.fontSize = `${fontSize || DataGridStyle.DEFAULT_DATA_FONT_SIZE}px`;
     divEl.style.padding = '5px';
@@ -91,40 +86,37 @@ export namespace DataGridHelpers {
 
     const rect = divEl.getBoundingClientRect();
 
-    width = Math.ceil(rect.width);
-    height = Math.ceil(rect.height);
+    const width = Math.ceil(rect.width);
+    const height = Math.ceil(rect.height);
 
     document.body.removeChild(divEl);
 
-    return {width, height};
+    return { width, height };
   }
 
-  export function findSectionIndex(
-    list: SectionList,
-    cursorPosition: number
-  ): { index: number, delta: number } | null {
+  public static findSectionIndex(list: SectionList, cursorPosition: number): { index: number; delta: number } | null {
     // Bail early if the list is empty or the position is invalid.
     if (list.sectionCount === 0 || cursorPosition < 0 || cursorPosition - list.totalSize > 0) {
       return null;
     }
 
-    let index = list.sectionIndex(cursorPosition);
-    let delta = cursorPosition - (list.sectionOffset(index));
+    const index = list.sectionIndex(cursorPosition);
+    const delta = cursorPosition - list.sectionOffset(index);
 
     if (index >= 0) {
-      return {index, delta};
+      return { index, delta };
     }
 
     return null;
   }
 
-  export function throttle<T, U>(
-    func: Function,
+  public static throttle<T, U>(
+    func: (...args) => unknown,
     limit: number,
-    context = this,
-    controllObject?: { timerId: any }
+    context: any = this,
+    controlObject?: { timerId: any },
   ): (T?) => U | undefined {
-    let controll = controllObject || {timerId: undefined};
+    const control = controlObject || { timerId: undefined };
     let lastRan;
 
     return (...args: T[]): U | undefined => {
@@ -135,42 +127,42 @@ export namespace DataGridHelpers {
         return;
       }
 
-      clearTimeout(controll.timerId);
-      controll.timerId = setTimeout(() => {
-        if ((Date.now() - lastRan) < limit) {
+      clearTimeout(control.timerId);
+      control.timerId = setTimeout(() => {
+        if (Date.now() - lastRan < limit) {
           return;
         }
 
         func.apply(context, args);
         lastRan = Date.now();
-      }, limit - (Date.now() - lastRan))
-    }
+      }, limit - (Date.now() - lastRan));
+    };
   }
 
-  export function debounce<A>(f: (a: A) => void, delay: number, controllObject?: { timerId: number }) {
-    let controll: { timerId: any } = controllObject || {timerId: undefined};
+  public static debounce<A>(f: (a: A) => void, delay: number, controllObject?: { timerId: number }) {
+    const control: { timerId: any } = controllObject || { timerId: undefined };
 
     return (a: A) => {
-      clearTimeout(controll.timerId);
-      controll.timerId = setTimeout(() => f(a), delay);
-    }
+      clearTimeout(control.timerId);
+      control.timerId = setTimeout(() => f(a), delay);
+    };
   }
 
-  export function isUrl(url: string) {
-    return urlRegex.test(String(url));
+  public static isUrl(url: string) {
+    return DataGridHelpers.urlRegex.test(String(url));
   }
 
-  export function retrieveUrl(text: string): string | null {
+  public static retrieveUrl(text: string): string | null {
     if (typeof text !== 'string') {
       return null;
     }
 
-    const matched = text && text.match(urlRegex);
+    const matched = text && text.match(DataGridHelpers.urlRegex);
 
     return matched ? matched[0] : null;
   }
 
-  export function getEventKeyCode(event: KeyboardEvent) {
+  public static getEventKeyCode(event: KeyboardEvent) {
     if (event.which || event.charCode || event.keyCode) {
       return event.which || event.charCode || event.keyCode;
     }
@@ -182,9 +174,9 @@ export namespace DataGridHelpers {
     return event.key.charAt(0) || 0;
   }
 
-  export function sortColumnsByPositionCallback(columnA: DataGridColumn, columnB: DataGridColumn) {
-    let positionA = columnA.getPosition();
-    let positionB = columnB.getPosition();
+  public static sortColumnsByPositionCallback(columnA: DataGridColumn, columnB: DataGridColumn) {
+    const positionA = columnA.getPosition();
+    const positionB = columnB.getPosition();
 
     if (positionA.region === positionB.region) {
       return positionA.value - positionB.value;
@@ -193,14 +185,14 @@ export namespace DataGridHelpers {
     return positionA.region === 'row-header' ? -1 : 1;
   }
 
-  export function applyTimezone(timestamp, tz) {
+  public static applyTimezone(timestamp, tz) {
     const time = moment(timestamp, 'x');
 
     if (!tz) {
       return time;
     }
 
-    if (tz.startsWith("GMT")) {
+    if (tz.startsWith('GMT')) {
       time.utcOffset(tz);
     } else {
       time.tz(tz);
@@ -209,25 +201,27 @@ export namespace DataGridHelpers {
     return time;
   }
 
-  export function formatTimestamp(timestamp, tz, format) {
-    return applyTimezone(timestamp, tz).format(format);
+  public static formatTimestamp(timestamp, tz, format) {
+    return DataGridHelpers.applyTimezone(timestamp, tz).format(format);
   }
 
-  export function hasUpperCaseLetter(value: string) {
+  public static hasUpperCaseLetter(value: string) {
     return /[A-Z]+/gm.test(value);
   }
 
-  export function getBackgroundColor(dataGrid: BeakerXDataGrid, config: CellRenderer.ICellConfig): string {
-    let selectionColor = dataGrid.cellSelectionManager.getBackgroundColor(config);
-    let highlighterColor = dataGrid.highlighterManager.getCellBackground(config);
-    let focusedColor = dataGrid.cellFocusManager.getFocussedCellBackground(config);
-    let initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
+  public static getBackgroundColor(dataGrid: BeakerXDataGrid, config: CellRenderer.ICellConfig): string {
+    const selectionColor = dataGrid.cellSelectionManager.getBackgroundColor(config);
+    const highlighterColor = dataGrid.highlighterManager.getCellBackground(config);
+    const focusedColor = dataGrid.cellFocusManager.getFocussedCellBackground(config);
+    const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
 
-    return focusedColor && initialColor && DataGridStyle.darken(initialColor) ||
+    return (
+      (focusedColor && initialColor && DataGridStyle.darken(initialColor)) ||
       focusedColor ||
       initialColor ||
       highlighterColor ||
       selectionColor ||
-      Theme.DEFAULT_CELL_BACKGROUND;
+      Theme.DEFAULT_CELL_BACKGROUND
+    );
   }
 }

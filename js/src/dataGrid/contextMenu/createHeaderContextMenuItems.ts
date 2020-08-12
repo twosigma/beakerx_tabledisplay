@@ -14,20 +14,22 @@
  *  limitations under the License.
  */
 
-import { IContextMenuItem } from "../../contextMenu/IContextMenuItem";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { selectHeadersVertical } from "../model/selectors";
-import { DataGridContextMenu } from "./DataGridContextMenu";
+import { IContextMenuItem } from '../../contextMenu/IContextMenuItem';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { selectHeadersVertical } from '../model/selectors';
+import { DataGridContextMenu } from './DataGridContextMenu';
 
 export function createHeaderContextMenuItems(
   dataGrid: BeakerXDataGrid,
-  contextMenu: DataGridContextMenu
+  contextMenu: DataGridContextMenu,
 ): IContextMenuItem[] {
   const selector = `#${dataGrid.wrapperId} canvas`;
 
-  const rotateMenuItemAction = (headersVertical: boolean) => (event: MouseEvent) => {
-    dataGrid.model.setHeaderTextVertical(headersVertical);
-    dataGrid.resize();
+  const rotateMenuItemAction = function (headersVertical: boolean): () => void {
+    return () => {
+      dataGrid.model.setHeaderTextVertical(headersVertical);
+      dataGrid.resize();
+    };
   };
 
   const isVisible = (headersVertical: boolean) => {
@@ -46,13 +48,14 @@ export function createHeaderContextMenuItems(
       title: 'vertical headers',
       action: rotateMenuItemAction(true),
       isVisible: () => isVisible(!selectHeadersVertical(dataGrid.store.state)),
-      selector
-    }, {
+      selector,
+    },
+    {
       id: `${dataGrid.wrapperId}_horizontalHeaders`,
       title: 'horizontal headers',
       action: rotateMenuItemAction(false),
       isVisible: () => isVisible(!!selectHeadersVertical(dataGrid.store.state)),
-      selector
-    }
-  ]
+      selector,
+    },
+  ];
 }

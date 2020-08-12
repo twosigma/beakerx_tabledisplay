@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { Reducer } from "@phosphor/datastore";
-import { IColumnsState, IColumnState } from "../interface/IColumn";
-import { DataGridAction, DataGridColumnAction, DataGridColumnsAction } from "../store/DataGridAction";
-import { COLUMN_TYPES } from "./enums";
+import { Reducer } from '@phosphor/datastore';
+import { IColumnsState, IColumnState } from '../interface/IColumn';
+import { DataGridAction, DataGridColumnAction, DataGridColumnsAction } from '../store/DataGridAction';
+import { COLUMN_TYPES } from './enums';
 
 export const UPDATE_COLUMNS_STATES = 'UPDATE_COLUMNS_STATES';
 export const UPDATE_COLUMN_STATE = 'UPDATE_COLUMNS_STATE';
@@ -44,7 +44,7 @@ const reduceColumnWidth = reduceColumnStateProperty('width');
 
 export const columnReducer: Reducer<IColumnsState> = (
   state: IColumnsState,
-  action: DataGridColumnAction | DataGridColumnsAction | DataGridAction
+  action: DataGridColumnAction | DataGridColumnsAction | DataGridAction,
 ): IColumnsState => {
   switch (action.type) {
     case UPDATE_COLUMNS_STATES:
@@ -90,7 +90,7 @@ export const columnReducer: Reducer<IColumnsState> = (
 
 function reduceColumnsState(property: string) {
   return (state, action: DataGridColumnsAction) => {
-    const {value, hasIndex, defaultValue = []} = action.payload;
+    const { value, hasIndex, defaultValue = [] } = action.payload;
     const bodyColumnValues = hasIndex ? value.slice(1) : value;
     const indexColumnValues = hasIndex ? value.slice(0, 1) : defaultValue;
 
@@ -105,11 +105,11 @@ function reduceColumnsState(property: string) {
 
 function updateColumnStateProperty(state, newState, property, columnType) {
   return (value, index) => {
-    let key = `${columnType}_${index}`;
+    const key = `${columnType}_${index}`;
 
     newState.set(key, {
       ...state.get(key),
-      [property]: value
+      [property]: value,
     });
   };
 }
@@ -119,11 +119,11 @@ function reduceColumnState(state, action) {
     return state;
   }
 
-  const {columnType, columnIndex, value} = action.payload;
+  const { columnType, columnIndex, value } = action.payload;
   const key = `${columnType}_${columnIndex}`;
   const newState = new Map<string, IColumnState>(state);
 
-  newState.set(key, {...state.get(key), ...value});
+  newState.set(key, { ...state.get(key), ...value });
 
   return newState;
 }
@@ -134,48 +134,46 @@ function reduceColumnStateProperty(property: string) {
       return state;
     }
 
-    const {columnType, columnIndex, value} = action.payload;
+    const { columnType, columnIndex, value } = action.payload;
     const key = `${columnType}_${columnIndex}`;
     const newState = new Map<string, IColumnState>(state);
 
-    newState.set(key, {...state.get(key), [property]: value});
+    newState.set(key, { ...state.get(key), [property]: value });
 
     return newState;
   };
 }
 
 function reduceColumnPositions(state: IColumnsState, action: DataGridColumnsAction) {
-  const {value, hasIndex, columnsFrozenNames = [], columnsVisible = {}} = action.payload;
+  const { value, hasIndex, columnsFrozenNames = [], columnsVisible = {} } = action.payload;
   const columnsFrozenCopy = [...columnsFrozenNames];
   const stateArray = Array.from(state.values());
   const order = [...value];
-  let indexColumnPosition = order.indexOf("index");
+  const indexColumnPosition = order.indexOf('index');
   if (-1 !== indexColumnPosition) {
-    order.splice(indexColumnPosition, 1)
+    order.splice(indexColumnPosition, 1);
   }
 
-  const hiddenStates: IColumnState[] = stateArray.filter(
-    columnState => columnsVisible[columnState.name] === false
-  );
+  const hiddenStates: IColumnState[] = stateArray.filter((columnState) => columnsVisible[columnState.name] === false);
 
   // Remove frozen columns
   if (columnsFrozenCopy.length > 0) {
     columnsFrozenCopy.sort((name1, name2) => {
-      let index1 = order.indexOf(name1);
-      let index2 = order.indexOf(name2);
+      const index1 = order.indexOf(name1);
+      const index2 = order.indexOf(name2);
 
       return index1 - index2;
     });
 
-    columnsFrozenCopy.forEach(name => {
+    columnsFrozenCopy.forEach((name) => {
       order.splice(order.indexOf(name), 1)[0];
     });
   }
 
   // Move hidden columns outside the visible range
-  hiddenStates.forEach((state, index) => {
-    let position = order.indexOf(state.name);
-    let frozenPosition = columnsFrozenCopy.indexOf(state.name);
+  hiddenStates.forEach((state) => {
+    const position = order.indexOf(state.name);
+    const frozenPosition = columnsFrozenCopy.indexOf(state.name);
 
     if (position !== -1) {
       order.splice(position, 1);
@@ -196,7 +194,7 @@ function reduceColumnPositions(state: IColumnsState, action: DataGridColumnsActi
     }
 
     let positionInBody = order.indexOf(columnState.name);
-    let positionInFrozen = columnsFrozenCopy.indexOf(columnState.name) + 1;
+    const positionInFrozen = columnsFrozenCopy.indexOf(columnState.name) + 1;
 
     if (positionInFrozen === 0 && positionInBody === -1) {
       positionInBody = order.push(columnState.name) - 1;
@@ -211,7 +209,7 @@ function reduceColumnPositions(state: IColumnsState, action: DataGridColumnsActi
       position: {
         region: positionInFrozen === 0 ? 'body' : 'row-header',
         value: positionInFrozen === 0 ? positionInBody : positionInFrozen,
-      }
+      },
     });
   });
 

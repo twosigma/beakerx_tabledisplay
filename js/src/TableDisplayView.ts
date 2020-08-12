@@ -15,8 +15,8 @@
  */
 
 import * as widgets from '@jupyter-widgets/base';
-import { DataGridScope } from "./dataGrid";
-import { TableDisplayWidget } from "./TableDisplayWidget";
+import { DataGridScope } from './dataGrid';
+import { TableDisplayWidget } from './TableDisplayWidget';
 
 export class TableDisplayView extends widgets.DOMWidgetView implements TableDisplayWidget {
   private _currentScope: DataGridScope;
@@ -70,7 +70,7 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
       element: this.el,
       data: data,
       widgetModel: this.model,
-      widgetView: this
+      widgetView: this,
     });
 
     this._currentScope.render();
@@ -89,17 +89,18 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
   }
 
   canLoadMore(): boolean {
-    return this.isEndlessLoadingMode() && (this.model.get('loadMoreRows') == "loadMoreServerInit" || this.model.get('loadMoreRows') == "loadMoreJSDone");
+    return (
+      this.isEndlessLoadingMode() &&
+      (this.model.get('loadMoreRows') == 'loadMoreServerInit' || this.model.get('loadMoreRows') == 'loadMoreJSDone')
+    );
   }
 
-
   loadMoreRows(): void {
-    this.model.set('loadMoreRows', "loadMoreRequestJS");
+    this.model.set('loadMoreRows', 'loadMoreRequestJS');
     this.touch();
   }
 
-  private isEndlessLoadingMode():boolean {
+  private isEndlessLoadingMode(): boolean {
     return this.model.get('model').loadingMode == 'ENDLESS';
   }
-
 }

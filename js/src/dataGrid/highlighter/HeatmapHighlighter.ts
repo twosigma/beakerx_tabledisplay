@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from "@phosphor/datagrid";
+import { CellRenderer } from '@phosphor/datagrid';
 import * as d3scale from 'd3-scale';
-import { Theme } from "../../utils/Theme";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { HIGHLIGHTER_STYLE, IHighlighterState } from "../interface/IHighlighterState";
-import { DataGridStyle } from "../style/DataGridStyle";
-import { Highlighter } from "./Highlighter";
+import { Theme } from '../../utils';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { HIGHLIGHTER_STYLE, IHighlighterState } from '../interface/IHighlighterState';
+import { DataGridStyle } from '../style/DataGridStyle';
+import { Highlighter } from './Highlighter';
 
 export class HeatmapHighlighter extends Highlighter {
-  colorScale: Function;
+  colorScale: (value: any) => string;
 
   constructor(column: DataGridColumn, state: IHighlighterState) {
     super(column, state);
@@ -31,12 +31,13 @@ export class HeatmapHighlighter extends Highlighter {
     this.state.minColor = DataGridStyle.formatColor(state.minColor || DataGridStyle.getDefaultColor('blue'));
     this.state.maxColor = DataGridStyle.formatColor(state.maxColor || DataGridStyle.getDefaultColor('red'));
 
-    this.colorScale = d3scale.scaleLinear()
+    this.colorScale = d3scale
+      .scaleLinear()
       .domain([this.state.minVal, this.state.maxVal])
       .range([this.state.minColor, this.state.maxColor]);
   }
 
-  getBackgroundColor(config: CellRenderer.ICellConfig) {
+  getBackgroundColor(config: CellRenderer.ICellConfig): string {
     const value = this.getValueToHighlight(config);
     if (this.state.style === HIGHLIGHTER_STYLE.FULL_ROW) {
       return this.colorScale(value);

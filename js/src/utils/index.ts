@@ -14,6 +14,6 @@
  *  limitations under the License.
  */
 
-export { Common } from './Common';
-export * from './Sanitize';
+export { CommonUtils } from './CommonUtils';
+export { SanitizeUtils } from './SanitizeUtils';
 export * from './Theme';

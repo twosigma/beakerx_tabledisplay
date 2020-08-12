@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { DataModel } from "@phosphor/datagrid";
+import { DataModel } from '@phosphor/datagrid';
 import * as moment from 'moment-timezone/builds/moment-timezone-with-data';
-import { createSelector } from "reselect";
-import { getAlignmentByChar } from "../../column/ColumnAlignment";
-import { ALL_TYPES } from "../../dataTypes";
-import { IColumnPosition } from "../../interface/IColumn";
-import { IHighlighterState } from "../../interface/IHighlighterState";
+import { createSelector } from 'reselect';
+import { getAlignmentByChar } from '../../column/ColumnAlignment';
+import { ALL_TYPES } from '../../dataTypes';
+import { IColumnPosition } from '../../interface/IColumn';
+import { IHighlighterState } from '../../interface/IHighlighterState';
 import {
   selectAlignmentByType,
   selectAlignmentForColumn,
@@ -35,11 +35,10 @@ import {
   selectRendererForColumn,
   selectRendererForType,
   selectStringFormatForColumn,
-  selectStringFormatForType
-} from "./model";
+  selectStringFormatForType,
+} from './model';
 
 export const DEFAULT_INDEX_COLUMN_NAME = '';
-
 
 const processColumnName = (name) => {
   if (name === null) {
@@ -51,64 +50,53 @@ const processColumnName = (name) => {
   }
 
   const isDate = (value) => {
-    return value instanceof Object &&
-      value.hasOwnProperty('type') &&
-      value.hasOwnProperty('timestamp') &&
-      value.type === "Date";
+    return (
+      value instanceof Object &&
+      Object.prototype.hasOwnProperty.call(value, 'type') &&
+      Object.prototype.hasOwnProperty.call(value, 'timestamp') &&
+      value.type === 'Date'
+    );
   };
 
-  return name.reduce((prev, curr, index, arr) => {
-    let processed = isDate(curr) ?
-      moment(curr.timestamp).format('YYYY-MM-DD') :
-      String(curr);
+  return name.reduce((prev, curr, index) => {
+    const processed = isDate(curr) ? moment(curr.timestamp).format('YYYY-MM-DD') : String(curr);
 
     return index === 0 ? processed : `${prev}, ${processed}`;
   }, '');
 };
 
-export const selectColumnNames = createSelector(
-  selectRawColumnNames,
-  names => names.map(processColumnName)
+export const selectColumnNames = createSelector(selectRawColumnNames, (names) => names.map(processColumnName));
+
+export const selectBodyColumnNames = createSelector([selectColumnNames, selectHasIndex], (columnNames, hasIndex) =>
+  hasIndex ? columnNames.slice(1) : columnNames,
 );
 
-export const selectBodyColumnNames = createSelector(
-  [selectColumnNames, selectHasIndex],
-  (columnNames, hasIndex) => hasIndex ? columnNames.slice(1) : columnNames
-);
+export const selectColumnIndexByName = createSelector([selectBodyColumnNames, (state, name) => name], (names, name) => {
+  const index = names.indexOf(String(name));
 
-export const selectColumnIndexByName = createSelector(
-  [selectBodyColumnNames, (state, name) => name],
-  (names, name) => {
-    const index = names.indexOf(String(name));
+  return index !== -1 ? index : 0;
+});
 
-    return index !== -1 ? index : 0;
-  }
-);
-
-export const selectIndexColumnNames = createSelector(
-  [selectColumnNames, selectHasIndex],
-  (columnNames, hasIndex) => hasIndex && columnNames[0] !== null ? [columnNames[0]] : [DEFAULT_INDEX_COLUMN_NAME]
+export const selectIndexColumnNames = createSelector([selectColumnNames, selectHasIndex], (columnNames, hasIndex) =>
+  hasIndex && columnNames[0] !== null ? [columnNames[0]] : [DEFAULT_INDEX_COLUMN_NAME],
 );
 
 export const selectColumnsFrozenNames = createSelector(
   [selectColumnsFrozen, selectIndexColumnNames],
-  (columnsFrozen, indexColumnNames): string[] => Object.keys(columnsFrozen).filter(
-    name => columnsFrozen[name] && indexColumnNames.indexOf(name) === -1
-  )
+  (columnsFrozen, indexColumnNames): string[] =>
+    Object.keys(columnsFrozen).filter((name) => columnsFrozen[name] && indexColumnNames.indexOf(name) === -1),
 );
 
 export const selectColumnsFrozenCount = (state) => selectColumnsFrozenNames(state).length;
 export const selectIsColumnFrozen = createSelector(
   [selectColumnsFrozenNames, (state, column) => column],
-  (columnsFrozen, column) => columnsFrozen.indexOf(column.name) !== -1
+  (columnsFrozen, column) => columnsFrozen.indexOf(column.name) !== -1,
 );
 
 export const selectColumnVisible = createSelector(
   [selectColumnsVisible, selectColumnOrder, (state, column) => column],
-  (columnsVisible, columnsOrder, column) => (
-    columnsVisible[column.name] !== false
-    && (columnsOrder.length === 0 || columnsOrder.indexOf(column.name) !== -1)
-  )
+  (columnsVisible, columnsOrder, column) =>
+    columnsVisible[column.name] !== false && (columnsOrder.length === 0 || columnsOrder.indexOf(column.name) !== -1),
 );
 
 export const selectInitialColumnAlignment = createSelector(
@@ -123,19 +111,17 @@ export const selectInitialColumnAlignment = createSelector(
     }
 
     return alignmentByType;
-  }
+  },
 );
 
 export const selectVisibleColumnsFrozenCount = createSelector(
   [selectColumnsFrozenNames, selectColumnsVisible],
-  (columnsFrozenNames, columnsVisible) => columnsFrozenNames
-    .filter(name => columnsVisible[name] !== false)
-    .length
+  (columnsFrozenNames, columnsVisible) => columnsFrozenNames.filter((name) => columnsVisible[name] !== false).length,
 );
 
 export const selectColumnDataTypeByName = createSelector(
   [selectColumnTypes, selectRawColumnNames, (state, name) => name],
-  (types, names, name) => ALL_TYPES[types[names.indexOf(name)]]
+  (types, names, name) => ALL_TYPES[types[names.indexOf(name)]],
 );
 
 // Returns the map columnIndex => position
@@ -168,15 +154,15 @@ export const selectInitialColumnPositions = createSelector(
 
     Object.keys(columnsVisible).forEach((name) => {
       if (columnsVisible[name] === false) {
-        let indexToRemove = order.indexOf(name);
-        let removed = order.splice(indexToRemove, 1)[0];
+        const indexToRemove = order.indexOf(name);
+        const removed = order.splice(indexToRemove, 1)[0];
 
         order.push(removed);
       }
     });
 
-    columnsFrozenNames.forEach((name, index) => {
-      let frozenColumnIndex = order.indexOf(name);
+    columnsFrozenNames.forEach((name) => {
+      const frozenColumnIndex = order.indexOf(name);
 
       if (frozenColumnIndex !== -1) {
         order.splice(frozenColumnIndex, 1);
@@ -198,15 +184,15 @@ export const selectInitialColumnPositions = createSelector(
         region = 'row-header';
       }
 
-      result[index] = {value, region};
+      result[index] = { value, region };
     });
 
     if (hasIndex) {
-      result.unshift({value: 0, region: 'row-header'});
+      result.unshift({ value: 0, region: 'row-header' });
     }
 
     return result;
-  }
+  },
 );
 
 export const selectRenderer = createSelector(
@@ -217,21 +203,17 @@ export const selectRenderer = createSelector(
     }
 
     return typeRenderer;
-  }
+  },
 );
 
 export const selectColumnHighlighters = createSelector(
-  [
-    selectCellHighlighters,
-    (state, columnName) => columnName,
-    (state, columnName, highlighterType) => highlighterType
-  ],
-  (highlighters, columnName, highlighterType): IHighlighterState[] => highlighters.filter(
-    highlighter => highlighter.colName === columnName && highlighter.type === highlighterType
-  )
+  [selectCellHighlighters, (state, columnName) => columnName, (state, columnName, highlighterType) => highlighterType],
+  (highlighters, columnName, highlighterType): IHighlighterState[] =>
+    highlighters.filter((highlighter) => highlighter.colName === columnName && highlighter.type === highlighterType),
 );
 
-export const selectColumnFixedWidth: (state, columnName, typeName) => number | null = createSelector([
+export const selectColumnFixedWidth: (state, columnName, typeName) => number | null = createSelector(
+  [
     selectStringFormatForColumn,
     selectStringFormatForType,
     (state, columnName) => columnName,
@@ -247,5 +229,5 @@ export const selectColumnFixedWidth: (state, columnName, typeName) => number | n
     }
 
     return null;
-  }
+  },
 );

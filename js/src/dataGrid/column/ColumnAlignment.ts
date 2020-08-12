@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { TextRenderer } from "@phosphor/datagrid";
-import { ALL_TYPES } from "../dataTypes";
+import { TextRenderer } from '@phosphor/datagrid';
+import { ALL_TYPES } from '../dataTypes';
 
 export const LEFT: TextRenderer.HorizontalAlignment = 'left';
 export const RIGHT: TextRenderer.HorizontalAlignment = 'right';
@@ -24,23 +24,21 @@ export const CENTER: TextRenderer.HorizontalAlignment = 'center';
 export const DEFAULT_ALIGNMENT = LEFT;
 
 export const ALIGNMENTS_BY_TYPE = {
-  'datetime': CENTER,
-  'time': CENTER,
-  'integer': RIGHT,
-  'int64': RIGHT,
-  'double': RIGHT
+  datetime: CENTER,
+  time: CENTER,
+  integer: RIGHT,
+  int64: RIGHT,
+  double: RIGHT,
 };
 
 export const ALIGNMENTS_BY_CHAR = {
-  'C': CENTER,
-  'R': RIGHT,
-  'L': LEFT
+  C: CENTER,
+  R: RIGHT,
+  L: LEFT,
 };
 
-export const getAlignmentByType =
-  (type: number): TextRenderer.HorizontalAlignment =>
-    ALIGNMENTS_BY_TYPE[ALL_TYPES[type]] || DEFAULT_ALIGNMENT;
+export const getAlignmentByType = (type: number): TextRenderer.HorizontalAlignment =>
+  ALIGNMENTS_BY_TYPE[ALL_TYPES[type]] || DEFAULT_ALIGNMENT;
 
-export const getAlignmentByChar =
-  (char: string): TextRenderer.HorizontalAlignment =>
-    ALIGNMENTS_BY_CHAR[char] || DEFAULT_ALIGNMENT;
+export const getAlignmentByChar = (char: string): TextRenderer.HorizontalAlignment =>
+  ALIGNMENTS_BY_CHAR[char] || DEFAULT_ALIGNMENT;

@@ -14,11 +14,11 @@
  *  limitations under the License.
  */
 
-import { Message } from '@phosphor/messaging'
-import { Menu } from '@phosphor/widgets'
+import { Message } from '@phosphor/messaging';
+import { Menu } from '@phosphor/widgets';
 
 export class BkoMenu extends Menu {
-  keepOpen: boolean|undefined;
+  keepOpen: boolean | undefined;
   trigger: HTMLElement;
 
   dispose() {
@@ -41,7 +41,8 @@ export class BkoMenu extends Menu {
       return;
     }
 
-    const command = item.command, args = item.args;
+    const command = item.command,
+      args = item.args;
     if (this.commands && this.commands.isEnabled(command, args)) {
       this.commands.execute(command, args);
     }

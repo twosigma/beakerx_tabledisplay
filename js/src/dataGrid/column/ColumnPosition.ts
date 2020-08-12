@@ -14,29 +14,29 @@
  *  limitations under the License.
  */
 
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { ICellData } from "../interface/ICell";
-import { IColumnPosition } from "../interface/IColumn";
-import { UPDATE_COLUMN_ORDER } from "../model/reducer";
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { ICellData } from '../interface/ICell';
+import { IColumnPosition } from '../interface/IColumn';
+import { UPDATE_COLUMN_ORDER } from '../model/reducer';
 import {
   selectColumnNames,
   selectColumnOrder,
   selectColumnsFrozenCount,
   selectColumnsFrozenNames,
   selectColumnsVisible,
-  selectHasIndex
-} from "../model/selectors";
-import { BeakerXDataStore } from "../store/BeakerXDataStore";
-import { DataGridColumnAction, DataGridColumnsAction } from "../store/DataGridAction";
-import { DataGridStyle } from "../style/DataGridStyle";
-import { ColumnManager } from "./ColumnManager";
-import { DataGridColumn } from "./DataGridColumn";
-import { COLUMN_SIDE, COLUMN_TYPES } from "./enums";
-import { UPDATE_COLUMN_POSITIONS } from "./reducer";
-import { selectColumnIndexByPosition } from "./selectors";
+  selectHasIndex,
+} from '../model/selectors';
+import { BeakerXDataStore } from '../store/BeakerXDataStore';
+import { DataGridColumnAction, DataGridColumnsAction } from '../store/DataGridAction';
+import { DataGridStyle } from '../style/DataGridStyle';
+import { ColumnManager } from './ColumnManager';
+import { DataGridColumn } from './DataGridColumn';
+import { COLUMN_SIDE, COLUMN_TYPES } from './enums';
+import { UPDATE_COLUMN_POSITIONS } from './reducer';
+import { selectColumnIndexByPosition } from './selectors';
 
-const DATA_GRID_PADDING: number = 20;
-const DRAG_START_DEBOUNCE_TIME: number = 150;
+const DATA_GRID_PADDING = 20;
+const DRAG_START_DEBOUNCE_TIME = 150;
 
 export class ColumnPosition {
   dataGrid: BeakerXDataGrid;
@@ -80,7 +80,8 @@ export class ColumnPosition {
     this.grabbedCellData = null;
     this.dropCellData = null;
     this.toggleGrabbing(false);
-    this.dataGrid.node.contains(this.draggableHeaderCanvas) && this.dataGrid.node.removeChild(this.draggableHeaderCanvas);
+    this.dataGrid.node.contains(this.draggableHeaderCanvas) &&
+      this.dataGrid.node.removeChild(this.draggableHeaderCanvas);
     this.dataGrid.repaint();
     this.draggableHeaderOffsetLeft = null;
   }
@@ -96,12 +97,14 @@ export class ColumnPosition {
       order = selectColumnNames(this.store.state);
     }
 
-    this.store.dispatch(new DataGridColumnsAction(UPDATE_COLUMN_POSITIONS, {
-      value: order,
-      hasIndex: selectHasIndex(this.store.state),
-      columnsFrozenNames: selectColumnsFrozenNames(this.store.state),
-      columnsVisible: selectColumnsVisible(this.store.state),
-    }));
+    this.store.dispatch(
+      new DataGridColumnsAction(UPDATE_COLUMN_POSITIONS, {
+        value: order,
+        hasIndex: selectHasIndex(this.store.state),
+        columnsFrozenNames: selectColumnsFrozenNames(this.store.state),
+        columnsVisible: selectColumnsVisible(this.store.state),
+      }),
+    );
 
     this.dataGrid.resize();
     this.dataGrid.model.reset();
@@ -109,7 +112,8 @@ export class ColumnPosition {
 
   getColumnByPosition(position: IColumnPosition) {
     const columnIndex = selectColumnIndexByPosition(this.store.state, position);
-    const columnType = position.region === 'row-header' && position.value === 0 ? COLUMN_TYPES.index : COLUMN_TYPES.body;
+    const columnType =
+      position.region === 'row-header' && position.value === 0 ? COLUMN_TYPES.index : COLUMN_TYPES.body;
 
     return this.dataGrid.columnManager.getColumnByIndex(columnType, columnIndex);
   }
@@ -124,15 +128,14 @@ export class ColumnPosition {
   }
 
   setPosition(column: DataGridColumn, position: IColumnPosition) {
-    this.store.dispatch(new DataGridColumnAction(
-      UPDATE_COLUMN_ORDER,
-      {
+    this.store.dispatch(
+      new DataGridColumnAction(UPDATE_COLUMN_ORDER, {
         value: position,
         columnType: column.type,
         columnName: column.name,
         columnIndex: column.index,
-        hasIndex: selectHasIndex(this.store.state)
-      })
+        hasIndex: selectHasIndex(this.store.state),
+      }),
     );
 
     this.updateAll();
@@ -145,12 +148,14 @@ export class ColumnPosition {
       order = selectColumnNames(this.store.state);
     }
 
-    this.store.dispatch(new DataGridColumnsAction(UPDATE_COLUMN_POSITIONS, {
-      value: order,
-      hasIndex: selectHasIndex(this.store.state),
-      columnsFrozenNames: selectColumnsFrozenNames(this.store.state),
-      columnsVisible: selectColumnsVisible(this.store.state),
-    }));
+    this.store.dispatch(
+      new DataGridColumnsAction(UPDATE_COLUMN_POSITIONS, {
+        value: order,
+        hasIndex: selectHasIndex(this.store.state),
+        columnsFrozenNames: selectColumnsFrozenNames(this.store.state),
+        columnsVisible: selectColumnsVisible(this.store.state),
+      }),
+    );
 
     this.dataGrid.resize();
   }
@@ -160,9 +165,9 @@ export class ColumnPosition {
       return true;
     }
 
-    let rect = this.dataGrid.viewport.node.getBoundingClientRect();
+    const rect = this.dataGrid.viewport.node.getBoundingClientRect();
     let newX = event.clientX - rect.left;
-    let newY = event.clientY - rect.top;
+    const newY = event.clientY - rect.top;
 
     if (this.draggableHeaderOffsetLeft !== null) {
       newX -= this.draggableHeaderOffsetLeft;
@@ -187,24 +192,25 @@ export class ColumnPosition {
 
   private moveColumn() {
     const frozenColumnscount = selectColumnsFrozenCount(this.store.state);
-    const column = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(this.grabbedCellData));
+    const column = this.dataGrid.columnManager.getColumnByPosition(
+      ColumnManager.createPositionFromCell(this.grabbedCellData),
+    );
     let destination = this.dropCellData.column;
 
     if (this.dropCellData.region !== 'corner-header' && this.dropCellData.region !== 'row-header') {
       destination += frozenColumnscount;
     }
 
-    this.setPosition(column, ColumnManager.createPositionFromCell({...this.dropCellData, column: destination}));
+    this.setPosition(column, ColumnManager.createPositionFromCell({ ...this.dropCellData, column: destination }));
   }
 
   private toggleGrabbing(enable: boolean) {
-    enable
-      ? this.dataGrid.node.classList.add('grabbing')
-      : this.dataGrid.node.classList.remove('grabbing');
+    enable ? this.dataGrid.node.classList.add('grabbing') : this.dataGrid.node.classList.remove('grabbing');
   }
 
   private attachDraggableHeader(data) {
-    const widthSection = data.region === 'corner-header' ? this.dataGrid.rowHeaderSections : this.dataGrid.columnSections;
+    const widthSection =
+      data.region === 'corner-header' ? this.dataGrid.rowHeaderSections : this.dataGrid.columnSections;
     const sectionWidth = widthSection.sectionSize(data.column) - 1;
     const sectionHeight = this.dataGrid.columnHeaderSections.sectionSize(data.row) - 1;
     const dpiRatio = this.dataGrid['_dpiRatio'];
@@ -229,27 +235,23 @@ export class ColumnPosition {
       0,
       0,
       sectionWidth,
-      sectionHeight
+      sectionHeight,
     );
 
     this.draggableHeaderOffsetLeft = data.delta - DATA_GRID_PADDING;
     this.dataGrid.node.appendChild(this.draggableHeaderCanvas);
   }
 
-  private handleCellHovered(sender: BeakerXDataGrid, {data, event}) {
+  private handleCellHovered(sender: BeakerXDataGrid, { data, event }) {
     const pressData = this.grabbedCellData;
     let targetData = data;
 
-    if (
-      !data
-      || !pressData
-      || pressData.type !== data.type
-    ) {
+    if (!data || !pressData || pressData.type !== data.type) {
       return true;
     }
 
-    let direction = data.column >= this.grabbedCellData.column ? COLUMN_SIDE.right : COLUMN_SIDE.left;
-    let side = data.delta < data.width / 2 ? COLUMN_SIDE.left : COLUMN_SIDE.right;
+    const direction = data.column >= this.grabbedCellData.column ? COLUMN_SIDE.right : COLUMN_SIDE.left;
+    const side = data.delta < data.width / 2 ? COLUMN_SIDE.left : COLUMN_SIDE.right;
 
     if (side === COLUMN_SIDE.right && direction !== COLUMN_SIDE.right) {
       targetData = this.dataGrid.getCellData(event.clientX + data.width - data.delta + 1, event.clientY);

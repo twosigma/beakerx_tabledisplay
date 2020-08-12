@@ -14,9 +14,8 @@
  *  limitations under the License.
  */
 
-export namespace EventHelpers {
-
-  export function isOutsideNode(event: MouseEvent, node: HTMLElement): boolean {
+export class EventHelpers {
+  public static isOutsideNode(event: MouseEvent, node: HTMLElement): boolean {
     const rect = node.getBoundingClientRect();
 
     if (event.clientY - rect.top <= 1) {
@@ -31,14 +30,14 @@ export namespace EventHelpers {
       return true;
     }
 
-    if( rect.right - event.clientX <= 1) {
+    if (rect.right - event.clientX <= 1) {
       return true;
     }
 
     return false;
   }
 
-  export function isInsideGrid(event): boolean {
+  public static isInsideGrid(event): boolean {
     const relatedTarget = (event.relatedTarget || event.target) as HTMLElement;
 
     if (!relatedTarget) {
@@ -56,7 +55,7 @@ export namespace EventHelpers {
     return false;
   }
 
-  export function isInsideGridNode(event: MouseEvent, gridNode: HTMLElement): boolean {
+  public static isInsideGridNode(event: MouseEvent, gridNode: HTMLElement): boolean {
     const relatedTarget = (event.relatedTarget || event.target) as HTMLElement;
 
     if (!relatedTarget) {

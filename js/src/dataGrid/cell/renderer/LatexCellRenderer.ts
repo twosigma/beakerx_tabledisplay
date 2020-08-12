@@ -16,27 +16,27 @@
 
 import * as katex from 'katex';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const katexCss = require('katex/dist/katex.css').toString();
 
 const latexFormulaRegex = /^(?:\$)(.+)(?:\$)$/; // match strings like '$e^{i\pi} + 1 = 0$'
 const latexCache = {};
 
 export class LatexCellRenderer {
-
   /**
    * Convert given LaTeX formula into HTML representation.
    * @param text - ex. '$e^{i\pi} + 1 = 0$'
    */
   static latexToHtml(text: string): string {
-    let [, formula] = text.match(latexFormulaRegex);
+    const [, formula] = text.match(latexFormulaRegex);
 
     if (latexCache[formula]) {
       return latexCache[formula];
     }
 
-    return latexCache[formula] = katex.renderToString(formula, {
-      throwOnError: false
-    });
+    return (latexCache[formula] = katex.renderToString(formula, {
+      throwOnError: false,
+    }));
   }
 
   /**
@@ -51,8 +51,14 @@ export class LatexCellRenderer {
   /**
    * Get base64 encoded SVG element
    */
-  static getLatexImageData(latexHTML: string, width: string, height: string, color: string, vAlign: string,
-                           hAlign: string): string {
+  static getLatexImageData(
+    latexHTML: string,
+    width: string,
+    height: string,
+    color: string,
+    vAlign: string,
+    hAlign: string,
+  ): string {
     const svgEl = LatexCellRenderer.getSVGElement(latexHTML, width, height, color, vAlign, hAlign);
     return LatexCellRenderer.getBase64EncodedImage(svgEl);
   }
@@ -60,12 +66,17 @@ export class LatexCellRenderer {
   /**
    * Get SVG element with LaTeX html included.
    */
-  private static getSVGElement(latexHTML: string, width: string, height: string, color: string, vAlign: string,
-                               hAlign: string): SVGSVGElement {
+  private static getSVGElement(
+    latexHTML: string,
+    width: string,
+    height: string,
+    color: string,
+    vAlign: string,
+    hAlign: string,
+  ): SVGSVGElement {
     const ns = 'http://www.w3.org/2000/svg';
     const svgEl = document.createElementNS(ns, 'svg');
     svgEl.setAttribute('width', width);
-
 
     svgEl.setAttribute('height', height);
     const foreignObject = document.createElementNS(ns, 'foreignObject');
@@ -73,7 +84,12 @@ export class LatexCellRenderer {
 
     foreignObject.setAttribute('height', height);
     const div = document.createElement('div');
-    div.setAttribute('style', `display: table-cell; width: ${width}px; height: ${height}px; color: ${color}; vertical-align: ${vAlign === 'center' ? 'middle' : vAlign}; text-align: ${hAlign}`);
+    div.setAttribute(
+      'style',
+      `display: table-cell; width: ${width}px; height: ${height}px; color: ${color}; vertical-align: ${
+        vAlign === 'center' ? 'middle' : vAlign
+      }; text-align: ${hAlign}`,
+    );
     div.innerHTML = `<style>${katexCss}</style>${latexHTML}`;
 
     foreignObject.appendChild(div);
