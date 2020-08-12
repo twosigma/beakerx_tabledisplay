@@ -207,7 +207,9 @@ export class BeakerXDataGridModel extends DataModel {
   }
 
   private dateValueResolver(value) {
-    return value.timestamp;
+    if (value)
+      return value.timestamp;
+    return NaN;
   }
 
   private defaultValueResolver(value) {
