@@ -14,17 +14,17 @@
  *  limitations under the License.
  */
 
-import { each, filter, iter, toArray } from "@phosphor/algorithm";
-import { CellRenderer } from "@phosphor/datagrid";
-import { Theme } from "../../utils/Theme";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { HIGHLIGHTER_STYLE, HIGHLIGHTER_TYPE, IHighlighterState } from "../interface/IHighlighterState";
-import { ADD_COLUMN_HIGHLIGHTER, REMOVE_COLUMN_HIGHLIGHTER } from "../model/reducer";
-import { selectCellHighlighters } from "../model/selectors/model";
-import { DataGridColumnAction } from "../store/DataGridAction";
-import { Highlighter } from "./Highlighter";
-import { HighlighterFactory } from "./HighlighterFactory";
+import { each, filter, iter, toArray } from '@phosphor/algorithm';
+import { CellRenderer } from '@phosphor/datagrid';
+import { Theme } from '../../utils/Theme';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { HIGHLIGHTER_STYLE, HIGHLIGHTER_TYPE, IHighlighterState } from '../interface/IHighlighterState';
+import { ADD_COLUMN_HIGHLIGHTER, REMOVE_COLUMN_HIGHLIGHTER } from '../model/reducer';
+import { selectCellHighlighters } from '../model/selectors/model';
+import { DataGridColumnAction } from '../store/DataGridAction';
+import { Highlighter } from './Highlighter';
+import { HighlighterFactory } from './HighlighterFactory';
 
 export class HighlighterManager {
   highlighters: Highlighter[];
@@ -46,7 +46,7 @@ export class HighlighterManager {
   destroy(): void {
     this.dataGrid = null;
     this.highlighters = [];
-    this.cachedHighlighters.forEach(highlighter => highlighter.destroy());
+    this.cachedHighlighters.forEach((highlighter) => highlighter.destroy());
     this.cachedHighlighters.clear();
   }
 
@@ -57,15 +57,13 @@ export class HighlighterManager {
   }
 
   createHighlighter(state: IHighlighterState): void {
-    let column = this.dataGrid.getColumnByName(state.colName);
+    const column = this.dataGrid.getColumnByName(state.colName);
 
     if (!column) {
       return;
     }
 
-    const highlighter = this.cachedHighlighters.get(
-      this.getHighlighterKey(column, state.type)
-    );
+    const highlighter = this.cachedHighlighters.get(this.getHighlighterKey(column, state.type));
 
     if (highlighter) {
       return this.registerHighlighter(highlighter);
@@ -83,10 +81,7 @@ export class HighlighterManager {
       this.highlighters.unshift(highlighter);
     } else {
       this.highlighters.push(highlighter);
-      this.cachedHighlighters.set(
-        this.getHighlighterKey(highlighter.column, highlighter.state.type),
-        highlighter
-      );
+      this.cachedHighlighters.set(this.getHighlighterKey(highlighter.column, highlighter.state.type), highlighter);
     }
   }
 
@@ -99,21 +94,20 @@ export class HighlighterManager {
   }
 
   getColumnHighlighters(column, highlighterType?: HIGHLIGHTER_TYPE): Highlighter[] {
-    return toArray(filter(
-      iter(this.highlighters),
-      (highlighter: Highlighter) => {
+    return toArray(
+      filter(iter(this.highlighters), (highlighter: Highlighter) => {
         return highlighterType
           ? highlighter.column === column && highlighter.state.type === highlighterType
           : highlighter.column === column;
-      }
-    ));
+      }),
+    );
   }
 
   addColumnHighlighter(column, highlighterType: HIGHLIGHTER_TYPE) {
     const highlighterState = this.createColumnHighlighterState(highlighterType, column);
     this.registerHighlighter(
-      this.cachedHighlighters.get(this.getHighlighterKey(column, highlighterType))
-      || HighlighterFactory.getHighlighter(highlighterState, column)
+      this.cachedHighlighters.get(this.getHighlighterKey(column, highlighterType)) ||
+        HighlighterFactory.getHighlighter(highlighterState, column),
     );
   }
 
@@ -128,34 +122,35 @@ export class HighlighterManager {
       type: highlighterType,
       minVal: column.minValue,
       maxVal: column.maxValue,
-      colName: column.name
+      colName: column.name,
     };
     this.removeColumnHighlighter(column, highlighterType);
-    this.dataGrid.store.dispatch(new DataGridColumnAction(ADD_COLUMN_HIGHLIGHTER, {
-      columnIndex: column.index,
-      columnName: column.name,
-      value: highlighterState
-    }));
+    this.dataGrid.store.dispatch(
+      new DataGridColumnAction(ADD_COLUMN_HIGHLIGHTER, {
+        columnIndex: column.index,
+        columnName: column.name,
+        value: highlighterState,
+      }),
+    );
     return highlighterState;
   }
 
   restoreHighlighters(column, highlighterType?: HIGHLIGHTER_TYPE) {
     const highlighters = this.getColumnHighlighters(column, highlighterType);
-    highlighters.forEach(value => this.updatedColumnHighlighter(column, value.state.type));
+    highlighters.forEach((value) => this.updatedColumnHighlighter(column, value.state.type));
   }
 
   removeColumnHighlighter(column, highlighterType?: HIGHLIGHTER_TYPE) {
     const highlighters = this.getColumnHighlighters(column, highlighterType);
 
     each(highlighters, (highlighter) => {
-      this.dataGrid.store.dispatch(new DataGridColumnAction(
-        REMOVE_COLUMN_HIGHLIGHTER,
-        {
+      this.dataGrid.store.dispatch(
+        new DataGridColumnAction(REMOVE_COLUMN_HIGHLIGHTER, {
           value: highlighter.state,
           columnName: column.name,
-          columnIndex: column.index
-        }
-      ));
+          columnIndex: column.index,
+        }),
+      );
       this.unregisterHighlighter(highlighter);
     });
   }
@@ -177,19 +172,13 @@ export class HighlighterManager {
 
   getCellBackground(config: CellRenderer.ICellConfig): string {
     let background = Theme.DEFAULT_CELL_BACKGROUND;
-    let column = this.dataGrid.getColumn(config);
+    const column = this.dataGrid.getColumn(config);
 
-    each(
-      iter(this.highlighters),
-      (highlighter) => {
-        if (
-          highlighter.column === column ||
-          highlighter.state.style === HIGHLIGHTER_STYLE.FULL_ROW
-        ) {
-          background = highlighter.getBackgroundColor(config);
-        }
+    each(iter(this.highlighters), (highlighter) => {
+      if (highlighter.column === column || highlighter.state.style === HIGHLIGHTER_STYLE.FULL_ROW) {
+        background = highlighter.getBackgroundColor(config);
       }
-    );
+    });
 
     return background;
   }

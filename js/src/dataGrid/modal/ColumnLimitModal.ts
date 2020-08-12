@@ -14,11 +14,11 @@
  *  limitations under the License.
  */
 
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { ColumnManager } from "../column/ColumnManager";
-import { selectOutputColumnLimit } from "../column/selectors";
-import { selectColumnNames } from "../model/selectors";
-import { BeakerXDataStore } from "../store/BeakerXDataStore";
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { ColumnManager } from '../column/ColumnManager';
+import { selectOutputColumnLimit } from '../column/selectors';
+import { selectColumnNames } from '../model/selectors';
+import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { createModalTemplate } from './columnLimitModalTemplate';
 
 export class ColumnLimitModal {
@@ -51,7 +51,7 @@ export class ColumnLimitModal {
     modal.style.display = 'none';
     modal.innerHTML = createModalTemplate(
       selectOutputColumnLimit(this.store.state),
-      selectColumnNames(this.store.state).length
+      selectColumnNames(this.store.state).length,
     );
 
     this.container.appendChild(modal);
@@ -65,9 +65,9 @@ export class ColumnLimitModal {
   bindEvents(modal) {
     const buttons = modal.querySelectorAll('button') || [];
 
-    buttons[0].addEventListener('mouseup', () => {
+    buttons[0].addEventListener('mouseup', (e) => {
       this.container.removeChild(modal);
-      this.columnManager.indexColumns[0].menu.open(1);
+      this.columnManager.indexColumns[0].menu.open(e, 1);
     });
     buttons[1].addEventListener('mouseup', () => this.container.removeChild(modal));
   }

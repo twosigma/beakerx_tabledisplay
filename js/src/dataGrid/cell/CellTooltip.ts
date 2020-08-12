@@ -55,13 +55,10 @@ export class CellTooltip {
     this.node.classList.remove('visible');
 
     clearTimeout(this.timeoutId);
-    this.timeoutId = setTimeout(
-      () => {
-        if (this.container.contains(this.node)) {
-          this.container.removeChild(this.node);
-        }
-      },
-      2 * CellTooltip.TOOLTIP_ANIMATION_DELAY
-    ) as any
+    this.timeoutId = setTimeout(() => {
+      if (this.container.contains(this.node)) {
+        this.container.removeChild(this.node);
+      }
+    }, 2 * CellTooltip.TOOLTIP_ANIMATION_DELAY) as any;
   }
 }

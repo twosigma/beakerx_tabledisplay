@@ -14,5 +14,5 @@
  *  limitations under the License.
  */
 
-export * from './model'
-export * from './column'
+export * from './model';
+export * from './column';

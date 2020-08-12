@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { reduce } from "@phosphor/algorithm";
-import { CellRenderer } from "@phosphor/datagrid";
-import { Theme } from "../../utils/Theme";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { IHighlighterState } from "../interface/IHighlighterState";
-import { selectColumnNames } from "../model/selectors/column";
-import { Highlighter } from "./Highlighter";
+import { reduce } from '@phosphor/algorithm';
+import { CellRenderer } from '@phosphor/datagrid';
+import { Theme } from '../../utils/Theme';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { IHighlighterState } from '../interface/IHighlighterState';
+import { selectColumnNames } from '../model/selectors/column';
+import { Highlighter } from './Highlighter';
 
 const MAX_HUE_VALUE = 360;
 const DEFAULT_HSL_COMPONENT_STEPS_COUNT = 50;
@@ -51,9 +51,9 @@ export class UniqueEntriesHighlighter extends Highlighter {
           this.uniqueColors[valueResolver(value)] = generateColor();
         }
 
-        return acc
+        return acc;
       },
-      this.uniqueValues
+      this.uniqueValues,
     );
   }
 
@@ -64,14 +64,14 @@ export class UniqueEntriesHighlighter extends Highlighter {
     let lightnessRatio = initialLightnessRatio;
     let saturationStepCount = 0;
     let lightnessStepCount = 0;
-    let hueValues = [];
+    const hueValues = [];
 
     return () => {
       hueRatio += goldenRatioConjugate;
       hueRatio %= 1;
 
-      let hue = Math.round(hueRatio * MAX_HUE_VALUE);
-      let repeated = hueValues.indexOf(hue) !== -1;
+      const hue = Math.round(hueRatio * MAX_HUE_VALUE);
+      const repeated = hueValues.indexOf(hue) !== -1;
 
       if (!repeated) {
         hueValues.push(hue);
@@ -83,20 +83,20 @@ export class UniqueEntriesHighlighter extends Highlighter {
         saturationStepCount += 1;
       }
 
-      if ((
-        repeated && saturationStepCount > DEFAULT_HSL_COMPONENT_STEPS_COUNT
-        || saturationStepCount > DEFAULT_HSL_COMPONENT_STEPS_COUNT
-      ) && lightnessStepCount < DEFAULT_HSL_COMPONENT_STEPS_COUNT
+      if (
+        ((repeated && saturationStepCount > DEFAULT_HSL_COMPONENT_STEPS_COUNT) ||
+          saturationStepCount > DEFAULT_HSL_COMPONENT_STEPS_COUNT) &&
+        lightnessStepCount < DEFAULT_HSL_COMPONENT_STEPS_COUNT
       ) {
         lightnessRatio += goldenRatioConjugate;
         lightnessRatio %= 1;
         lightnessStepCount += 1;
       }
 
-      let saturation = Theme.MIN_SATURATION_VALUE + saturationRatio * DEFAULT_HSL_COMPONENT_STEPS_COUNT;
-      let lightness = Theme.MIN_LIGHTNESS_VALUE + lightnessRatio * DEFAULT_HSL_COMPONENT_STEPS_COUNT;
+      const saturation = Theme.MIN_SATURATION_VALUE + saturationRatio * DEFAULT_HSL_COMPONENT_STEPS_COUNT;
+      const lightness = Theme.MIN_LIGHTNESS_VALUE + lightnessRatio * DEFAULT_HSL_COMPONENT_STEPS_COUNT;
 
       return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-    }
+    };
   }
 }

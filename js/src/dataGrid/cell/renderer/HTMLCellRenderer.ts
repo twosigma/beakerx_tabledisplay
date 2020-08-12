@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext, TextRenderer } from "@phosphor/datagrid";
-import { BeakerXCellRenderer } from "./BeakerXCellRenderer";
+import { CellRenderer, GraphicsContext, TextRenderer } from '@phosphor/datagrid';
+import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 import { LatexCellRenderer } from './LatexCellRenderer';
 
-import LatoRegular from "./../../../../fonts/lato/Lato-Regular.woff";
-import LatoBlack from "./../../../../fonts/lato/Lato-Black.woff";
+import LatoRegular from './../../../../fonts/lato/Lato-Regular.woff';
+import LatoBlack from './../../../../fonts/lato/Lato-Black.woff';
 
 export class HTMLCellRenderer extends BeakerXCellRenderer {
   dataCache = new Map<string, string>();
@@ -31,19 +31,19 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
       return;
     }
 
-    let color = CellRenderer.resolveOption(this.textColor, config);
+    const color = CellRenderer.resolveOption(this.textColor, config);
 
     if (!color) {
       return;
     }
 
-    let text = this.format(config);
+    const text = this.format(config);
 
-    let vAlign = CellRenderer.resolveOption(this.verticalAlignment, config);
-    let hAlign = CellRenderer.resolveOption(this.horizontalAlignment, config);
+    const vAlign = CellRenderer.resolveOption(this.verticalAlignment, config);
+    const hAlign = CellRenderer.resolveOption(this.horizontalAlignment, config);
 
     // Compute the padded text box height for the specified alignment.
-    let boxHeight = config.height - (vAlign === 'center' ? 1 : 2);
+    const boxHeight = config.height - (vAlign === 'center' ? 1 : 2);
 
     if (boxHeight <= 0) {
       return;
@@ -129,13 +129,22 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
     return () => this.dataGrid.repaint(x, y, width, height);
   }
 
-  private getHTMLImageData(text: string, width: string, height: string, font: string, color: string, vAlign: string,
-                           hAlign: string) {
+  private getHTMLImageData(
+    text: string,
+    width: string,
+    height: string,
+    font: string,
+    color: string,
+    vAlign: string,
+    hAlign: string,
+  ) {
     const html = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}px" height="${height}px">
       <foreignObject width="${width}px" height="${height}px">
         <div
           xmlns="http://www.w3.org/1999/xhtml"
-          style="display: table-cell; font: ${font}; width: ${width}px; height: ${height}px; color: ${color}; vertical-align: ${vAlign === 'center' ? 'middle' : vAlign}; text-align: ${hAlign}"
+          style="display: table-cell; font: ${font}; width: ${width}px; height: ${height}px; color: ${color}; vertical-align: ${
+      vAlign === 'center' ? 'middle' : vAlign
+    }; text-align: ${hAlign}"
         >
           <style type="text/css">${this.getFontFaceStyle()}</style>
           <div style="display: inline-block; padding: 0 2px">${text}</div>
@@ -143,6 +152,6 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
       </foreignObject>
     </svg>`;
 
-    return "data:image/svg+xml," + encodeURIComponent(html);
+    return 'data:image/svg+xml,' + encodeURIComponent(html);
   }
 }

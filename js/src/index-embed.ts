@@ -14,5 +14,5 @@
  *  limitations under the License.
  */
 
-import '../sass/table_display.scss'
+import '../sass/table_display.scss';
 export * from './index';

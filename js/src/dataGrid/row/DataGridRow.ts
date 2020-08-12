@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { DataGridCellValue } from "./DataGridCellValue";
+import { DataGridCellValue } from './DataGridCellValue';
 
 export class DataGridRow {
   index: number;
@@ -26,6 +26,6 @@ export class DataGridRow {
   }
 
   getValue(index) {
-    return this.cells[index].value
+    return this.cells[index].value;
   }
 }

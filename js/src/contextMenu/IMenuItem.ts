@@ -15,24 +15,27 @@
  */
 
 import { CommandRegistry } from '@phosphor/commands';
+import { ReadonlyJSONObject } from '@phosphor/coreutils';
+import { DataGridColumn } from '../dataGrid/column/DataGridColumn';
+import { IContextMenuItem } from './IContextMenuItem';
 
 export interface IMenuItem {
-  title: string,
-  action?: Function,
-  enableItemsFiltering?: boolean,
-  id?: string,
-  icon?: string,
-  inputPlaceholder?: string,
-  inputAction?: Function,
-  isChecked?: Function|boolean,
-  items?: IMenuItem[]|Function,
-  keepOpen?: boolean,
-  separator?: boolean,
-  shortcut?: string
-  submenuClass?: string,
-  type?: string,
-  tooltip?: string,
-  updateLayout?: boolean,
-  isVisible?: CommandRegistry.CommandFunc<boolean>,
-  args?: object
+  title: string;
+  action?: (event?: MouseEvent, column?: DataGridColumn) => void;
+  enableItemsFiltering?: boolean;
+  id?: string;
+  icon?: string;
+  inputPlaceholder?: string;
+  inputAction?: () => void;
+  isChecked?: ((column: any) => boolean) | boolean;
+  items?: IContextMenuItem[] | ((column?: any) => IContextMenuItem[]);
+  keepOpen?: boolean;
+  separator?: boolean;
+  shortcut?: string;
+  submenuClass?: string;
+  type?: string;
+  tooltip?: string;
+  updateLayout?: boolean;
+  isVisible?: CommandRegistry.CommandFunc<boolean>;
+  args?: ReadonlyJSONObject;
 }

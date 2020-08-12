@@ -14,20 +14,20 @@
  *  limitations under the License.
  */
 
-import { each } from "@phosphor/algorithm";
-import { Reducer } from "@phosphor/datastore";
-import { IDataGridModelState } from "../interface/IDataGridModelState";
-import { IHighlighterState } from "../interface/IHighlighterState";
-import { DataGridAction, DataGridColumnAction } from "../store/DataGridAction";
+import { each } from '@phosphor/algorithm';
+import { Reducer } from '@phosphor/datastore';
+import { IDataGridModelState } from '../interface/IDataGridModelState';
+import { IHighlighterState } from '../interface/IHighlighterState';
+import { DataGridAction, DataGridColumnAction } from '../store/DataGridAction';
 import {
   selectColumnNames,
   selectColumnOrder,
   selectColumnsFrozen,
   selectColumnsVisible,
-  selectHasIndex
-} from "./selectors";
-import { selectColumnHighlighters } from "./selectors/column";
-import { selectCellHighlighters } from "./selectors/model";
+  selectHasIndex,
+} from './selectors';
+import { selectColumnHighlighters } from './selectors/column';
+import { selectCellHighlighters } from './selectors/model';
 
 export const UPDATE_MODEL_DATA = 'UPDATE_MODEL_DATA';
 export const UPDATE_MODEL_VALUES = 'UPDATE_MODEL_VALUES';
@@ -43,25 +43,25 @@ export const REMOVE_COLUMN_HIGHLIGHTER = 'REMOVE_COLUMN_HIGHLIGHTER';
 
 export const dataGridModelReducer: Reducer<IDataGridModelState> = (
   state: IDataGridModelState,
-  action: DataGridAction | DataGridColumnAction
+  action: DataGridAction | DataGridColumnAction,
 ): IDataGridModelState => {
   switch (action.type) {
     case UPDATE_MODEL_DATA:
-      return {...state, ...action.payload};
+      return { ...state, ...action.payload };
 
     case UPDATE_MODEL_VALUES:
-      return {...state, values: action.payload.values};
+      return { ...state, values: action.payload.values };
 
     case UPDATE_MODEL_FONT_COLOR:
-      return {...state, fontColor: action.payload.fontColor};
+      return { ...state, fontColor: action.payload.fontColor };
 
     case UPDATE_COLUMN_RENDERER:
       return {
         ...state,
         rendererForColumn: {
           ...state.rendererForColumn,
-          [action.payload.columnName]: action.payload.value
-        }
+          [action.payload.columnName]: action.payload.value,
+        },
       };
 
     case UPDATE_COLUMN_ORDER:
@@ -90,15 +90,15 @@ export const dataGridModelReducer: Reducer<IDataGridModelState> = (
 };
 
 function reduceColumnFrozen(state, action: DataGridColumnAction) {
-  const {columnName, value} = action.payload;
-  const columnsFrozen = selectColumnsFrozen({model: state});
+  const { columnName, value } = action.payload;
+  const columnsFrozen = selectColumnsFrozen({ model: state });
 
   return {
     ...state,
     columnsFrozen: {
       ...columnsFrozen,
-      [columnName]: value
-    }
+      [columnName]: value,
+    },
   };
 }
 
@@ -111,22 +111,20 @@ function reduceColumnsVisible(state, action) {
         return true;
       }
 
-      index < columnOrder.length
-        ? columnOrder.splice(index, 0, name)
-        : columnOrder.push(name);
+      index < columnOrder.length ? columnOrder.splice(index, 0, name) : columnOrder.push(name);
     });
   }
 
-  return {...state, columnOrder, columnsVisible: action.payload.value};
+  return { ...state, columnOrder, columnsVisible: action.payload.value };
 }
 
 function reduceColumnVisible(state, action: DataGridColumnAction): IDataGridModelState {
-  const {columnName, columnIndex, value} = action.payload;
-  const columnsVisible = selectColumnsVisible({model: state});
-  const columnOrder = [...selectColumnOrder({model: state})];
+  const { columnName, columnIndex, value } = action.payload;
+  const columnsVisible = selectColumnsVisible({ model: state });
+  const columnOrder = [...selectColumnOrder({ model: state })];
 
   if (value && columnOrder.length > 0 && columnOrder.indexOf(columnName) === -1) {
-    let position = columnIndex <= columnOrder.length ? columnIndex : columnOrder.length - 1;
+    const position = columnIndex <= columnOrder.length ? columnIndex : columnOrder.length - 1;
 
     columnOrder.splice(position, 0, columnName);
   }
@@ -136,25 +134,25 @@ function reduceColumnVisible(state, action: DataGridColumnAction): IDataGridMode
     columnOrder,
     columnsVisible: {
       ...columnsVisible,
-      [columnName]: value
-    }
+      [columnName]: value,
+    },
   };
 }
 
 function reduceColumnOrder(state, action: DataGridColumnAction) {
-  const {columnName, value: position} = action.payload;
+  const { columnName, value: position } = action.payload;
   const columnOrder = getColumnOrderArray(state);
   const columnVisible = state.columnsVisible;
-  const columnsFrozenen = selectColumnsFrozen({model: state});
-  const hasIndex = selectHasIndex({model: state});
+  const columnsFrozenen = selectColumnsFrozen({ model: state });
+  const hasIndex = selectHasIndex({ model: state });
   let destination = hasIndex ? position.value + 1 : position.value;
 
-  Object.keys(columnVisible).forEach(name => {
+  Object.keys(columnVisible).forEach((name) => {
     if (columnVisible[name] !== false) {
       return true;
     }
 
-    let position = columnOrder.indexOf(name);
+    const position = columnOrder.indexOf(name);
 
     if (position !== -1) {
       columnOrder.splice(position, 1);
@@ -179,7 +177,7 @@ function reduceColumnOrder(state, action: DataGridColumnAction) {
       frozenCounter += 1;
 
       if (frozenCounter === destination) {
-        destination = index
+        destination = index;
       }
     });
   }
@@ -188,7 +186,7 @@ function reduceColumnOrder(state, action: DataGridColumnAction) {
 
   return {
     ...state,
-    columnOrder
+    columnOrder,
   };
 }
 
@@ -196,7 +194,7 @@ function resetColumnsOrder(state, action) {
   const columnOrder = [...state.columnOrder];
 
   if (action.payload.value) {
-    return {...state, columnOrder: []};
+    return { ...state, columnOrder: [] };
   }
 
   state.columnNames.forEach((name, index) => {
@@ -207,8 +205,8 @@ function resetColumnsOrder(state, action) {
 
   return {
     ...state,
-    columnOrder
-  }
+    columnOrder,
+  };
 }
 
 function getColumnOrderArray(state): string[] {
@@ -218,7 +216,7 @@ function getColumnOrderArray(state): string[] {
     return [...columnOrder];
   }
 
-  return [...selectColumnNames({model: state})];
+  return [...selectColumnNames({ model: state })];
 }
 
 function addCellHighlighters(state, action) {
@@ -229,14 +227,18 @@ function addCellHighlighters(state, action) {
 
   return {
     ...newState,
-    cellHighlighters
-  }
+    cellHighlighters,
+  };
 }
 
 function removeCellHighlighters(state, action) {
-  const cellHighlighters = [...selectCellHighlighters({model: state})];
+  const cellHighlighters = [...selectCellHighlighters({ model: state })];
   const highlighterState: IHighlighterState = action.payload.value;
-  const currentHighlighters = selectColumnHighlighters({model: state}, highlighterState.colName, highlighterState.type);
+  const currentHighlighters = selectColumnHighlighters(
+    { model: state },
+    highlighterState.colName,
+    highlighterState.type,
+  );
 
   if (currentHighlighters.length > 0) {
     each(currentHighlighters, (current) => {
@@ -246,6 +248,6 @@ function removeCellHighlighters(state, action) {
 
   return {
     ...state,
-    cellHighlighters
-  }
+    cellHighlighters,
+  };
 }

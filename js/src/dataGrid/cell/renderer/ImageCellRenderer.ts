@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext } from "@phosphor/datagrid";
-import { BeakerXDataGrid } from "../../BeakerXDataGrid";
-import { ColumnManager } from "../../column/ColumnManager";
-import { selectColumnWidth } from "../../column/selectors";
-import { DataGridHelpers } from "../../Helpers";
-import { BeakerXDataStore } from "../../store/BeakerXDataStore";
+import { CellRenderer, GraphicsContext } from '@phosphor/datagrid';
+import { BeakerXDataGrid } from '../../BeakerXDataGrid';
+import { ColumnManager } from '../../column/ColumnManager';
+import { selectColumnWidth } from '../../column/selectors';
+import { DataGridHelpers } from '../../Helpers';
+import { BeakerXDataStore } from '../../store/BeakerXDataStore';
 
 export class ImageCellRenderer extends CellRenderer {
   store: BeakerXDataStore;
@@ -31,11 +31,12 @@ export class ImageCellRenderer extends CellRenderer {
 
     this.store = dataGrid.store;
     this.dataGrid = dataGrid;
-    this.backgroundColor = (config: CellRenderer.ICellConfig) => DataGridHelpers.getBackgroundColor(this.dataGrid, config);
+    this.backgroundColor = (config: CellRenderer.ICellConfig) =>
+      DataGridHelpers.getBackgroundColor(this.dataGrid, config);
   }
 
   drawBackground(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
-    let color = CellRenderer.resolveOption(this.backgroundColor, config);
+    const color = CellRenderer.resolveOption(this.backgroundColor, config);
 
     if (!color) {
       return;
@@ -72,9 +73,9 @@ export class ImageCellRenderer extends CellRenderer {
     if (!img.complete) {
       img.onload = () => {
         this.dataGrid.repaint(x, y, img.width, img.height);
-      }
+      };
     } else {
-      this.resizeCell({...config}, img.width, img.height);
+      this.resizeCell({ ...config }, img.width, img.height);
 
       gc.drawImage(img, x, y);
     }
@@ -82,16 +83,14 @@ export class ImageCellRenderer extends CellRenderer {
 
   resizeCell(config, width, height) {
     setTimeout(() => {
-      const column = this.dataGrid.columnManager.getColumnByPosition(
-        ColumnManager.createPositionFromCell(config)
-      );
+      const column = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(config));
 
       if (this.dataGrid.sectionSize('row', config.row) < height) {
         this.dataGrid.resizeSection('row', config.row, height);
       }
 
       if (selectColumnWidth(this.dataGrid.store.state, column) < width) {
-        column.dataGrid.dataGridResize.setSectionWidth("column", column, width);
+        column.dataGrid.dataGridResize.setSectionWidth('column', column, width);
         column.dataGrid.dataGridResize.updateWidgetWidth();
       }
 
@@ -107,15 +106,15 @@ export class ImageCellRenderer extends CellRenderer {
     }
 
     try {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const coreutils = require('@jupyterlab/coreutils');
       coreutils.PageConfig.getOption('pageUrl');
       baseUrl = coreutils.PageConfig.getBaseUrl();
-
     } catch (e) {
       baseUrl = `${window.location.origin}/`;
     }
 
-    let notebookPath = `${baseUrl}${document.body.dataset.notebookPath}`;
+    const notebookPath = `${baseUrl}${document.body.dataset.notebookPath}`;
 
     return '/files' + new URL(config.value, notebookPath).pathname;
   }

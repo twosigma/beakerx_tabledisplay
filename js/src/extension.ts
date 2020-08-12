@@ -17,10 +17,10 @@
 if ((window as any).require) {
   (window as any).require.config({
     map: {
-      "*" : {
-        "beakerx_tabledisplay": "nbextensions/beakerx_tabledisplay/index",
-      }
-    }
+      '*': {
+        beakerx_tabledisplay: 'nbextensions/beakerx_tabledisplay/index',
+      },
+    },
   });
 }
 

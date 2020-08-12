@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from "@phosphor/datagrid";
-import { Theme } from "../../utils/Theme";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { ICellData } from "../interface/ICell";
+import { CellRenderer } from '@phosphor/datagrid';
+import { Theme } from '../../utils/Theme';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { ICellData } from '../interface/ICell';
 
 export interface IRangeCells {
-  startCell: ICellData,
-  endCell: ICellData
+  startCell: ICellData;
+  endCell: ICellData;
 }
 
 export class CellSelectionManager {
@@ -58,23 +58,23 @@ export class CellSelectionManager {
       return {
         startCell: this.startCellData,
         endCell: this.endCellData,
-      }
+      };
     }
 
     if (this.startCellData.region !== 'row-header' && this.endCellData.region === 'row-header') {
       return {
         startCell: this.endCellData,
         endCell: this.startCellData,
-      }
+      };
     }
 
-    let startCell = this.startCellData.column < this.endCellData.column ? this.startCellData : this.endCellData;
-    let endCell = this.startCellData.column < this.endCellData.column ? this.endCellData : this.startCellData;
+    const startCell = this.startCellData.column < this.endCellData.column ? this.startCellData : this.endCellData;
+    const endCell = this.startCellData.column < this.endCellData.column ? this.endCellData : this.startCellData;
 
     return {
       startCell,
-      endCell
-    }
+      endCell,
+    };
   }
 
   getRowsRangeCells(): IRangeCells | null {
@@ -87,8 +87,8 @@ export class CellSelectionManager {
 
     return {
       startCell,
-      endCell
-    }
+      endCell,
+    };
   }
 
   isBetweenRows(config: CellRenderer.ICellConfig) {
@@ -98,7 +98,7 @@ export class CellSelectionManager {
       return false;
     }
 
-    return config.row >= rowsRange.startCell.row && config.row <= rowsRange.endCell.row
+    return config.row >= rowsRange.startCell.row && config.row <= rowsRange.endCell.row;
   }
 
   isBetweenColumns(config: CellRenderer.ICellConfig) {
@@ -109,8 +109,8 @@ export class CellSelectionManager {
     }
 
     if (
-      config.region !== columnsRange.startCell.region && config.region === 'row-header'
-      || config.region !== columnsRange.endCell.region && config.region === 'body'
+      (config.region !== columnsRange.startCell.region && config.region === 'row-header') ||
+      (config.region !== columnsRange.endCell.region && config.region === 'body')
     ) {
       return false;
     }
@@ -123,10 +123,7 @@ export class CellSelectionManager {
       return config.column <= columnsRange.endCell.column;
     }
 
-    return (
-      config.column >= columnsRange.startCell.column &&
-      config.column <= columnsRange.endCell.column
-    );
+    return config.column >= columnsRange.startCell.column && config.column <= columnsRange.endCell.column;
   }
 
   enable() {
@@ -177,9 +174,9 @@ export class CellSelectionManager {
 
   handleBodyCellHover(event: MouseEvent) {
     if (
-      event.buttons !== 1
-      || this.dataGrid.columnPosition.isDragging()
-      || this.dataGrid.eventManager.isOverHeader(event)
+      event.buttons !== 1 ||
+      this.dataGrid.columnPosition.isDragging() ||
+      this.dataGrid.eventManager.isOverHeader(event)
     ) {
       return;
     }

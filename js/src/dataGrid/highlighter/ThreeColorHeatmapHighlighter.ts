@@ -15,10 +15,10 @@
  */
 
 import * as d3scale from 'd3-scale';
-import { DataGridColumn } from "../column/DataGridColumn";
-import { IHighlighterState } from "../interface/IHighlighterState";
-import { DataGridStyle } from "../style/DataGridStyle";
-import { HeatmapHighlighter } from "./HeatmapHighlighter";
+import { DataGridColumn } from '../column/DataGridColumn';
+import { IHighlighterState } from '../interface/IHighlighterState';
+import { DataGridStyle } from '../style/DataGridStyle';
+import { HeatmapHighlighter } from './HeatmapHighlighter';
 
 export class ThreeColorHeatmapHighlighter extends HeatmapHighlighter {
   constructor(column: DataGridColumn, state: IHighlighterState) {
@@ -28,10 +28,11 @@ export class ThreeColorHeatmapHighlighter extends HeatmapHighlighter {
       throw new Error('Min and Max values are not set');
     }
 
-    this.state.midVal = column.getValueResolver()(this.state.midVal || (this.state.minVal + this.state.maxVal / 2));
+    this.state.midVal = column.getValueResolver()(this.state.midVal || this.state.minVal + this.state.maxVal / 2);
     this.state.midColor = DataGridStyle.formatColor(state.midColor);
 
-    this.colorScale = d3scale.scaleLinear()
+    this.colorScale = d3scale
+      .scaleLinear()
       .domain([this.state.minVal, this.state.midVal, this.state.maxVal])
       .range([this.state.minColor, this.state.midColor, this.state.maxColor]);
   }

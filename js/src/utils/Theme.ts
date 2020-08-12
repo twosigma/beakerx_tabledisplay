@@ -14,18 +14,15 @@
  *  limitations under the License.
  */
 
-import { DataGrid } from "@phosphor/datagrid";
+import { DataGrid } from '@phosphor/datagrid';
 
 export class Theme {
-
   public static get isDark(): boolean {
     return document.body.classList.contains('bx-dark-theme');
   }
 
   public static getStyle(): DataGrid.IStyle & { isDark: boolean } {
-    return this.isDark ?
-      this.getDarkStyle() :
-      this.getLightStyle();
+    return this.isDark ? this.getDarkStyle() : this.getLightStyle();
   }
 
   public static get DEFAULT_DATA_FONT_COLOR(): string {
@@ -74,7 +71,7 @@ export class Theme {
       voidColor: '#636363',
       backgroundColor: '#212121',
       headerBackgroundColor: '#252525',
-      rowBackgroundColor: i => i % 2 === 0 ? '#424242' : '',
+      rowBackgroundColor: (i) => (i % 2 === 0 ? '#424242' : ''),
       gridLineColor: '#626262',
       headerGridLineColor: '#626262',
       isDark: true,
@@ -86,7 +83,7 @@ export class Theme {
       ...DataGrid.defaultStyle,
       voidColor: '#ffffff',
       headerBackgroundColor: '#e6e6e6',
-      rowBackgroundColor: i => i % 2 === 0 ? '#f9f9f9' : '',
+      rowBackgroundColor: (i) => (i % 2 === 0 ? '#f9f9f9' : ''),
       gridLineColor: '#d4d0d0',
       isDark: false,
     };

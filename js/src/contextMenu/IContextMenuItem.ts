@@ -17,6 +17,6 @@
 import { IMenuItem } from './IMenuItem';
 
 export interface IContextMenuItem extends IMenuItem {
-  selector: string
-  id: string,
+  selector: string;
+  id: string;
 }

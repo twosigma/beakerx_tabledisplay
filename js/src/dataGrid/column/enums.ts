@@ -16,16 +16,16 @@
 
 export enum COLUMN_TYPES {
   index,
-  body
+  body,
 }
 
 export enum SORT_ORDER {
   ASC,
   DESC,
-  NO_SORT
+  NO_SORT,
 }
 
 export enum COLUMN_SIDE {
   left,
-  right
+  right,
 }

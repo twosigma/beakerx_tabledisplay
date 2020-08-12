@@ -14,14 +14,13 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from "@phosphor/datagrid";
-import { Theme } from "../../utils/Theme";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { HIGHLIGHTER_STYLE, IHighlighterState } from "../interface/IHighlighterState";
-import { Highlighter } from "./Highlighter";
+import { CellRenderer } from '@phosphor/datagrid';
+import { Theme } from '../../utils/Theme';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { HIGHLIGHTER_STYLE, IHighlighterState } from '../interface/IHighlighterState';
+import { Highlighter } from './Highlighter';
 
 export class SortHighlighter extends Highlighter {
-
   constructor(column: DataGridColumn, state: IHighlighterState) {
     super(column, state);
 
@@ -29,8 +28,6 @@ export class SortHighlighter extends Highlighter {
   }
 
   getBackgroundColor(config: CellRenderer.ICellConfig) {
-    return config.row % 2 === 0 ?
-      Theme.HIGHLIGHTED_CELL_BACKGROUND_EVEN :
-      Theme.HIGHLIGHTED_CELL_BACKGROUND_ODD;
+    return config.row % 2 === 0 ? Theme.HIGHLIGHTED_CELL_BACKGROUND_EVEN : Theme.HIGHLIGHTED_CELL_BACKGROUND_ODD;
   }
 }

@@ -19,7 +19,7 @@ import { Message } from '@phosphor/messaging';
 import { Menu, Widget } from '@phosphor/widgets';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { BkoMenu } from "../../../src/dataGrid/headerMenu/BkoMenu";
+import { HeaderMenu } from "../../../src/dataGrid/headerMenu/BkoMenu";
 
 describe('BkoMenu', () => {
   let bkoMenu;
@@ -28,7 +28,7 @@ describe('BkoMenu', () => {
 
   before(() => {
     commands = new CommandRegistry();
-    bkoMenu = new BkoMenu({ commands });
+    bkoMenu = new HeaderMenu({ commands });
 
     commands.addCommand('test', {
       execute: () => {
@@ -91,7 +91,7 @@ describe('BkoMenu', () => {
   });
 
   it('should call show and hide methods', () => {
-    const parentMenu = new BkoMenu({commands});
+    const parentMenu = new HeaderMenu({commands});
     const stub = sinon.stub(bkoMenu, 'show');
     const stubHide = sinon.stub(bkoMenu, 'hide');
 

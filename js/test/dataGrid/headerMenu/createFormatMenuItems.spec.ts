@@ -20,8 +20,8 @@ import { COLUMN_TYPES } from "../../../src/dataGrid/column/enums";
 import { consts } from "../../../src/dataGrid/consts";
 import {
   createFormatMenuItems,
-  createPrecisionSubitems,
-  createTimeSubitems
+  createPrecisionSubmenuItems,
+  createTimeSubmenuItems
 } from "../../../src/dataGrid/headerMenu/createFormatMenuItems";
 import { createStore } from "../../../src/dataGrid/store/BeakerXDataStore";
 import { modelStateMock, tableDisplayWidgetMock } from "../mock";
@@ -51,7 +51,7 @@ describe('createFormatMenuItems', () => {
 
   describe('createPrecisionSubitems', () => {
     it('should create precission menu items', () => {
-      let precissionMenuItems = createPrecisionSubitems(column);
+      let precissionMenuItems = createPrecisionSubmenuItems(column);
 
       expect(precissionMenuItems).to.be.an.instanceof(Array);
       expect(precissionMenuItems).to.have.length(consts.scopeData.allPrecissions.length);
@@ -60,7 +60,7 @@ describe('createFormatMenuItems', () => {
 
   describe('createTimeSubitems', () => {
     it('should create time menu items', () => {
-      let timeMenuItems = createTimeSubitems();
+      let timeMenuItems = createTimeSubmenuItems();
 
       expect(timeMenuItems).to.be.an.instanceof(Array);
       expect(timeMenuItems).to.have.length(Object.keys(consts.TIME_UNIT_FORMATS).length);

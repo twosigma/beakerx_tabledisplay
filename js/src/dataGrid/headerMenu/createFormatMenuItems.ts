@@ -14,36 +14,39 @@
  *  limitations under the License.
  */
 
-import { IMenuItem } from "../../contextMenu/IMenuItem";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { consts } from "../consts";
-import { ALL_TYPES, getAllowedTypesByType } from "../dataTypes";
+import { DataGridColumn } from '../column/DataGridColumn';
+import { ALL_TYPES, getAllowedTypesByType } from '../dataTypes';
+import { IContextMenuItem } from '../../contextMenu';
+import { scopeData, TIME_UNIT_FORMATS } from '../consts';
 
-export function createFormatMenuItems(column: DataGridColumn) {
+export function createFormatMenuItems(column: DataGridColumn): IContextMenuItem[] {
   const types = getAllowedTypesByType(column.getDataType());
-  let items: IMenuItem[] = [];
+  let items: IContextMenuItem[] = [];
 
   if (!column.dataGrid) {
     return [];
   }
 
   types.forEach((obj) => {
-    if (obj.type === 8) { //datetime
-      items = items.concat(createTimeSubitems());
+    if (obj.type === 8) {
+      //datetime
+      items = items.concat(createTimeSubmenuItems());
 
       return;
     }
 
-    let item: IMenuItem = {
+    const item: IContextMenuItem = {
       title: obj.name,
       id: `format_${obj.name}`,
-      isChecked: (column) => column && column.getDisplayType() === obj.type
+      isChecked: (column) => column && column.getDisplayType() === obj.type,
+      selector: '',
     };
 
-    if (obj.type === 4) { //double with precision
-      item.items = createPrecisionSubitems(column);
+    if (obj.type === 4) {
+      //double with precision
+      item.items = createPrecisionSubmenuItems();
     } else {
-      item.action = (column) => column.setDisplayType(obj.type)
+      item.action = (event, column) => column?.setDisplayType(obj.type);
     }
     items.push(item);
   });
@@ -51,15 +54,16 @@ export function createFormatMenuItems(column: DataGridColumn) {
   return items;
 }
 
-export function createPrecisionSubitems(column: DataGridColumn): IMenuItem[] {
-  const items: IMenuItem[] = [];
+export function createPrecisionSubmenuItems(): IContextMenuItem[] {
+  const items: IContextMenuItem[] = [];
 
-  consts.scopeData.allPrecissions.forEach((precision) => {
-    let item = {
+  scopeData.allPrecissions.forEach((precision) => {
+    const item: IContextMenuItem = {
       title: `${precision}`,
       id: `precision_${precision}`,
       isChecked: (column) => `4.${precision}` === column.getDisplayType(),
-      action: (column) => column.setDisplayType(`4.${precision}`)
+      action: (event, column) => column?.setDisplayType(`4.${precision}`),
+      selector: '',
     };
 
     items.push(item);
@@ -68,23 +72,24 @@ export function createPrecisionSubitems(column: DataGridColumn): IMenuItem[] {
   return items;
 }
 
-export function createTimeSubitems(): IMenuItem[] {
-  const items: IMenuItem[] = [];
+export function createTimeSubmenuItems(): IContextMenuItem[] {
+  const items: IContextMenuItem[] = [];
 
-  Object.keys(consts.TIME_UNIT_FORMATS).forEach((key) => {
-    let item = {
-      title: consts.TIME_UNIT_FORMATS[key].title,
-      id: `timeunit_${consts.TIME_UNIT_FORMATS[key].title}`,
+  Object.keys(TIME_UNIT_FORMATS).forEach((key) => {
+    const item: IContextMenuItem = {
+      title: TIME_UNIT_FORMATS[key].title,
+      id: `timeunit_${TIME_UNIT_FORMATS[key].title}`,
       isChecked: (column) => {
         const displayType = column && column.getDisplayType();
 
         return (
-            displayType === ALL_TYPES.datetime ||
-            displayType === ALL_TYPES.time
-          ) && consts.TIME_UNIT_FORMATS[key].format === column.getFormatForTimes().format
-          && consts.TIME_UNIT_FORMATS[key].valueModifier === column.getFormatForTimes().valueModifier
+          (displayType === ALL_TYPES.datetime || displayType === ALL_TYPES.time) &&
+          TIME_UNIT_FORMATS[key].format === column.getFormatForTimes().format &&
+          TIME_UNIT_FORMATS[key].valueModifier === column.getFormatForTimes().valueModifier
+        );
       },
-      action: (column) => column.setTimeDisplayType(consts.TIME_UNIT_FORMATS[key])
+      action: (event, column) => column?.setTimeDisplayType(TIME_UNIT_FORMATS[key]),
+      selector: '',
     };
 
     items.push(item);

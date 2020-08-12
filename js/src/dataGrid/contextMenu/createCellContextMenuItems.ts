@@ -14,16 +14,18 @@
  *  limitations under the License.
  */
 
-import { IContextMenuItem } from "../../contextMenu/IContextMenuItem";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { ColumnManager } from "../column/ColumnManager";
-import { selectColumnIndexByPosition } from "../column/selectors";
-import { selectContextMenuItems, selectContextMenuTags } from "../model/selectors";
-import { DataGridContextMenu } from "./DataGridContextMenu";
+import { IContextMenuItem } from '../../contextMenu/IContextMenuItem';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { ColumnManager } from '../column/ColumnManager';
+import { selectColumnIndexByPosition } from '../column/selectors';
+import { selectContextMenuItems, selectContextMenuTags } from '../model/selectors';
+import { DataGridContextMenu } from './DataGridContextMenu';
+import { ContextMenuClickMessage } from '../message/ContextMenuClickMessage';
+import { ActionDetailsMessage } from '../message/ActionDetailsMessage';
 
 export function createCellContextMenuItems(
   dataGrid: BeakerXDataGrid,
-  contextMenu: DataGridContextMenu
+  contextMenu: DataGridContextMenu,
 ): IContextMenuItem[] {
   const selector = `#${dataGrid.wrapperId} canvas`;
   const contextMenuItems = selectContextMenuItems(dataGrid.store.state);
@@ -51,13 +53,14 @@ export function createCellContextMenuItems(
           return;
         }
 
-        dataGrid.commSignal.emit({
-          event: 'CONTEXT_MENU_CLICK',
-          itemKey: item,
-          row: dataGrid.rowManager.getRow(data.row).index,
-          column: selectColumnIndexByPosition(dataGrid.store.state, ColumnManager.createPositionFromCell(data)),
-        });
-      }
+        dataGrid.commSignal.emit(
+          new ContextMenuClickMessage(
+            dataGrid.rowManager.getRow(data.row).index,
+            selectColumnIndexByPosition(dataGrid.store.state, ColumnManager.createPositionFromCell(data)),
+            item,
+          ),
+        );
+      },
     }));
   }
 
@@ -65,7 +68,7 @@ export function createCellContextMenuItems(
     const items: IContextMenuItem[] = [];
 
     Object.keys(contextMenuTags).forEach((name) => {
-      let tag = contextMenuTags[name];
+      const tag = contextMenuTags[name];
 
       items.push({
         selector,
@@ -79,26 +82,20 @@ export function createCellContextMenuItems(
             return;
           }
 
-          const params = {
-            actionType: 'CONTEXT_MENU_CLICK',
-            contextMenuItem: name,
-            row: dataGrid.rowManager.getRow(data.row).index,
-            col: selectColumnIndexByPosition(dataGrid.store.state, ColumnManager.createPositionFromCell(data))
-          };
-
-          dataGrid.commSignal.emit({
-            params,
-            event: 'actiondetails'
-          });
-        }
+          dataGrid.commSignal.emit(
+            new ActionDetailsMessage(
+              'CONTEXT_MENU_CLICK',
+              dataGrid.rowManager.getRow(data.row).index,
+              selectColumnIndexByPosition(dataGrid.store.state, ColumnManager.createPositionFromCell(data)),
+              name,
+            ),
+          );
+        },
       });
     });
 
     return items;
   }
 
-  return [
-    ...createFromModelContextMenuItems(),
-    ...createFromModelContextMenuTags()
-  ]
+  return [...createFromModelContextMenuItems(), ...createFromModelContextMenuTags()];
 }

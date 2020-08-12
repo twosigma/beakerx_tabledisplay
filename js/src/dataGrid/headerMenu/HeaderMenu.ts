@@ -16,15 +16,14 @@
 
 import { CommandRegistry } from '@phosphor/commands';
 import { Widget } from '@phosphor/widgets';
-import { IMenu } from "../../contextMenu/IMenu";
-import { IMenuItem } from "../../contextMenu/IMenuItem";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { SORT_ORDER } from "../column/enums";
-import { KEYBOARD_KEYS } from "../event/enums";
-import { DataGridHelpers } from "../Helpers";
+import { IMenu } from '../../contextMenu';
+import { IMenuItem } from '../../contextMenu/IMenuItem';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { SORT_ORDER } from '../column/enums';
+import { KEYBOARD_KEYS } from '../event/enums';
+import { DataGridHelpers } from '../Helpers';
 import { BkoMenu } from './BkoMenu';
-import getEventKeyCode = DataGridHelpers.getEventKeyCode;
 
 export abstract class HeaderMenu implements IMenu {
   columnIndex: number;
@@ -36,12 +35,12 @@ export abstract class HeaderMenu implements IMenu {
   protected dataGrid: BeakerXDataGrid;
   protected column: DataGridColumn;
 
-  private TRIGGER_CLASS_OPENED: string = 'opened';
-  private TRIGGER_CLASS_SORTING_DESC: string = 'sorting_desc';
-  private TRIGGER_CLASS_SORTING_ASC: string = 'sorting_asc';
+  private TRIGGER_CLASS_OPENED = 'opened';
+  private TRIGGER_CLASS_SORTING_DESC = 'sorting_desc';
+  private TRIGGER_CLASS_SORTING_ASC = 'sorting_asc';
 
-  static DEFAULT_TRIGGER_HEIGHT: number = 24;
-  static DEFAULT_TRIGGER_WIDTH: number = 14;
+  static DEFAULT_TRIGGER_HEIGHT = 24;
+  static DEFAULT_TRIGGER_WIDTH = 14;
 
   constructor(column: DataGridColumn) {
     this.commands = new CommandRegistry();
@@ -59,16 +58,15 @@ export abstract class HeaderMenu implements IMenu {
     this.attachTriggerToMenu();
   }
 
-  protected abstract buildMenu(): void
+  protected abstract buildMenu(): void;
 
   updateTriggerPosition() {
     const columnPosition = this.column.getPosition();
     const scrollCompensation = columnPosition.region !== 'row-header' ? this.dataGrid.scrollX : 0;
 
-    this.triggerNode.style.left = `${this.dataGrid.getColumnOffset(
-      columnPosition.value,
-      columnPosition.region
-    ) - scrollCompensation}px`;
+    this.triggerNode.style.left = `${
+      this.dataGrid.getColumnOffset(columnPosition.value, columnPosition.region) - scrollCompensation
+    }px`;
   }
 
   showTrigger(): void {
@@ -84,7 +82,10 @@ export abstract class HeaderMenu implements IMenu {
   }
 
   hideTrigger() {
-    if (this.column.getSortOrder() !== SORT_ORDER.NO_SORT && this.column.getVisible() || this.column.getKeepTrigger()) {
+    if (
+      (this.column.getSortOrder() !== SORT_ORDER.NO_SORT && this.column.getVisible()) ||
+      this.column.getKeepTrigger()
+    ) {
       return;
     }
 
@@ -96,7 +97,7 @@ export abstract class HeaderMenu implements IMenu {
     this.column.getKeepTrigger() && this.showTrigger();
   }
 
-  open(submenuIndex?: number): void {
+  open(event: MouseEvent, submenuIndex?: number): boolean {
     const menuPosition = this.getMenuPosition(this.triggerNode);
 
     this.menu.addClass('open');
@@ -107,12 +108,14 @@ export abstract class HeaderMenu implements IMenu {
     this.triggerNode.classList.add(this.TRIGGER_CLASS_OPENED);
 
     if (submenuIndex !== undefined) {
-      let item = this.menu.items[submenuIndex];
+      const item = this.menu.items[submenuIndex];
       if (item.type === 'submenu') {
         this.menu.activeIndex = submenuIndex;
         this.menu.triggerActiveItem();
       }
     }
+
+    return true; // TODO is there a case where this should be false?
   }
 
   close() {
@@ -134,29 +137,29 @@ export abstract class HeaderMenu implements IMenu {
     });
   }
 
-  toggleMenu(submenuIndex?: number): void {
-    this.triggerNode.classList.contains(this.TRIGGER_CLASS_OPENED) ?
-      this.triggerNode.classList.remove(this.TRIGGER_CLASS_OPENED) :
-      this.open(submenuIndex);
+  toggleMenu(event: MouseEvent, submenuIndex?: number): void {
+    this.triggerNode.classList.contains(this.TRIGGER_CLASS_OPENED)
+      ? this.triggerNode.classList.remove(this.TRIGGER_CLASS_OPENED)
+      : this.open(event, submenuIndex);
   }
 
   createItems(items: IMenuItem[], menu: BkoMenu): void {
     for (let i = 0, ien = items.length; i < ien; i++) {
-      let menuItem = items[i];
+      const menuItem = items[i];
 
-      const subitems = (typeof menuItem.items == 'function') ? menuItem.items(this.column) : menuItem.items;
+      const subitems = typeof menuItem.items == 'function' ? menuItem.items(this.column) : menuItem.items;
       const hasSubitems = Array.isArray(subitems) && subitems.length;
 
-      menuItem.separator && menu.addItem({type: 'separator'});
+      menuItem.separator && menu.addItem({ type: 'separator' });
 
       if (!hasSubitems) {
-        let command = this.addCommand(menuItem, menu);
-        menu.addItem({command});
+        const command = this.addCommand(menuItem, menu);
+        menu.addItem({ command });
 
         continue;
       }
 
-      menu.addItem({type: 'submenu', submenu: this.createSubmenu(menuItem, subitems)});
+      menu.addItem({ type: 'submenu', submenu: this.createSubmenu(menuItem, subitems) });
     }
   }
 
@@ -179,17 +182,17 @@ export abstract class HeaderMenu implements IMenu {
       },
       execute: (): void => {
         if (menuItem.action && typeof menuItem.action == 'function') {
-          menuItem.action(this.column);
+          menuItem.action(undefined, this.column);
           menuItem.updateLayout && menu.update();
         }
-      }
+      },
     });
 
     if (menuItem.shortcut) {
       this.commands.addKeyBinding({
         keys: [menuItem.shortcut],
         selector: 'body',
-        command: commandId
+        command: commandId,
       });
     }
 
@@ -197,7 +200,7 @@ export abstract class HeaderMenu implements IMenu {
   }
 
   createSubmenu(menuItem: IMenuItem, subitems: IMenuItem[]): BkoMenu {
-    const submenu = new BkoMenu({commands: this.commands});
+    const submenu = new BkoMenu({ commands: this.commands });
 
     submenu.addClass('dropdown-submenu');
     submenu.addClass('bko-table-menu');
@@ -248,10 +251,10 @@ export abstract class HeaderMenu implements IMenu {
     this.triggerNode.addEventListener('mousedown', this.handleMenuTriggerClick);
   }
 
-  private handleMenuTriggerClick(event) {
+  private handleMenuTriggerClick(event: MouseEvent) {
     event.preventDefault();
 
-    this.toggleMenu();
+    this.toggleMenu(event);
   }
 
   protected getMenuPosition(trigger: any) {
@@ -259,7 +262,7 @@ export abstract class HeaderMenu implements IMenu {
 
     return {
       top: window.pageYOffset + triggerRectObject.bottom,
-      left: triggerRectObject.left
+      left: triggerRectObject.left,
     };
   }
 
@@ -311,7 +314,7 @@ export abstract class HeaderMenu implements IMenu {
     input.addEventListener('keyup', (event: KeyboardEvent) => {
       event.stopImmediatePropagation();
 
-      if (getEventKeyCode(event) === KEYBOARD_KEYS.Escape) {
+      if (DataGridHelpers.getEventKeyCode(event) === KEYBOARD_KEYS.Escape) {
         menu.close();
 
         return;
@@ -326,9 +329,9 @@ export abstract class HeaderMenu implements IMenu {
     const items = menu.contentNode.querySelectorAll('.p-Menu-item');
 
     for (let i = 0; i < items.length; i++) {
-      let item = <HTMLElement>items.item(i);
-      let itemClassList = item.classList;
-      let shouldHide = searchExp && searchExp.test ? !searchExp.test(item.innerText) : false;
+      const item = <HTMLElement>items.item(i);
+      const itemClassList = item.classList;
+      const shouldHide = searchExp && searchExp.test ? !searchExp.test(item.innerText) : false;
 
       shouldHide ? itemClassList.add('hidden') : itemClassList.remove('hidden');
     }

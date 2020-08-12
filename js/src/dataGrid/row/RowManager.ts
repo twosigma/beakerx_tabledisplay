@@ -15,15 +15,15 @@
  */
 
 import { filter, iter, MapIterator, toArray } from '@phosphor/algorithm';
-import { Theme } from "../../utils/Theme";
-import { ColumnFilter } from "../column/ColumnFilter";
-import { ColumnManager } from "../column/ColumnManager";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { COLUMN_TYPES, SORT_ORDER } from "../column/enums";
-import { selectFontColor, selectValues } from "../model/selectors";
-import { BeakerXDataStore } from "../store/BeakerXDataStore";
-import { DataGridCellValue } from "./DataGridCellValue";
-import { DataGridRow } from "./DataGridRow";
+import { Theme } from '../../utils/Theme';
+import { ColumnFilter } from '../column/ColumnFilter';
+import { ColumnManager } from '../column/ColumnManager';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { COLUMN_TYPES, SORT_ORDER } from '../column/enums';
+import { selectFontColor, selectValues } from '../model/selectors';
+import { BeakerXDataStore } from '../store/BeakerXDataStore';
+import { DataGridCellValue } from './DataGridCellValue';
+import { DataGridRow } from './DataGridRow';
 
 export class RowManager {
   rowsIterator: MapIterator<any[], DataGridRow>;
@@ -50,18 +50,18 @@ export class RowManager {
   }
 
   createRows(store: BeakerXDataStore, hasIndex) {
-    let cellValues = this.createCellValue(store);
+    const cellValues = this.createCellValue(store);
     hasIndex ? this.createRowsWithIndex(cellValues) : this.createRowsWithGeneratedIndex(cellValues);
   }
 
   private createCellValue(store: BeakerXDataStore) {
     let data = selectValues(store.state);
-    let fontFun = this.defineFontFun(store, data);
-    let newData = [];
+    const fontFun = this.defineFontFun(store, data);
+    const newData = [];
     for (let i = 0; i < data.length; i++) {
-      let newRows = [];
+      const newRows = [];
       for (let y = 0; y < data[i].length; y++) {
-        let pair = new DataGridCellValue(data[i][y], fontFun(i, y));
+        const pair = new DataGridCellValue(data[i][y], fontFun(i, y));
         newRows.push(pair);
       }
       newData.push(newRows);
@@ -71,11 +71,12 @@ export class RowManager {
   }
 
   private defineFontFun(store: BeakerXDataStore, data) {
-    let fontColors = selectFontColor(store.state);
+    const fontColors = selectFontColor(store.state);
 
-    if (fontColors && (fontColors.length == data.length)) {
+    if (fontColors && fontColors.length == data.length) {
       return (row: number, col: number): string => fontColors[row][col];
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (row: number, col: number): string => Theme.DEFAULT_DATA_FONT_COLOR;
     }
   }
@@ -83,7 +84,7 @@ export class RowManager {
   createRowsWithGeneratedIndex(data) {
     this.rowsIterator = new MapIterator<any[], DataGridRow>(
       iter(data),
-      (values, index) => new DataGridRow(index, values)
+      (values, index) => new DataGridRow(index, values),
     );
     this.rows = toArray(this.rowsIterator.clone());
   }
@@ -91,15 +92,15 @@ export class RowManager {
   createRowsWithIndex(data) {
     this.rowsIterator = new MapIterator<any[], DataGridRow>(
       iter(data),
-      (values) => new DataGridRow(values[0].value, values.slice(1)
-      ));
+      (values) => new DataGridRow(values[0].value, values.slice(1)),
+    );
 
     this.rows = toArray(this.rowsIterator.clone());
   }
 
   keepSorting() {
     if (this.sortedBy != undefined) {
-      this.sortByColumn(this.sortedBy)
+      this.sortByColumn(this.sortedBy);
     }
   }
 
@@ -119,28 +120,24 @@ export class RowManager {
     return this.sortRows(column, sortOrder);
   }
 
-  sortRows(column: DataGridColumn, sortOrder: SORT_ORDER, valueResolver?: Function): void {
+  sortRows(column: DataGridColumn, sortOrder: SORT_ORDER, valueResolver?: (row, columnIndex) => any): void {
     const shouldReverse = sortOrder === SORT_ORDER.DESC;
     const resolverFn = valueResolver ? valueResolver : this.defaultValueResolver;
     const columnValueResolver = column.getValueResolver();
     const columnIndex = column.index;
 
     this.rows = this.rows.sort((row1, row2) => {
-      let value1 = columnValueResolver(resolverFn(row1, columnIndex));
-      let value2 = columnValueResolver(resolverFn(row2, columnIndex));
-      let result = this.compareSortedValues(value1, value2);
+      const value1 = columnValueResolver(resolverFn(row1, columnIndex));
+      const value2 = columnValueResolver(resolverFn(row2, columnIndex));
+      const result = this.compareSortedValues(value1, value2);
 
       return shouldReverse ? -result : result;
     });
   }
 
   private compareSortedValues(value1, value2) {
-    if (
-      typeof value1 === 'number'
-      && typeof value2 === 'number'
-      && !isFinite(value1 - value2)
-    ) {
-      return !isFinite(value1) ? !isFinite(value2) ? 0 : 1 : -1;
+    if (typeof value1 === 'number' && typeof value2 === 'number' && !isFinite(value1 - value2)) {
+      return !isFinite(value1) ? (!isFinite(value2) ? 0 : 1) : -1;
     }
 
     if (value1 > value2) {
@@ -164,6 +161,7 @@ export class RowManager {
     return row.getValue(columnIndex);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   indexValueResolver(row, columnIndex: number) {
     return row.index;
   }
@@ -171,9 +169,9 @@ export class RowManager {
   createFilterExpressionVars() {
     this.expressionVars = '';
 
-    const agregationFn = (column: DataGridColumn) => {
-      let prefix = ColumnFilter.getColumnNameVarPrefix(column.name);
-      let name = ColumnFilter.escapeColumnName(column.name);
+    const aggregationFn = (column: DataGridColumn) => {
+      const prefix = ColumnFilter.getColumnNameVarPrefix(column.name);
+      const name = ColumnFilter.escapeColumnName(column.name);
 
       if (column.type === COLUMN_TYPES.index) {
         this.expressionVars += `var ${prefix}${name} = row.index;`;
@@ -182,15 +180,15 @@ export class RowManager {
       }
     };
 
-    this.columnManager.columns[COLUMN_TYPES.index].forEach(agregationFn);
-    this.columnManager.columns[COLUMN_TYPES.body].forEach(agregationFn);
+    this.columnManager.columns[COLUMN_TYPES.index].forEach(aggregationFn);
+    this.columnManager.columns[COLUMN_TYPES.body].forEach(aggregationFn);
   }
 
   searchRows() {
     this.filterRows(this.evaluateSearchExpression);
   }
 
-  filterRows(evalFn?: Function) {
+  filterRows(evalFn?: (row: any, formatFns: any) => any) {
     const columns = this.columnManager.columns;
 
     this.createFilterExpression();
@@ -203,18 +201,19 @@ export class RowManager {
     }
 
     const formatFns = {};
-    formatFns[COLUMN_TYPES.index] = columns[COLUMN_TYPES.index].map(column => column.formatFn);
-    formatFns[COLUMN_TYPES.body] = columns[COLUMN_TYPES.body].map(column => column.formatFn);
+    formatFns[COLUMN_TYPES.index] = columns[COLUMN_TYPES.index].map((column) => column.formatFn);
+    formatFns[COLUMN_TYPES.body] = columns[COLUMN_TYPES.body].map((column) => column.formatFn);
 
     try {
-      this.rows = toArray(filter(
-        this.rowsIterator.clone(),
-        (row) => evalFn ? evalFn(row, formatFns) : this.evaluateFilterExpression(row, formatFns)
-      ));
+      this.rows = toArray(
+        filter(this.rowsIterator.clone(), (row) =>
+          evalFn ? evalFn(row, formatFns) : this.evaluateFilterExpression(row, formatFns),
+        ),
+      );
       this.sortedBy && this.sortByColumn(this.sortedBy);
       this.columnManager.dataGrid.resize();
-    } catch (e) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
   }
 
   takeRows(start: number, end: number) {
@@ -222,9 +221,9 @@ export class RowManager {
   }
 
   createFilterExpression(): void {
-    let expressionParts: string[] = [];
+    const expressionParts: string[] = [];
     const agregationFn = (column: DataGridColumn) => {
-      let filter = column.getFilter();
+      const filter = column.getFilter();
 
       if (filter) {
         expressionParts.push(filter);
@@ -237,48 +236,54 @@ export class RowManager {
     this.filterExpression = expressionParts.join(' && ').trim();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   evaluateFilterExpression(row, formatFns) {
     const evalInContext = function (expression: string) {
-      "use strict";
-
+      'use strict';
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const row = {
         ...this.row,
         getValue(index) {
-          return this.cells[index].value
-        }
+          return this.cells[index].value;
+        },
       };
+      /* eslint-enable @typescript-eslint/no-unused-vars */
       const result = eval(expression);
 
       return result !== undefined ? result : true;
-    }.bind({row});
+    }.bind({ row });
 
     return evalInContext(String(`${this.expressionVars} ${this.filterExpression}`));
   }
 
   evaluateSearchExpression(row, formatFns) {
     const evalInContext = function (expression: string) {
+      /* eslint-disable @typescript-eslint/no-unused-vars */
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       const row = {
-        index: formatFns[COLUMN_TYPES.index][0]({row: this.row.index, value: this.row.index, column: 0}),
-        values: this.row.values.map((value, index) => formatFns[COLUMN_TYPES.body][index]({
-          value,
-          row: this.row.index,
-          column: index
-        }))
+        index: formatFns[COLUMN_TYPES.index][0]({ row: this.row.index, value: this.row.index, column: 0 }),
+        values: this.row.values.map((value, index) =>
+          formatFns[COLUMN_TYPES.body][index]({
+            value,
+            row: this.row.index,
+            column: index,
+          }),
+        ),
       };
+      /* eslint-enable @typescript-eslint/no-unused-vars */
       const result = eval(expression);
 
       return result !== undefined ? result : true;
-    }.bind({row});
+    }.bind({ row });
 
     return evalInContext(String(`${this.expressionVars} ${this.filterExpression}`));
   }
 
   getValueByColumn(row: number, columnIndex: number, columnType: COLUMN_TYPES) {
-    return columnType === COLUMN_TYPES.body
-      ? this.getRow(row).getValue(columnIndex)
-      : this.getRow(row).index;
+    return columnType === COLUMN_TYPES.body ? this.getRow(row).getValue(columnIndex) : this.getRow(row).index;
   }
 
   setRowsToShow(rows) {

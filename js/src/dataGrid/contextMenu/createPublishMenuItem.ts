@@ -14,15 +14,11 @@
  *  limitations under the License.
  */
 
-import { IContextMenuItem } from "../../contextMenu/IContextMenuItem";
-import { GistPublisherUtils } from "../../GistPublisherUtils";
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { DataGridContextMenu } from "./DataGridContextMenu";
+import { IContextMenuItem } from '../../contextMenu/IContextMenuItem';
+import { GistPublisherUtils } from '../../GistPublisherUtils';
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
 
-export function createPublishMenuItems(
-  dataGrid: BeakerXDataGrid,
-  contextMenu: DataGridContextMenu
-): IContextMenuItem[] {
+export function createPublishMenuItems(dataGrid: BeakerXDataGrid): IContextMenuItem[] {
   const selector = `#${dataGrid.wrapperId} canvas`;
 
   return [
@@ -30,7 +26,7 @@ export function createPublishMenuItems(
       id: `beakerx:publish:${dataGrid.wrapperId}`,
       title: 'Publish...',
       action: () => GistPublisherUtils.publishScope(dataGrid),
-      selector
+      selector,
     },
   ];
 }

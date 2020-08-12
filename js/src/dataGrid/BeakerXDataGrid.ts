@@ -14,33 +14,36 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, DataGrid, DataModel, GraphicsContext } from "@phosphor/datagrid";
-import { SectionList } from "@phosphor/datagrid/lib/sectionlist";
+import { CellRenderer, DataGrid, DataModel, GraphicsContext } from '@phosphor/datagrid';
+import { SectionList } from '@phosphor/datagrid/lib/sectionlist';
 import { Signal } from '@phosphor/signaling';
-import { Widget } from "@phosphor/widgets";
-import { TableDisplayView } from "../TableDisplayView";
-import { TableDisplayWidget } from "../TableDisplayWidget";
-import { Common, Theme } from "../utils";
-import { CellFocusManager } from "./cell/CellFocusManager";
-import { CellManager } from "./cell/CellManager";
-import { CellRendererFactory } from "./cell/CellRendererFactory";
-import { CellSelectionManager } from "./cell/CellSelectionManager";
-import { CellTooltipManager } from "./cell/CellTooltipManager";
-import { DataGridCell } from "./cell/DataGridCell";
-import { ColumnManager } from "./column/ColumnManager";
-import { ColumnPosition } from "./column/ColumnPosition";
-import { DataGridColumn } from "./column/DataGridColumn";
-import { DataGridResize } from "./DataGridResize";
-import { ALL_TYPES } from "./dataTypes";
-import { EventManager } from "./event/EventManager";
-import { DataGridHelpers } from "./Helpers";
-import { HighlighterManager } from "./highlighter/HighlighterManager";
-import { ICellData } from "./interface/ICell";
-import { IDataGridModelState } from "./interface/IDataGridModelState";
-import { BeakerXDataGridModel } from "./model/BeakerXDataGridModel";
-import { selectHasIndex, selectRowsToShow } from "./model/selectors";
-import { RowManager } from "./row/RowManager";
-import { BeakerXDataStore } from "./store/BeakerXDataStore";
+import { Widget } from '@phosphor/widgets';
+import { TableDisplayView } from '../TableDisplayView';
+import { TableDisplayWidget } from '../TableDisplayWidget';
+import { CommonUtils, Theme } from '../utils';
+import { CellFocusManager } from './cell/CellFocusManager';
+import { CellManager } from './cell/CellManager';
+import { CellRendererFactory } from './cell/CellRendererFactory';
+import { CellSelectionManager } from './cell/CellSelectionManager';
+import { CellTooltipManager } from './cell/CellTooltipManager';
+import { DataGridCell } from './cell/DataGridCell';
+import { ColumnManager } from './column/ColumnManager';
+import { ColumnPosition } from './column/ColumnPosition';
+import { DataGridColumn } from './column/DataGridColumn';
+import { DataGridResize } from './DataGridResize';
+import { ALL_TYPES } from './dataTypes';
+import { EventManager } from './event/EventManager';
+import { DataGridHelpers } from './Helpers';
+import { HighlighterManager } from './highlighter/HighlighterManager';
+import { ICellData } from './interface/ICell';
+import { IDataGridModelState } from './interface/IDataGridModelState';
+import { BeakerXDataGridModel } from './model/BeakerXDataGridModel';
+import { selectHasIndex, selectRowsToShow } from './model/selectors';
+import { RowManager } from './row/RowManager';
+import { BeakerXDataStore } from './store/BeakerXDataStore';
+import { ActionDetailsMessage } from './message/ActionDetailsMessage';
+import { DoubleClickMessage } from './message/DoubleClickMessage';
+import { ContextMenuClickMessage } from './message/ContextMenuClickMessage';
 
 declare global {
   interface Window {
@@ -72,12 +75,16 @@ export class BeakerXDataGrid extends DataGrid {
   wrapperId: string;
   tableDisplayView: TableDisplayWidget & TableDisplayView;
 
-  cellHovered = new Signal<this, { data: ICellData | null, event: MouseEvent }>(this);
-  commSignal = new Signal<this, {}>(this);
+  cellHovered = new Signal<this, { data: ICellData | null; event: MouseEvent }>(this);
+  commSignal = new Signal<this, ActionDetailsMessage | DoubleClickMessage | ContextMenuClickMessage>(this);
 
   static FOCUS_CSS_CLASS = 'bko-focused';
 
-  constructor(options: DataGrid.IOptions, dataStore: BeakerXDataStore, tableDisplayView: TableDisplayWidget & TableDisplayView) {
+  constructor(
+    options: DataGrid.IOptions,
+    dataStore: BeakerXDataStore,
+    tableDisplayView: TableDisplayWidget & TableDisplayView,
+  ) {
     super(options);
 
     //this is hack to use private DataGrid properties
@@ -93,11 +100,16 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   init(store: BeakerXDataStore) {
-    this.id = 'grid_' + Common.generateId(6);
+    this.id = 'grid_' + CommonUtils.generateId(6);
     this.store = store;
     this.columnManager = new ColumnManager(this);
     this.columnPosition = new ColumnPosition(this);
-    this.rowManager = new RowManager(store, selectHasIndex(store.state), this.columnManager, selectRowsToShow(store.state));
+    this.rowManager = new RowManager(
+      store,
+      selectHasIndex(store.state),
+      this.columnManager,
+      selectRowsToShow(store.state),
+    );
     this.cellSelectionManager = new CellSelectionManager(this);
     this.cellManager = new CellManager(this);
     this.eventManager = new EventManager(this);
@@ -170,7 +182,7 @@ export class BeakerXDataGrid extends DataGrid {
     this.dataGridResize.setInitialSize();
   }
 
-  resize(args?: any): void {
+  resize(): void {
     this.dataGridResize && this.dataGridResize.resize();
   }
 
@@ -179,8 +191,8 @@ export class BeakerXDataGrid extends DataGrid {
 
     try {
       window.beakerx.tableFocused = this.focused;
-    } catch (e) {
-    }
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
 
     if (focus) {
       this.node.focus();
@@ -190,7 +202,7 @@ export class BeakerXDataGrid extends DataGrid {
       return;
     }
 
-    this.cellHovered.emit({data: null, event: null});
+    this.cellHovered.emit({ data: null, event: null });
     this.cellTooltipManager.hideTooltips();
     this.columnManager.blurColumnFilterInputs();
     this.columnManager.closeAllMenus();
@@ -235,8 +247,8 @@ export class BeakerXDataGrid extends DataGrid {
   onAfterAttach(msg) {
     super.onAfterAttach(msg);
 
-    this.columnManager.bodyColumns.forEach(column => column.columnFilter.attach(this.viewport.node));
-    this.columnManager.indexColumns.forEach(column => column.columnFilter.attach(this.viewport.node));
+    this.columnManager.bodyColumns.forEach((column) => column.columnFilter.attach(this.viewport.node));
+    this.columnManager.indexColumns.forEach((column) => column.columnFilter.attach(this.viewport.node));
   }
 
   messageHook(handler, msg) {
@@ -254,12 +266,13 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   colorizeColumnBorder(data: ICellData, color: string) {
-    const {column, region} = data;
-    let sectionList = region === 'corner-header' || region === 'row-header' ? this.rowHeaderSections : this.columnSections;
-    let sectionSize = sectionList.sectionSize(column);
-    let sectionOffset = sectionList.sectionOffset(column);
+    const { column, region } = data;
+    const sectionList =
+      region === 'corner-header' || region === 'row-header' ? this.rowHeaderSections : this.columnSections;
+    const sectionSize = sectionList.sectionSize(column);
+    const sectionOffset = sectionList.sectionOffset(column);
     let x = sectionOffset;
-    let height = this.totalHeight;
+    const height = this.totalHeight;
 
     if (data.delta > data.width / 2) {
       x += sectionSize;
@@ -283,18 +296,18 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   private addCellRenderers() {
-    let defaultRenderer = CellRendererFactory.getRenderer(this);
-    let headerCellRenderer = CellRendererFactory.getHeaderRenderer(this);
+    const defaultRenderer = CellRendererFactory.getRenderer(this);
+    const headerCellRenderer = CellRendererFactory.getHeaderRenderer(this);
 
     this.cellRenderers.set(
       'body',
-      {dataType: ALL_TYPES[ALL_TYPES.html]},
-      CellRendererFactory.getRenderer(this, ALL_TYPES.html)
+      { dataType: ALL_TYPES[ALL_TYPES.html] },
+      CellRendererFactory.getRenderer(this, ALL_TYPES.html),
     );
     this.cellRenderers.set(
       'body',
-      {dataType: ALL_TYPES[ALL_TYPES.image]},
-      CellRendererFactory.getRenderer(this, ALL_TYPES.image)
+      { dataType: ALL_TYPES[ALL_TYPES.image] },
+      CellRendererFactory.getRenderer(this, ALL_TYPES.image),
     );
     this.cellRenderers.set('body', {}, defaultRenderer);
     this.cellRenderers.set('column-header', {}, headerCellRenderer);

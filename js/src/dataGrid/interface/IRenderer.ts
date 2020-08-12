@@ -15,12 +15,12 @@
  */
 
 export enum RENDERER_TYPE {
-  DataBars = 'DataBars'
+  DataBars = 'DataBars',
 }
 
 export interface IRenderer {
-  type: RENDERER_TYPE,
-  includeText: boolean,
-  percent?: number
-  direction?: 'RIGHT' | 'LEFT'
+  type: RENDERER_TYPE;
+  includeText: boolean;
+  percent?: number;
+  direction?: 'RIGHT' | 'LEFT';
 }

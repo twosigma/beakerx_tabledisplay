@@ -14,33 +14,32 @@
  *  limitations under the License.
  */
 
-export namespace ColumnValuesIterator {
-
-  export function longestString(valueResolver: Function) {
+export class ColumnValuesIterator {
+  public static longestString(valueResolver: (item: any) => string | undefined) {
     return (a: any, b: any) => {
-      let value1 = valueResolver(a);
-      let value2 = valueResolver(b);
-      let aLength = value1 ? value1.length : 0;
-      let bLength = value2 ? value2.length : 0;
+      const value1 = valueResolver(a);
+      const value2 = valueResolver(b);
+      const aLength = value1 ? value1.length : 0;
+      const bLength = value2 ? value2.length : 0;
 
       if (aLength === bLength) {
         return 0;
       }
 
       return aLength < bLength ? -1 : 1;
-    }
+    };
   }
 
-  export function minMax(valueResolver: Function) {
+  public static minMax(valueResolver: (item: any) => number) {
     return (a: any, b: any) => {
-      let value1 = valueResolver(a);
-      let value2 = valueResolver(b);
+      const value1 = valueResolver(a);
+      const value2 = valueResolver(b);
 
       if (value1 === value2) {
         return 0;
       }
 
       return value1 < value2 ? -1 : 1;
-    }
+    };
   }
 }

@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { DataGridColumn } from "../column/DataGridColumn";
-import { HIGHLIGHTER_STYLE, HIGHLIGHTER_TYPE, IHighlighterState } from "../interface/IHighlighterState";
-import { HeatmapHighlighter } from "./HeatmapHighlighter";
-import { SortHighlighter } from "./SortHighlighter";
-import { ThreeColorHeatmapHighlighter } from "./ThreeColorHeatmapHighlighter";
-import { UniqueEntriesHighlighter } from "./UniqueEntriesHighlighter";
-import { ValueHighlighter } from "./ValueHighlighter";
+import { DataGridColumn } from '../column/DataGridColumn';
+import { HIGHLIGHTER_STYLE, HIGHLIGHTER_TYPE, IHighlighterState } from '../interface/IHighlighterState';
+import { HeatmapHighlighter } from './HeatmapHighlighter';
+import { SortHighlighter } from './SortHighlighter';
+import { ThreeColorHeatmapHighlighter } from './ThreeColorHeatmapHighlighter';
+import { UniqueEntriesHighlighter } from './UniqueEntriesHighlighter';
+import { ValueHighlighter } from './ValueHighlighter';
 
 export class HighlighterFactory {
   static defaultHighlighterState: IHighlighterState = {

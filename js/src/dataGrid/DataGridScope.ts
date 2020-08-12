@@ -14,17 +14,17 @@
  *  limitations under the License.
  */
 
-import { RendererMap } from "@phosphor/datagrid";
+import { RendererMap } from '@phosphor/datagrid';
 import { Widget } from '@phosphor/widgets';
-import { TableDisplayView } from "../TableDisplayView";
-import { Theme } from "../utils/Theme";
+import { TableDisplayView } from '../TableDisplayView';
+import { Theme } from '../utils/Theme';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
-import { DataGridContextMenu } from "./contextMenu/DataGridContextMenu";
-import { IDataGridModelState } from "./interface/IDataGridModelState";
-import IDataGridScopeOptions from "./interface/IDataGridScopeOptions";
-import { ColumnLimitModal } from "./modal/ColumnLimitModal";
-import { selectModel } from "./model/selectors";
-import { BeakerXDataStore, createStore } from "./store/BeakerXDataStore";
+import { DataGridContextMenu } from './contextMenu/DataGridContextMenu';
+import { IDataGridModelState } from './interface/IDataGridModelState';
+import IDataGridScopeOptions from './interface/IDataGridScopeOptions';
+import { ColumnLimitModal } from './modal/ColumnLimitModal';
+import { selectModel } from './model/selectors';
+import { BeakerXDataStore, createStore } from './store/BeakerXDataStore';
 
 export class DataGridScope {
   contextMenu: DataGridContextMenu;
@@ -35,11 +35,13 @@ export class DataGridScope {
   private tableDisplayModel: any;
   private tableDisplayView: TableDisplayView;
 
-  public get dataGrid():BeakerXDataGrid { return this._dataGrid; }
+  public get dataGrid(): BeakerXDataGrid {
+    return this._dataGrid;
+  }
 
   constructor(options: IDataGridScopeOptions) {
-    if (Object.keys(options.data).length === 0 && options.data.constructor === Object){
-      throw new Error("options.data can not be empty")
+    if (Object.keys(options.data).length === 0 && options.data.constructor === Object) {
+      throw new Error('options.data can not be empty');
     }
     this.store = createStore(options.data);
     this.element = options.element;
@@ -48,10 +50,10 @@ export class DataGridScope {
     this._dataGrid = new BeakerXDataGrid(
       {
         style: Theme.getStyle(),
-        cellRenderers: new RendererMap({ priority: ['body|{dataType: html}','body|'] })
+        cellRenderers: new RendererMap({ priority: ['body|{dataType: html}', 'body|'] }),
       },
       this.store,
-      this.tableDisplayView
+      this.tableDisplayView,
     );
     this.element.id = `wrap_${this.tableDisplayModel.model_id}`;
 
@@ -66,7 +68,7 @@ export class DataGridScope {
   }
 
   render(): void {
-    Widget.attach(this.dataGrid as unknown as Widget, this.element); // todo investigate
+    Widget.attach((this.dataGrid as unknown) as Widget, this.element); // todo investigate
   }
 
   doDestroy(): void {
@@ -99,7 +101,7 @@ export class DataGridScope {
 
   connectToCommSignal() {
     this.dataGrid.commSignal.connect((handler, args) => {
-      this.tableDisplayModel.send(args, this.tableDisplayView.callbacks());
+      this.tableDisplayModel.send(args.toObject(), this.tableDisplayView.callbacks());
     }, this);
   }
 

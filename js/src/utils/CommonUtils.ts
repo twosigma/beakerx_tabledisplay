@@ -14,38 +14,32 @@
  *  limitations under the License.
  */
 
-import moment from "moment-timezone";
+import moment from 'moment-timezone';
 
-export namespace Common {
-
-  export function formatTimestamp(timestamp: number, tz: string, format: string): string {
-    return Private.applyTimezone(timestamp, tz).format(format);
+export class CommonUtils {
+  public static formatTimestamp(timestamp: number, tz: string, format: string): string {
+    return CommonUtils.applyTimezone(timestamp, tz).format(format);
   }
 
-  export function generateId(length: number = 6): string {
-    return Private.randomString(length);
+  public static generateId(length = 6): string {
+    return CommonUtils.randomString(length);
   }
 
-  export function rgbaToHex(r: number, g: number, b: number, a: number = 0xFF): string {
-    let num = ((a & 0xFF) << 24) |
-      ((r & 0xFF) << 16) |
-      ((g & 0xFF) << 8) |
-      ((b & 0xFF));
+  public static rgbaToHex(r: number, g: number, b: number, a = 0xff): string {
+    let num = ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
     if (num < 0) {
-      num = 0xFFFFFFFF + num + 1;
+      num = 0xffffffff + num + 1;
     }
 
     return `#${num.toString(16).padStart(8, '0').slice(2)}`;
   }
 
-}
-
-namespace Private {
-
-  export function applyTimezone(timestamp: number, tz?: string): moment.Moment {
+  private static applyTimezone(timestamp: number, tz?: string): moment.Moment {
     const time = moment(timestamp);
-    if (!tz) { return time; }
-    if (tz.startsWith("GMT")) {
+    if (!tz) {
+      return time;
+    }
+    if (tz.startsWith('GMT')) {
       time.utcOffset(tz);
       return time;
     }
@@ -54,9 +48,9 @@ namespace Private {
     return time;
   }
 
-  export function randomString(length: number = 6): string {
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    let textArray: string[] = [];
+  private static randomString(length = 6): string {
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const textArray: string[] = [];
 
     for (let i = 0; i < length; i++) {
       textArray.push(possible.charAt(Math.floor(Math.random() * possible.length)));
@@ -64,6 +58,4 @@ namespace Private {
 
     return textArray.join('');
   }
-
-
 }

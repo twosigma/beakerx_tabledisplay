@@ -14,10 +14,7 @@
  *  limitations under the License.
  */
 
-export function createModalTemplate(
-  outputColumnLimit: number,
-  columnNumber: number
-): string {
+export function createModalTemplate(outputColumnLimit: number, columnNumber: number): string {
   return `
       <div class="bko-modal column-limit-modal">
           <div class="modal-dialog" role="document">

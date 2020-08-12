@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-export * from "./BkoContextMenu";
-export * from "./IContextMenuItem";
-export * from "./IMenu";
-export * from "./IContextMenuItem";
+export * from './ContextMenu';
+export * from './IContextMenuItem';
+export * from './IMenu';
+export * from './IContextMenuItem';

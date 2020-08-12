@@ -15,6 +15,6 @@
  */
 
 export interface TableDisplayWidget {
-  loadMoreRows():void;
-  canLoadMore():boolean;
+  loadMoreRows(): void;
+  canLoadMore(): boolean;
 }

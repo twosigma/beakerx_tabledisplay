@@ -14,23 +14,23 @@
  *  limitations under the License.
  */
 
-import { IMenuItem } from "../../contextMenu/IMenuItem";
-import { DataGridColumn } from "../column/DataGridColumn";
-import { COLUMN_TYPES } from "../column/enums";
-import { selectBodyColumnStates } from "../column/selectors";
-import { consts } from "../consts";
+import { IMenuItem } from '../../contextMenu/IMenuItem';
+import { DataGridColumn } from '../column/DataGridColumn';
+import { COLUMN_TYPES } from '../column/enums';
+import { selectBodyColumnStates } from '../column/selectors';
 import { createFormatMenuItems } from './createFormatMenuItems';
+import { IContextMenuItem } from '../../contextMenu';
+import { DEFAULT_PAGE_LENGTH, scopeData } from '../consts';
 
 export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
-
   const dataGrid = column.dataGrid;
 
   if (!dataGrid) {
     return [];
   }
 
-  const createShowColumnSubmenu = (): IMenuItem[] => {
-    const items: IMenuItem[] = [];
+  const createShowColumnSubmenu = (): IContextMenuItem[] => {
+    const items: IContextMenuItem[] = [];
     const columnsStates = selectBodyColumnStates(dataGrid.store.state);
 
     columnsStates.forEach((state) => {
@@ -38,12 +38,12 @@ export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
         title: state.name,
         id: `column_${state.name}`,
         isChecked: () => {
-          let column = dataGrid.columnManager && dataGrid.columnManager.getColumnByName(state.name);
+          const column = dataGrid.columnManager && dataGrid.columnManager.getColumnByName(state.name);
 
           return column && column.getVisible();
         },
         action: () => {
-          let column = dataGrid.columnManager.getColumnByName(state.name);
+          const column = dataGrid.columnManager.getColumnByName(state.name);
 
           if (!column) {
             return;
@@ -51,23 +51,25 @@ export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
 
           column.getVisible() ? column.hide() : column.show();
         },
-        updateLayout: true
+        updateLayout: true,
+        selector: '',
       });
     });
 
     return items;
   };
 
-  const createRowsToShowSubmenu = (): IMenuItem[] => {
-    const items: IMenuItem[] = [];
+  const createRowsToShowSubmenu = (): IContextMenuItem[] => {
+    const items: IContextMenuItem[] = [];
 
-    consts.scopeData.rowsToDisplayMenu[0].forEach((item, index) => {
+    scopeData.rowsToDisplayMenu[0].forEach((item, index) => {
       items.push({
-        title: `${consts.scopeData.rowsToDisplayMenu[1][index]}`,
-        id: `rows_${consts.scopeData.rowsToDisplayMenu[1][index]}`,
+        title: `${scopeData.rowsToDisplayMenu[1][index]}`,
+        id: `rows_${scopeData.rowsToDisplayMenu[1][index]}`,
         isChecked: () => dataGrid.rowManager && item === dataGrid.rowManager.rowsToShow,
-        action: () => dataGrid.rowManager.setRowsToShow(item)
-      })
+        action: () => dataGrid.rowManager.setRowsToShow(item),
+        selector: '',
+      });
     });
 
     return items;
@@ -76,13 +78,13 @@ export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
   return [
     {
       title: 'Show All Columns',
-      action: () => dataGrid.columnManager.showAllColumns()
+      action: () => dataGrid.columnManager.showAllColumns(),
     },
     {
       title: 'Show Column',
       enableItemsFiltering: true,
       keepOpen: true,
-      items: createShowColumnSubmenu
+      items: createShowColumnSubmenu,
     },
     {
       title: 'Hide All Columns',
@@ -90,51 +92,51 @@ export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
         dataGrid.columnManager.columns[COLUMN_TYPES.body].forEach((column) => {
           column.hide();
         });
-      }
+      },
     },
     {
       title: 'Format',
       separator: true,
-      items: createFormatMenuItems(column)
+      items: createFormatMenuItems(column),
     },
     {
       title: 'Rows to Show',
-      items: createRowsToShowSubmenu
+      items: createRowsToShowSubmenu,
     },
     {
       title: 'Clear selection',
-      action: () => dataGrid.cellSelectionManager.clear()
+      action: () => dataGrid.cellSelectionManager.clear(),
     },
     {
       title: 'Copy to Clipboard',
       separator: true,
-      action: () => dataGrid.cellManager.copyToClipboard()
+      action: () => dataGrid.cellManager.copyToClipboard(),
     },
     {
       title: 'Download All as CSV',
-      action: () => dataGrid.cellManager.CSVDownload(false)
+      action: () => dataGrid.cellManager.CSVDownload(false),
     },
     {
       title: 'Download Selected as CSV',
-      action: () => dataGrid.cellManager.CSVDownload(true)
+      action: () => dataGrid.cellManager.CSVDownload(true),
     },
     {
       title: 'Search for Substring',
       icon: 'fa fa-search',
       tooltip: 'search the whole table for a substring',
       separator: true,
-      action: () => dataGrid.columnManager.showSearch()
+      action: () => dataGrid.columnManager.showSearch(),
     },
     {
       title: 'Filter by Expression',
       icon: 'fa fa-filter',
       tooltip: 'filter with an expression with a variable defined for each column',
       separator: true,
-      action: () => dataGrid.columnManager.showFilters()
+      action: () => dataGrid.columnManager.showFilters(),
     },
     {
       title: 'Hide Filter',
-      action: () => dataGrid.columnManager.resetFilters()
+      action: () => dataGrid.columnManager.resetFilters(),
     },
     {
       title: 'Reset All Interactions',
@@ -143,13 +145,13 @@ export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
         dataGrid.highlighterManager.removeHighlighters();
         dataGrid.cellSelectionManager.clear();
         dataGrid.rowManager.resetSorting();
-        dataGrid.rowManager.setRowsToShow(consts.DEFAULT_PAGE_LENGTH);
+        dataGrid.rowManager.setRowsToShow(DEFAULT_PAGE_LENGTH);
         dataGrid.columnManager.resetFilters();
         dataGrid.columnManager.showAllColumns();
         dataGrid.columnManager.resetColumnsAlignment();
         dataGrid.columnManager.resetColumnPositions();
         dataGrid.setInitialSize();
-      }
-    }
-  ]
+      },
+    },
+  ];
 }

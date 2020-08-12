@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { BeakerXDataGrid } from "../BeakerXDataGrid";
-import { ColumnManager } from "../column/ColumnManager";
-import { COLUMN_TYPES } from "../column/enums";
-import { ICellData } from "../interface/ICell";
-import { selectHasIndex, selectTooltips } from "../model/selectors";
-import { CellTooltip } from "./CellTooltip";
-import { DataGridCell } from "./DataGridCell";
+import { BeakerXDataGrid } from '../BeakerXDataGrid';
+import { ColumnManager } from '../column/ColumnManager';
+import { COLUMN_TYPES } from '../column/enums';
+import { ICellData } from '../interface/ICell';
+import { selectHasIndex, selectTooltips } from '../model/selectors';
+import { CellTooltip } from './CellTooltip';
+import { DataGridCell } from './DataGridCell';
 
 export class CellTooltipManager {
   activeTooltips: CellTooltip[] = [];
@@ -38,7 +38,7 @@ export class CellTooltipManager {
   }
 
   destroy(): void {
-    this.activeTooltips.forEach(tooltip => tooltip.destroy());
+    this.activeTooltips.forEach((tooltip) => tooltip.destroy());
 
     setTimeout(() => {
       this.dataGrid = null;
@@ -51,14 +51,14 @@ export class CellTooltipManager {
   hideTooltips() {
     let tooltip;
 
-    while (tooltip = this.activeTooltips.pop()) {
+    while ((tooltip = this.activeTooltips.pop())) {
       tooltip.hide();
     }
 
     this.lastData = null;
   }
 
-  handleCellHovered(sender: BeakerXDataGrid, {data}) {
+  handleCellHovered(sender: BeakerXDataGrid, { data }) {
     if (DataGridCell.dataEquals(data, this.lastData)) {
       return;
     }
@@ -74,36 +74,26 @@ export class CellTooltipManager {
   }
 
   private shouldShowBodyTooltip(data) {
-    return (
-      this.tooltips.length > 0
-      && (data && data.type !== COLUMN_TYPES.index || this.hasIndex)
-    )
+    return this.tooltips.length > 0 && ((data && data.type !== COLUMN_TYPES.index) || this.hasIndex);
   }
 
   private showTooltip(data: ICellData) {
     const offsetTop = DataGridCell.isHeaderCell(data) ? 0 : data.offsetTop - this.dataGrid.scrollY;
-    const offsetLeft = data.region === 'row-header' || data.region === 'corner-header'
-      ? data.offset
-      : data.offset - this.dataGrid.scrollX;
+    const offsetLeft =
+      data.region === 'row-header' || data.region === 'corner-header'
+        ? data.offset
+        : data.offset - this.dataGrid.scrollX;
     const rect = this.dataGrid.node.getBoundingClientRect();
-    const tooltip = new CellTooltip(
-      this.getTooltipText(data),
-      document.body
-    );
+    const tooltip = new CellTooltip(this.getTooltipText(data), document.body);
 
     this.lastData = data;
     this.activeTooltips.push(tooltip);
 
-    tooltip.show(
-      Math.ceil(rect.left + offsetLeft + 20),
-      Math.ceil(window.pageYOffset + rect.top + offsetTop - 10)
-    );
+    tooltip.show(Math.ceil(rect.left + offsetLeft + 20), Math.ceil(window.pageYOffset + rect.top + offsetTop - 10));
   }
 
   private getTooltipText(data) {
-    const column = this.dataGrid.columnManager.getColumnByPosition(
-      ColumnManager.createPositionFromCell(data)
-    );
+    const column = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(data));
 
     if (DataGridCell.isHeaderCell(data)) {
       return column.getDataTypeName() || typeof data.value;
