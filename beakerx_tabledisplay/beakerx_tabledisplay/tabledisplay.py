@@ -14,13 +14,12 @@
 
 import copy
 import json
-import types
-from os import makedirs, path, fdopen, open as os_open, O_RDWR, O_CREAT
-from ipykernel.comm import Comm
-
 import numpy as np
+import types
 from beakerx_base import BaseObject, BeakerxDOMWidget
+from ipykernel.comm import Comm
 from jupyter_core import paths
+from os import makedirs, path, fdopen, open as os_open, O_RDWR, O_CREAT
 from pandas import DataFrame, RangeIndex, MultiIndex, DatetimeIndex
 from traitlets import Unicode, Dict
 
@@ -391,6 +390,12 @@ class TableDisplay(BeakerxDOMWidget):
 
     def handle_msg(self, tabledisplay, params, list):
         self.details = TableActionDetails(params)
+        if 'params' in params:
+            self._run_double_click_by_tag(params)
+        elif 'event' in params:
+            self._run_event(params, tabledisplay)
+
+    def _run_event(self, params, tabledisplay):
         if params['event'] == 'DOUBLE_CLICK':
             self.doubleClickListener(params['row'], params['column'], tabledisplay)
             self.model = self.chart.transform()
@@ -402,6 +407,10 @@ class TableDisplay(BeakerxDOMWidget):
                 else:
                     func(params['row'], params['column'], tabledisplay)
                     self.model = self.chart.transform()
+
+    def _run_double_click_by_tag(self, params):
+        if params['params']['actionType'] == 'DOUBLE_CLICK' and self.chart.doubleClickTag is not None:
+            self._run_by_tag(self.chart.doubleClickTag)
 
     def _run_by_tag(self, tag):
         arguments = dict(target_name='beakerx.tag.run')
