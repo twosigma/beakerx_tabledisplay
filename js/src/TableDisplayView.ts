@@ -43,17 +43,37 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
     });
   }
 
-  handleModelUpdate(): void {
-    this._currentScope.doResetAll();
-    this._currentScope.updateModelData(this.model.get('model'));
+  handleModelUpdate(model, value, options): void {
+    let shouldReset = options.shouldResetModel==undefined || options.shouldResetModel;
+    if (shouldReset){
+      this._currentScope.doResetAll();
+      this._currentScope.updateModelData(this.model.get('model'));
+    }
   }
-
-  handleUpdateData(): void {
+  handleUpdateData(model, value, options): void {
     const change = this.model.get('updateData');
     const currentModel = this.model.get('model');
+    if (change.hasOwnProperty('values')){
+      this.updateValues(currentModel, change);
+    }else {
+      this.model.set('model', {...currentModel, ...change});
+      this.handleModelUpdate(model,value, options);
+    }
+  }
 
-    this.model.set('model', { ...currentModel, ...change }, { updated_view: this });
-    this.handleModelUpdate();
+  private updateValues(currentModel, change) {
+    let newValues = currentModel.values.concat(change.values || [])
+    let newFonts = currentModel.fontColor;
+    if (change.hasOwnProperty('fontColor')) {
+      newFonts = currentModel.fontColor.concat(change.fontColor || [])
+    }
+    this.model.set('model', {
+      ...currentModel, ...change,
+      values: newValues,
+      fontColor: newFonts
+    }, {"shouldResetModel": false});
+    this._currentScope.updateModelValues(this.model.get('model'));
+    this.model.set('loadMoreRows', "loadMoreJSDone");
   }
 
   showWarning(data): void {
