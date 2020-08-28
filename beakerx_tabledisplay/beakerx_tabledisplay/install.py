@@ -22,16 +22,17 @@ def install():
         ["jupyter", "nbextension", "install", "beakerx_tabledisplay", "--py", "--symlink", "--sys-prefix"])
     subprocess.check_call(["jupyter", "nbextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
-    # subprocess.call(["jupyter", "labextension", "install", "@jupyter-widgets/jupyterlab-manager"])
-    # subprocess.check_call(["jupyter", "labextension", "install", "beakerx-jupyterlab"])
+    if subprocess.call(["jupyter", "labextension", "install", "@jupyter-widgets/jupyterlab-manager", "--no-build"],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0:
+        subprocess.check_call(["jupyter", "labextension", "install", "@beakerx/beakerx-tabledisplay"])
 
 
 def uninstall():
     subprocess.check_call(["jupyter", "nbextension", "disable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "nbextension", "uninstall", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "disable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
-    # subprocess.check_call(["jupyter", "labextension", "uninstall", "beakerx-jupyterlab"])
-    # subprocess.check_call(["jupyter", "labextension", "uninstall", "@jupyter-widgets/jupyterlab-manager"])
+    subprocess.call(["jupyter", "labextension", "uninstall", "beakerx-jupyterlab"],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
 if __name__ == "__main__":
