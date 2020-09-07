@@ -17,17 +17,18 @@
 import subprocess
 
 
-def install():
+def install(args):
     subprocess.check_call(
         ["jupyter", "nbextension", "install", "beakerx_tabledisplay", "--py", "--symlink", "--sys-prefix"])
     subprocess.check_call(["jupyter", "nbextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
-    if subprocess.call(["jupyter", "labextension", "install", "@jupyter-widgets/jupyterlab-manager", "--no-build"],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0:
+    if args.lab:
+        subprocess.call(["jupyter", "labextension", "install", "@jupyter-widgets/jupyterlab-manager", "--no-build"],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.check_call(["jupyter", "labextension", "install", "@beakerx/beakerx-tabledisplay"])
 
 
-def uninstall():
+def uninstall(args):
     subprocess.check_call(["jupyter", "nbextension", "disable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "nbextension", "uninstall", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "disable", "beakerx_tabledisplay", "--py", "--sys-prefix"])

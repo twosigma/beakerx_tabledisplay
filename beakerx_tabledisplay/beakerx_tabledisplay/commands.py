@@ -27,6 +27,9 @@ def install_subparser(subparser):
     install_parser.add_argument("--prefix",
                                 help="location of the environment to install into",
                                 default=sys.prefix)
+    install_parser.add_argument("--lab",
+                                help="install lab extension",
+                                action='store_true')
     return subparser
 
 
@@ -36,6 +39,9 @@ def uninstall_subparser(subparser):
     uninstall_parser.add_argument("--prefix",
                                   help="location of the environment to uninstall from",
                                   default=sys.prefix)
+    uninstall_parser.add_argument("--lab",
+                                  help="install lab extension",
+                                  action='store_true')
     return subparser
 
 
@@ -62,6 +68,6 @@ def beakerx_parse():
     if args.func == run_jupyter:
         args.func(jupyter_commands)
     elif not jupyter_commands:
-        args.func()
+        args.func(args)
     else:
         parser.parse_args(jupyter_commands)
