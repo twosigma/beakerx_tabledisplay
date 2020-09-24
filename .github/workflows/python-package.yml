@@ -54,14 +54,14 @@ jobs:
         cd beakerx_tabledisplay
         pip install -e .
         beakerx_tabledisplay install
-    - name: Run e2e tests (TableDisplay)
+    - name: Run e2e tests (table v1)
       shell: bash -l {0}
       run: |
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         chmod +x gradlew
         conda activate beakerx
         pip install psutil
-        python ci_tests.py --app=notebook --tst=python.TableAPI*
+        python ci_tests.py --app=notebook --tbl=v1 --tst=python.Table*
     - name: Archive screenshot results
       uses: actions/upload-artifact@v1
       if: always()
