@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
+import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { HIGHLIGHTER_STYLE, IHighlighterState } from '../interface/IHighlighterState';
@@ -29,7 +29,7 @@ export class ValueHighlighter extends Highlighter {
     this.state.colors = this.state.colors || [];
   }
 
-  getBackgroundColor(config: CellRenderer.ICellConfig) {
+  getBackgroundColor(config: CellRenderer.CellConfig) {
     return (
       (this.state.colors && DataGridStyle.formatColor(this.state.colors[config.row])) || Theme.DEFAULT_CELL_BACKGROUND
     );

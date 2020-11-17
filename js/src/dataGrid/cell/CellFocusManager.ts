@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
+import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { DataGridColumn } from '../column/DataGridColumn';
-import { selectVisibleBodyColumns } from '../column/selectors';
+// import { selectVisibleBodyColumns } from '../column/selectors';
 import { KEYBOARD_KEYS } from '../event/enums';
 import { ICellData } from '../interface/ICell';
-import { selectColumnsFrozenNames } from '../model/selectors';
+// import { selectColumnsFrozenNames } from '../model/selectors';
 
 export class CellFocusManager {
   dataGrid: BeakerXDataGrid;
@@ -63,10 +63,10 @@ export class CellFocusManager {
         break;
     }
 
-    this.dataGrid.repaint();
+    this.dataGrid.repaintBody();
   }
 
-  getFocussedCellBackground(config: CellRenderer.ICellConfig): string {
+  getFocussedCellBackground(config: CellRenderer.CellConfig): string {
     const cellType = DataGridColumn.getColumnTypeByRegion(config.region, config.column);
 
     if (!this.focusedCellData || cellType !== this.focusedCellData.type) {
@@ -85,10 +85,10 @@ export class CellFocusManager {
       return;
     }
 
-    const columnsFrozen = selectColumnsFrozenNames(this.dataGrid.store.state);
+    const columnsFrozen = this.dataGrid.store.selectColumnsFrozenNames();
     let nextColumn = this.focusedCellData.column + 1;
     let region = this.focusedCellData.region;
-    const lastColumnIndex = selectVisibleBodyColumns(this.dataGrid.store.state).length - 1 - columnsFrozen.length;
+    const lastColumnIndex = this.dataGrid.store.selectVisibleBodyColumns([]).length - 1 - columnsFrozen.length;
 
     if (this.focusedCellData.region === 'row-header' && nextColumn > columnsFrozen.length) {
       region = lastColumnIndex > -1 ? 'body' : 'row-header';
@@ -116,7 +116,7 @@ export class CellFocusManager {
 
     let region = this.focusedCellData.region;
     let prevColumn = this.focusedCellData.column - 1;
-    const columnsFrozen = selectColumnsFrozenNames(this.dataGrid.store.state);
+    const columnsFrozen = this.dataGrid.store.selectColumnsFrozenNames();
 
     if (prevColumn < 0 && this.focusedCellData.region !== 'row-header') {
       prevColumn = columnsFrozen.length;
@@ -175,10 +175,10 @@ export class CellFocusManager {
   }
 
   private scrollIfNeeded(direction: 'up' | 'right' | 'down' | 'left') {
-    const rowOffset = this.dataGrid.rowSections.sectionOffset(this.focusedCellData.row);
-    const rowSize = this.dataGrid.rowSections.sectionSize(this.focusedCellData.row);
-    const columnOffset = this.dataGrid.columnSections.sectionOffset(this.focusedCellData.column);
-    const columnSize = this.dataGrid.columnSections.sectionSize(this.focusedCellData.column);
+    const rowOffset = this.dataGrid.getRowSections().offsetOf(this.focusedCellData.row);
+    const rowSize = this.dataGrid.getRowSections().sizeOf(this.focusedCellData.row);
+    const columnOffset = this.dataGrid.getColumnSections().offsetOf(this.focusedCellData.column);
+    const columnSize = this.dataGrid.getColumnSections().sizeOf(this.focusedCellData.column);
 
     let scrollToX = this.dataGrid.scrollX;
     let scrollToY = this.dataGrid.scrollY;

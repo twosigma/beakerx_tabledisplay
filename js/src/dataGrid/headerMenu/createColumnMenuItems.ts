@@ -18,9 +18,9 @@ import { IMenuItem } from '../../contextMenu/IMenuItem';
 import { CENTER, LEFT, RIGHT } from '../column/ColumnAlignment';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { SORT_ORDER } from '../column/enums';
-import { selectVisibleBodyColumns } from '../column/selectors';
+// import { selectVisibleBodyColumns } from '../column/selectors';
 import { HIGHLIGHTER_TYPE } from '../interface/IHighlighterState';
-import { selectVisibleColumnsFrozenCount } from '../model/selectors';
+// import { selectVisibleColumnsFrozenCount } from '../model/selectors';
 import { createFormatMenuItems } from './createFormatMenuItems';
 
 export function createColumnMenuItems(column: DataGridColumn): IMenuItem[] {
@@ -121,8 +121,8 @@ export function createColumnMenuItems(column: DataGridColumn): IMenuItem[] {
     {
       title: 'Move column to end',
       action: (event, column) => {
-        const visibleColumnsLength = selectVisibleBodyColumns(column.dataGrid.store.state).length;
-        const frozenColumnsCount = selectVisibleColumnsFrozenCount(column.dataGrid.store.state);
+        const visibleColumnsLength = column.dataGrid.store.selectVisibleBodyColumns([]).length;
+        const frozenColumnsCount = column.dataGrid.store.selectVisibleColumnsFrozenCount();
 
         if (column?.getPosition().region === 'body') {
           column?.move(visibleColumnsLength - 1);

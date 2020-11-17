@@ -14,21 +14,21 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
+import { CellRenderer } from '@lumino/datagrid';
 import Big from 'big.js';
 import moment from 'moment-timezone';
 import * as _ from 'underscore';
 import { ALL_TYPES, getDoublePrecisionByType, isDoubleWithPrecision } from './dataTypes';
 import { DataGridHelpers } from './Helpers';
 import { IColumnState } from './interface/IColumn';
-import {
-  selectColumnNames,
-  selectFormatForTimes,
-  selectStringFormatForColumn,
-  selectStringFormatForType,
-  selectTimeStrings,
-  selectTimeZone,
-} from './model/selectors';
+// import {
+//   selectColumnNames,
+//   selectFormatForTimes,
+//   selectStringFormatForColumn,
+//   selectStringFormatForType,
+//   selectTimeStrings,
+//   selectTimeZone,
+// } from './model/selectors';
 import { BeakerXDataStore } from './store/BeakerXDataStore';
 import { TIME_UNIT_FORMATS } from './consts';
 
@@ -61,27 +61,27 @@ export class DataFormatter {
   }
 
   get stringFormatForColumn() {
-    return selectStringFormatForColumn(this.store.state);
+    return this.store.selectStringFormatForColumn();
   }
 
   get timeStrings() {
-    return selectTimeStrings(this.store.state);
+    return this.store.selectTimeStrings();
   }
 
   get timeZone() {
-    return selectTimeZone(this.store.state);
+    return this.store.selectTimeZone();
   }
 
   get stringFormatForType() {
-    return selectStringFormatForType(this.store.state);
+    return this.store.selectStringFormatForType();
   }
 
   get formatForTimes() {
-    return selectFormatForTimes(this.store.state);
+    return this.store.selectFormatForTimes();
   }
 
   get columnNames() {
-    return selectColumnNames(this.store.state);
+    return this.store.selectColumnNames();
   }
 
   getFormatFnByDisplayType(displayType, columnState?: IColumnState): CellRenderer.ConfigFunc<string> {
@@ -120,7 +120,7 @@ export class DataFormatter {
   }
 
   private handleNull(formatFn: CellRenderer.ConfigFunc<string>): CellRenderer.ConfigFunc<string> {
-    return (config: CellRenderer.ICellConfig): string => {
+    return (config: CellRenderer.CellConfig): string => {
       if (this.isNull(config.value)) {
         return config.value;
       }
@@ -129,17 +129,17 @@ export class DataFormatter {
     };
   }
 
-  private rawValue(config: CellRenderer.ICellConfig) {
+  private rawValue(config: CellRenderer.CellConfig) {
     return config.value;
   }
 
-  private value(config: CellRenderer.ICellConfig): string {
+  private value(config: CellRenderer.CellConfig): string {
     const columnName = this.columnNames[config.column];
 
     return this.stringFormatForColumn[columnName].values[columnName][config.row];
   }
 
-  private string(config: CellRenderer.ICellConfig) {
+  private string(config: CellRenderer.CellConfig) {
     const objectValue = _.isObject(config.value);
     const stringFormatForColumn = this.stringFormatForColumn[this.columnNames[config.column]];
     let formattedValue = config.value !== null ? config.value : '';
@@ -158,7 +158,7 @@ export class DataFormatter {
     return DataGridHelpers.truncateString(formattedValue);
   }
 
-  private integer(config: CellRenderer.ICellConfig) {
+  private integer(config: CellRenderer.CellConfig) {
     if (this.isNull(config.value)) {
       return config.value;
     }
@@ -166,7 +166,7 @@ export class DataFormatter {
     return parseInt(config.value);
   }
 
-  private formattedInteger(config: CellRenderer.ICellConfig) {
+  private formattedInteger(config: CellRenderer.CellConfig) {
     if (this.isNull(config.value)) {
       return config.value;
     }
@@ -180,7 +180,7 @@ export class DataFormatter {
     return x;
   }
 
-  private double(config: CellRenderer.ICellConfig) {
+  private double(config: CellRenderer.CellConfig) {
     if (this.isNull(config.value)) {
       return config.value;
     }
@@ -203,12 +203,12 @@ export class DataFormatter {
   }
 
   private doubleWithPrecision(precision: any): CellRenderer.ConfigFunc<string> {
-    return this.handleNull((config: CellRenderer.ICellConfig) => {
+    return this.handleNull((config: CellRenderer.CellConfig) => {
       return parseFloat(config.value).toFixed(precision);
     });
   }
 
-  private exponential_5(config: CellRenderer.ICellConfig): string {
+  private exponential_5(config: CellRenderer.CellConfig): string {
     if (this.isNull(config.value)) {
       return config.value;
     }
@@ -216,7 +216,7 @@ export class DataFormatter {
     return parseFloat(config.value).toExponential(5);
   }
 
-  private exponential_15(config: CellRenderer.ICellConfig): string {
+  private exponential_15(config: CellRenderer.CellConfig): string {
     if (this.isNull(config.value)) {
       return config.value;
     }
@@ -224,7 +224,7 @@ export class DataFormatter {
     return parseFloat(config.value).toExponential(15);
   }
 
-  private datetime(config: CellRenderer.ICellConfig, formatForTimes: any): string {
+  private datetime(config: CellRenderer.CellConfig, formatForTimes: any): string {
     if (this.timeStrings) {
       return this.timeStrings[config.row];
     }
@@ -262,7 +262,7 @@ export class DataFormatter {
     return (config) => this.datetime(config, formatForTimes);
   }
 
-  private boolean(config: CellRenderer.ICellConfig): string {
+  private boolean(config: CellRenderer.CellConfig): string {
     return this.isNull(config.value) ||
       config.value === false ||
       (typeof config.value === 'number' && isNaN(config.value))
@@ -270,7 +270,7 @@ export class DataFormatter {
       : 'true';
   }
 
-  private html(config: CellRenderer.ICellConfig): string {
+  private html(config: CellRenderer.CellConfig): string {
     return config.value;
   }
 
@@ -278,7 +278,7 @@ export class DataFormatter {
    * Format numbers as percentage
    * @param config
    */
-  private percentage(config: CellRenderer.ICellConfig): string {
+  private percentage(config: CellRenderer.CellConfig): string {
     if (this.isNull(config.value)) {
       return config.value;
     }

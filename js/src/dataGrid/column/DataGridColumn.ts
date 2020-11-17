@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { each, filter, minmax } from '@phosphor/algorithm';
-import { CellRenderer, DataModel, TextRenderer } from '@phosphor/datagrid';
+import { each, filter, minmax } from '@lumino/algorithm';
+import { CellRenderer, DataModel, TextRenderer } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { DataGridCell } from '../cell/DataGridCell';
 import { ALL_TYPES, getDisplayType, isDoubleWithPrecision } from '../dataTypes';
@@ -27,18 +27,18 @@ import { IColumnOptions } from '../interface/IColumn';
 import { HIGHLIGHTER_TYPE } from '../interface/IHighlighterState';
 import { RENDERER_TYPE } from '../interface/IRenderer';
 import { UPDATE_COLUMN_FROZEN, UPDATE_COLUMN_RENDERER, UPDATE_COLUMN_VISIBLE } from '../model/reducer';
-import {
-  selectColumnsVisible,
-  selectColumnVisible,
-  selectFormatForTimes,
-  selectHasIndex,
-  selectInitialColumnAlignment,
-  selectIsColumnFrozen,
-  selectRenderer,
-  selectStringFormatForColumn,
-  selectStringFormatForType,
-} from '../model/selectors';
-import { selectDataFontSize } from '../model/selectors/model';
+// import {
+//   this.store.selectColumnsVisible,
+//   this.store.selectColumnVisible,
+//   this.store.selectFormatForTimes,
+//   this.store.selectHasIndex,
+//   this.store.selectInitialColumnAlignment,
+//   this.store.selectIsColumnFrozen,
+//   this.store.selectRenderer,
+//   this.store.selectStringFormatForColumn,
+//   this.store.selectStringFormatForType,
+// } from '../model/selectors';
+// import { this.store.selectDataFontSize } from '../model/selectors/model';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridColumnAction } from '../store/DataGridAction';
 import { ColumnFilter } from './ColumnFilter';
@@ -53,18 +53,18 @@ import {
   UPDATE_COLUMN_SORT_ORDER,
   UPDATE_COLUMN_WIDTH,
 } from './reducer';
-import {
-  selectColumnDataType,
-  selectColumnDataTypeName,
-  selectColumnDisplayType,
-  selectColumnFilter,
-  selectColumnFormatForTimes,
-  selectColumnHorizontalAlignment,
-  selectColumnKeepTrigger,
-  selectColumnPosition,
-  selectColumnSortOrder,
-  selectColumnState,
-} from './selectors';
+// import {
+//   this.store.selectColumnDataType,
+//   this.store.selectColumnDataTypeName,
+//   this.store.selectColumnDisplayType,
+//   this.store.selectColumnFilter,
+//   this.store.selectColumnFormatForTimes,
+//   this.store.selectColumnHorizontalAlignment,
+//   this.store.selectColumnKeepTrigger,
+//   this.store.selectColumnPosition,
+//   this.store.selectColumnSortOrder,
+//   this.store.selectColumnState,
+// } from './selectors';
 
 export class DataGridColumn {
   index: number;
@@ -108,6 +108,7 @@ export class DataGridColumn {
   }
 
   createMenu(): void {
+    console.log('createMenu');
     if (this.type === COLUMN_TYPES.index) {
       this.menu = new IndexMenu(this);
 
@@ -122,9 +123,9 @@ export class DataGridColumn {
 
     this.columnFilter = new ColumnFilter(this.dataGrid, this, {
       x: this.dataGrid.getColumnOffset(columnPosition.value, columnPosition.region),
-      y: this.dataGrid.baseColumnHeaderSize - 1,
-      width: this.dataGrid.columnSections.sectionSize(this.index),
-      height: this.dataGrid.baseRowSize,
+      y: this.dataGrid.defaultSizes.columnHeaderHeight - 1,
+      width: this.dataGrid.getColumnSections().sizeOf(this.index),
+      height: this.dataGrid.defaultSizes.rowHeight,
     });
   }
 
@@ -206,7 +207,7 @@ export class DataGridColumn {
   }
 
   getAlignment() {
-    return selectColumnHorizontalAlignment(this.store.state, this);
+    return this.store.selectColumnHorizontalAlignment(this);
   }
 
   setAlignment(horizontalAlignment: TextRenderer.HorizontalAlignment) {
@@ -220,7 +221,7 @@ export class DataGridColumn {
   }
 
   resetAlignment() {
-    this.setAlignment(selectInitialColumnAlignment(this.store.state, this.getDataType(), this.name));
+    this.setAlignment(this.store.selectInitialColumnAlignment(this.getDataType(), this.name));
   }
 
   setWidth(width: number) {
@@ -232,47 +233,47 @@ export class DataGridColumn {
   }
 
   getState() {
-    return selectColumnState(this.store.state, this);
+    return this.store.selectColumnState(this);
   }
 
   getVisible() {
-    return selectColumnVisible(this.store.state, this);
+    return this.store.selectColumnVisible(this);
   }
 
   getDataType() {
-    return selectColumnDataType(this.store.state, this);
+    return this.store.selectColumnDataType(this);
   }
 
   getSortOrder() {
-    return selectColumnSortOrder(this.store.state, this);
+    return this.store.selectColumnSortOrder(this);
   }
 
   getFilter() {
-    return selectColumnFilter(this.store.state, this);
+    return this.store.selectColumnFilter(this);
   }
 
   getKeepTrigger() {
-    return selectColumnKeepTrigger(this.store.state, this);
+    return this.store.selectColumnKeepTrigger(this);
   }
 
   getDataTypeName(): string {
-    return selectColumnDataTypeName(this.store.state, this);
+    return this.store.selectColumnDataTypeName(this);
   }
 
   getDisplayType() {
-    return selectColumnDisplayType(this.store.state, this);
+    return this.store.selectColumnDisplayType(this);
   }
 
   getFormatForTimes() {
-    return selectColumnFormatForTimes(this.store.state, this);
+    return this.store.selectColumnFormatForTimes(this);
   }
 
   getPosition() {
-    return selectColumnPosition(this.store.state, this);
+    return this.store.selectColumnPosition(this);
   }
 
   getRenderer() {
-    return selectRenderer(this.store.state, this);
+    return this.store.selectRenderer(this);
   }
 
   getHighlighter(highlighterType: HIGHLIGHTER_TYPE): Highlighter[] {
@@ -361,16 +362,16 @@ export class DataGridColumn {
   }
 
   resetState() {
-    this.setTimeDisplayType(selectFormatForTimes(this.store.state));
+    this.setTimeDisplayType(this.store.selectFormatForTimes());
     this.setDisplayType(
       getDisplayType(
         this.getDataType(),
-        selectStringFormatForType(this.store.state),
-        selectStringFormatForColumn(this.store.state)[this.name],
+        this.store.selectStringFormatForType(),
+        this.store.selectStringFormatForColumn()[this.name],
       ),
     );
-    this.setAlignment(selectInitialColumnAlignment(this.store.state, this.getDataType(), this.name));
-    this.toggleVisibility(selectColumnsVisible(this.store.state)[this.name] !== false);
+    this.setAlignment(this.store.selectInitialColumnAlignment(this.getDataType(), this.name));
+    this.toggleVisibility(this.store.selectColumnsVisible()[this.name] !== false);
     this.toggleDataBarsRenderer(false);
     this.resetHighlighters();
     this.resetFilter();
@@ -385,7 +386,7 @@ export class DataGridColumn {
   restoreState() {
     this.addMinMaxValues();
     this.restoreHighlighters();
-    this.dataGrid.repaint();
+    // this.dataGrid.repaint();
   }
 
   destroy() {
@@ -416,7 +417,7 @@ export class DataGridColumn {
   }
 
   isFrozen() {
-    return selectIsColumnFrozen(this.store.state, this);
+    return this.store.selectIsColumnFrozen(this);
   }
 
   toggleColumnFrozen() {
@@ -441,7 +442,7 @@ export class DataGridColumn {
   }
 
   private resizeHTMLRows(valuesIterator) {
-    const fontSize = selectDataFontSize(this.store.state);
+    const fontSize = this.store.selectDataFontSize();
     let longest;
 
     each(valuesIterator, (value, index) => {
@@ -451,8 +452,8 @@ export class DataGridColumn {
         longest = { width: size.width, value };
       }
 
-      if (size.height > this.dataGrid.rowSections.sectionSize(index)) {
-        this.dataGrid.resizeSection('row', index, size.height);
+      if (size.height > this.dataGrid.getRowSections().sizeOf(index)) {
+        // this.dataGrid.resizeSection('row', index, size.height);
       }
     });
 
@@ -472,7 +473,7 @@ export class DataGridColumn {
         columnIndex: this.index,
         columnType: this.type,
         columnName: this.name,
-        hasIndex: selectHasIndex(this.store.state),
+        hasIndex: this.store.selectHasIndex(),
       }),
     );
     this.dataGrid.columnPosition.updateAll();

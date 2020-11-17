@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext } from '@phosphor/datagrid';
+import { CellRenderer, GraphicsContext } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../../BeakerXDataGrid';
 import { ColumnManager } from '../../column/ColumnManager';
-import { selectColumnWidth } from '../../column/selectors';
+// import { selectColumnWidth } from '../../column/selectors';
 import { DataGridHelpers } from '../../Helpers';
 import { BeakerXDataStore } from '../../store/BeakerXDataStore';
 
@@ -31,11 +31,11 @@ export class ImageCellRenderer extends CellRenderer {
 
     this.store = dataGrid.store;
     this.dataGrid = dataGrid;
-    this.backgroundColor = (config: CellRenderer.ICellConfig) =>
+    this.backgroundColor = (config: CellRenderer.CellConfig) =>
       DataGridHelpers.getBackgroundColor(this.dataGrid, config);
   }
 
-  drawBackground(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
+  drawBackground(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     const color = CellRenderer.resolveOption(this.backgroundColor, config);
 
     if (!color) {
@@ -46,12 +46,12 @@ export class ImageCellRenderer extends CellRenderer {
     gc.fillRect(config.x, config.y, config.width, config.height);
   }
 
-  paint(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
+  paint(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     this.drawBackground(gc, config);
     this.drawImage(gc, config);
   }
 
-  drawImage(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
+  drawImage(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     if (!config.value) {
       return;
     }
@@ -72,7 +72,7 @@ export class ImageCellRenderer extends CellRenderer {
 
     if (!img.complete) {
       img.onload = () => {
-        this.dataGrid.repaint(x, y, img.width, img.height);
+        this.dataGrid.repaintBody();
       };
     } else {
       this.resizeCell({ ...config }, img.width, img.height);
@@ -85,11 +85,11 @@ export class ImageCellRenderer extends CellRenderer {
     setTimeout(() => {
       const column = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(config));
 
-      if (this.dataGrid.sectionSize('row', config.row) < height) {
-        this.dataGrid.resizeSection('row', config.row, height);
-      }
+      // if (this.dataGrid.sectionSize('row', config.row) < height) {
+      //   this.dataGrid.resizeSection('row', config.row, height);
+      // }
 
-      if (selectColumnWidth(this.dataGrid.store.state, column) < width) {
+      if (this.dataGrid.store.selectColumnWidth(column) < width) {
         column.dataGrid.dataGridResize.setSectionWidth('column', column, width);
         column.dataGrid.dataGridResize.updateWidgetWidth();
       }

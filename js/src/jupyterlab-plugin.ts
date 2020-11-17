@@ -20,6 +20,8 @@ import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application'
 import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
 import { BEAKERX_MODULE_VERSION } from './version';
 
+console.log('Loading plugin');
+
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'beakerx_tabledisplay:plugin',
   requires: [IJupyterWidgetRegistry],

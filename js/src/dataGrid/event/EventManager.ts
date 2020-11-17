@@ -22,7 +22,7 @@ import { COLUMN_TYPES } from '../column/enums';
 import { DataGridHelpers } from '../Helpers';
 import { ICellData } from '../interface/ICell';
 import { HIGHLIGHTER_TYPE } from '../interface/IHighlighterState';
-import { selectAutoLinkTableLinks, selectDoubleClickTag, selectHasDoubleClickAction } from '../model/selectors';
+// import { selectAutoLinkTableLinks, selectDoubleClickTag, selectHasDoubleClickAction } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { KEYBOARD_KEYS } from './enums';
 import { EventHelpers } from './EventHelpers';
@@ -97,7 +97,7 @@ export class EventManager {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    return x < this.dataGrid.bodyWidth + this.dataGrid.rowHeaderSections.totalSize && y < this.dataGrid.headerHeight;
+    return x < this.dataGrid.bodyWidth + this.dataGrid.getRowHeaderSections().defaultSize && y < this.dataGrid.headerHeight;
   }
 
   destroy(): void {
@@ -166,7 +166,7 @@ export class EventManager {
       return;
     }
 
-    if (!selectAutoLinkTableLinks(this.store.state)) {
+    if (!this.store.selectAutoLinkTableLinks()) {
       return;
     }
 
@@ -388,11 +388,11 @@ export class EventManager {
     }
 
     const row = this.getRowIndex(data.row);
-    if (selectHasDoubleClickAction(this.store.state)) {
+    if (this.store.selectHasDoubleClickAction()) {
       this.dataGrid.commSignal.emit(new DoubleClickMessage(row, data.column));
     }
 
-    if (selectDoubleClickTag(this.store.state)) {
+    if (this.store.selectDoubleClickTag()) {
       this.dataGrid.commSignal.emit(new ActionDetailsMessage('DOUBLE_CLICK', row, data.column));
     }
   }
