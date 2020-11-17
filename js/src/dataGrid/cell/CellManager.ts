@@ -14,12 +14,11 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, DataModel } from '@phosphor/datagrid';
+import { CellRenderer, DataModel } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { COLUMN_TYPES } from '../column/enums';
 import { DataGridHelpers } from '../Helpers';
 import { ICellData } from '../interface/ICell';
-import { selectHasIndex } from '../model/selectors';
 import { IRangeCells } from './CellSelectionManager';
 
 export interface ICellDataOptions {
@@ -59,7 +58,7 @@ export class CellManager {
       return;
     }
 
-    this.dataGrid.repaint(cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.baseRowSize);
+    this.dataGrid.repaintRegion('body', cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.defaultRowHeight);
   }
 
   setHoveredCellData(data: ICellData | null) {
@@ -171,7 +170,7 @@ export class CellManager {
       cells = this.getAllCells();
     }
 
-    this.executeCopy(this.exportCellsTo(cells, 'tabs', selectHasIndex(this.dataGrid.store.state)));
+    this.executeCopy(this.exportCellsTo(cells, 'tabs', this.dataGrid.store.selectHasIndex()));
   }
 
   CSVDownload(selectedOnly) {
@@ -193,7 +192,7 @@ export class CellManager {
     column = 0,
     value = 0,
     region = 'body',
-  }: ICellDataOptions | ICellData): CellRenderer.ICellConfig {
+  }: ICellDataOptions | ICellData): CellRenderer.CellConfig {
     return {
       row,
       column,
@@ -236,10 +235,10 @@ export class CellManager {
 
   private getCSVFromCells(selectedOnly: boolean) {
     if (selectedOnly) {
-      return this.exportCellsTo(this.getSelectedCells(), 'csv', selectHasIndex(this.dataGrid.store.state));
+      return this.exportCellsTo(this.getSelectedCells(), 'csv', this.dataGrid.store.selectHasIndex());
     }
 
-    return this.exportCellsTo(this.getAllCells(), 'csv', selectHasIndex(this.dataGrid.store.state));
+    return this.exportCellsTo(this.getAllCells(), 'csv', this.dataGrid.store.selectHasIndex());
   }
 
   private executeCopy(text: string) {

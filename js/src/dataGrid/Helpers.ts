@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
-import { SectionList } from '@phosphor/datagrid/lib/sectionlist';
+import { CellRenderer } from '@lumino/datagrid';
+import { SectionList } from "@lumino/datagrid/types/sectionlist";
 import moment from 'moment-timezone';
 import { SanitizeUtils, Theme } from '../utils';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
@@ -96,12 +96,12 @@ export class DataGridHelpers {
 
   public static findSectionIndex(list: SectionList, cursorPosition: number): { index: number; delta: number } | null {
     // Bail early if the list is empty or the position is invalid.
-    if (list.sectionCount === 0 || cursorPosition < 0 || cursorPosition - list.totalSize > 0) {
+    if (list.count === 0 || cursorPosition < 0 || cursorPosition - list.length > 0) {
       return null;
     }
 
-    const index = list.sectionIndex(cursorPosition);
-    const delta = cursorPosition - list.sectionOffset(index);
+    const index = list.indexOf(cursorPosition);
+    const delta = cursorPosition - list.offsetOf(index);
 
     if (index >= 0) {
       return { index, delta };
@@ -209,7 +209,7 @@ export class DataGridHelpers {
     return /[A-Z]+/gm.test(value);
   }
 
-  public static getBackgroundColor(dataGrid: BeakerXDataGrid, config: CellRenderer.ICellConfig): string {
+  public static getBackgroundColor(dataGrid: BeakerXDataGrid, config: CellRenderer.CellConfig): string {
     const selectionColor = dataGrid.cellSelectionManager.getBackgroundColor(config);
     const highlighterColor = dataGrid.highlighterManager.getCellBackground(config);
     const focusedColor = dataGrid.cellFocusManager.getFocussedCellBackground(config);

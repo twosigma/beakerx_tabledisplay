@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
+import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ICellData } from '../interface/ICell';
@@ -91,7 +91,7 @@ export class CellSelectionManager {
     };
   }
 
-  isBetweenRows(config: CellRenderer.ICellConfig) {
+  isBetweenRows(config: CellRenderer.CellConfig) {
     const rowsRange = this.getRowsRangeCells();
 
     if (!rowsRange) {
@@ -101,7 +101,7 @@ export class CellSelectionManager {
     return config.row >= rowsRange.startCell.row && config.row <= rowsRange.endCell.row;
   }
 
-  isBetweenColumns(config: CellRenderer.ICellConfig) {
+  isBetweenColumns(config: CellRenderer.CellConfig) {
     const columnsRange = this.getColumnsRangeCells();
 
     if (!columnsRange) {
@@ -134,10 +134,10 @@ export class CellSelectionManager {
     this.enabled = false;
     this.startCellData = null;
     this.endCellData = null;
-    this.dataGrid.repaint();
+    this.dataGrid.repaintBody();
   }
 
-  isSelected(config: CellRenderer.ICellConfig) {
+  isSelected(config: CellRenderer.CellConfig) {
     if (!this.enabled || !this.startCellData || !this.endCellData) {
       return false;
     }
@@ -154,7 +154,8 @@ export class CellSelectionManager {
   }
 
   handleMouseDown(event: MouseEvent) {
-    if (this.dataGrid.eventManager.isOverHeader(event) || this.dataGrid.columnPosition.isDragging()) {
+    // @ts-ignore TODO Remove this class entirely and rely on Lumino
+    if (this.dataGrid.mouseHandler.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
@@ -176,7 +177,8 @@ export class CellSelectionManager {
     if (
       event.buttons !== 1 ||
       this.dataGrid.columnPosition.isDragging() ||
-      this.dataGrid.eventManager.isOverHeader(event)
+      // @ts-ignore TODO Remove this class entirely and rely on Lumino
+      this.dataGrid.mouseHandler.isOverHeader(this.dataGrid, event)
     ) {
       return;
     }
@@ -186,12 +188,13 @@ export class CellSelectionManager {
     if (cellData) {
       this.setEndCell(cellData);
       this.enable();
-      this.dataGrid.repaint();
+      this.dataGrid.repaintBody();
     }
   }
 
   handleMouseUp(event: MouseEvent) {
-    if (this.dataGrid.eventManager.isOverHeader(event) || this.dataGrid.columnPosition.isDragging()) {
+    // @ts-ignore TODO Remove this class entirely and rely on Lumino
+    if (this.dataGrid.mouseHandler.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
@@ -205,6 +208,6 @@ export class CellSelectionManager {
 
     this.setEndCell(data);
     this.enable();
-    this.dataGrid.repaint();
+    this.dataGrid.repaintBody();
   }
 }

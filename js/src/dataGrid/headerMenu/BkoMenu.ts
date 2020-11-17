@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { Message } from '@phosphor/messaging';
-import { Menu } from '@phosphor/widgets';
+import { Message } from '@lumino/messaging';
+import { Menu } from '@lumino/widgets';
 
 export class BkoMenu extends Menu {
   keepOpen: boolean | undefined;

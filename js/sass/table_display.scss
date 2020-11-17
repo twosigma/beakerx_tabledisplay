@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-@import '~@phosphor/widgets/style/menu.css';
+@import '~@lumino/widgets/style/menu.css';
 
 //Colors
 $alto: #DADADA;
@@ -373,9 +373,9 @@ a.dtmenu {
       background: none;
 
       &:after {
-        display: inline-block;
-        font: normal normal normal 14px/1 FontAwesome;
+        font: normal normal normal 14px/1 'Font Awesome 5 Free', FontAwesome;
         font-size: inherit;
+        font-weight: 900;
         text-rendering: auto;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -420,7 +420,7 @@ a.dtmenu {
   max-width: 100%;
   min-height: 330px;
   padding: 20px;
-  border: 1px solid white;
+  border: none;
   font-family: "Lato", Helvetica, sans-serif;
 
   &.grabbing * {
@@ -528,7 +528,8 @@ a.dtmenu {
 
 .p-ScrollBar {
   .p-ScrollBar-button {
-    font: normal normal normal 14px/1 FontAwesome;
+    font: normal normal normal 14px/1 'Font Awesome 5 Free', FontAwesome;
+    font-weight: 900;
     text-align: center;
   }
 

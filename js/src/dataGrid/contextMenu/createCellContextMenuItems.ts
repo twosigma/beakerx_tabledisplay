@@ -14,11 +14,9 @@
  *  limitations under the License.
  */
 
-import { IContextMenuItem } from '../../contextMenu/IContextMenuItem';
+import { IContextMenuItem } from '../../contextMenu';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ColumnManager } from '../column/ColumnManager';
-import { selectColumnIndexByPosition } from '../column/selectors';
-import { selectContextMenuItems, selectContextMenuTags } from '../model/selectors';
 import { DataGridContextMenu } from './DataGridContextMenu';
 import { ContextMenuClickMessage } from '../message/ContextMenuClickMessage';
 import { ActionDetailsMessage } from '../message/ActionDetailsMessage';
@@ -28,8 +26,8 @@ export function createCellContextMenuItems(
   contextMenu: DataGridContextMenu,
 ): IContextMenuItem[] {
   const selector = `#${dataGrid.wrapperId} canvas`;
-  const contextMenuItems = selectContextMenuItems(dataGrid.store.state);
-  const contextMenuTags = selectContextMenuTags(dataGrid.store.state);
+  const contextMenuItems = dataGrid.store.selectContextMenuItems();
+  const contextMenuTags = dataGrid.store.selectContextMenuTags();
   const isVisible = () => {
     const data = dataGrid.getCellData(contextMenu.event.clientX, contextMenu.event.clientY);
 
@@ -56,7 +54,7 @@ export function createCellContextMenuItems(
         dataGrid.commSignal.emit(
           new ContextMenuClickMessage(
             dataGrid.rowManager.getRow(data.row).index,
-            selectColumnIndexByPosition(dataGrid.store.state, ColumnManager.createPositionFromCell(data)),
+            dataGrid.store.selectColumnIndexByPosition(ColumnManager.createPositionFromCell(data)),
             item,
           ),
         );
@@ -86,7 +84,7 @@ export function createCellContextMenuItems(
             new ActionDetailsMessage(
               'CONTEXT_MENU_CLICK',
               dataGrid.rowManager.getRow(data.row).index,
-              selectColumnIndexByPosition(dataGrid.store.state, ColumnManager.createPositionFromCell(data)),
+              dataGrid.store.selectColumnIndexByPosition(ColumnManager.createPositionFromCell(data)),
               name,
             ),
           );

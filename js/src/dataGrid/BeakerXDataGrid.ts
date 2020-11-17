@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, DataGrid, DataModel, GraphicsContext } from '@phosphor/datagrid';
-import { SectionList } from '@phosphor/datagrid/lib/sectionlist';
-import { Signal } from '@phosphor/signaling';
-import { Widget } from '@phosphor/widgets';
+import { CellRenderer, DataGrid, DataModel } from '@lumino/datagrid';
+import { SectionList } from '@lumino/datagrid/types/sectionlist';
+import { Signal } from '@lumino/signaling';
+import { Widget, ScrollBar } from '@lumino/widgets';
 import { TableDisplayView } from '../TableDisplayView';
 import { TableDisplayWidget } from '../TableDisplayWidget';
 import { CommonUtils, Theme } from '../utils';
@@ -31,19 +31,18 @@ import { ColumnManager } from './column/ColumnManager';
 import { ColumnPosition } from './column/ColumnPosition';
 import { DataGridColumn } from './column/DataGridColumn';
 import { DataGridResize } from './DataGridResize';
-import { ALL_TYPES } from './dataTypes';
-import { EventManager } from './event/EventManager';
+import { MouseEventManager, KeyEventManager } from './event/EventManager';
 import { DataGridHelpers } from './Helpers';
 import { HighlighterManager } from './highlighter/HighlighterManager';
 import { ICellData } from './interface/ICell';
 import { IDataGridModelState } from './interface/IDataGridModelState';
 import { BeakerXDataGridModel } from './model/BeakerXDataGridModel';
-import { selectHasIndex, selectRowsToShow } from './model/selectors';
 import { RowManager } from './row/RowManager';
 import { BeakerXDataStore } from './store/BeakerXDataStore';
 import { ActionDetailsMessage } from './message/ActionDetailsMessage';
 import { DoubleClickMessage } from './message/DoubleClickMessage';
 import { ContextMenuClickMessage } from './message/ContextMenuClickMessage';
+import { getTypeByName } from './dataTypes';
 
 declare global {
   interface Window {
@@ -54,23 +53,16 @@ declare global {
 export class BeakerXDataGrid extends DataGrid {
   id: string;
   store: BeakerXDataStore;
-  columnSections: SectionList;
-  columnHeaderSections: SectionList;
-  model: BeakerXDataGridModel;
-  rowHeaderSections: SectionList;
-  rowSections: SectionList;
-  viewport: Widget;
+  dataModel: BeakerXDataGridModel;
   highlighterManager: HighlighterManager;
   columnManager: ColumnManager;
   columnPosition: ColumnPosition;
   rowManager: RowManager;
   cellSelectionManager: CellSelectionManager;
   cellManager: CellManager;
-  eventManager: EventManager;
   cellFocusManager: CellFocusManager;
   cellTooltipManager: CellTooltipManager;
   dataGridResize: DataGridResize;
-  canvasGC: GraphicsContext;
   focused: boolean;
   wrapperId: string;
   tableDisplayView: TableDisplayWidget & TableDisplayView;
@@ -87,13 +79,6 @@ export class BeakerXDataGrid extends DataGrid {
   ) {
     super(options);
 
-    //this is hack to use private DataGrid properties
-    this.viewport = this['_viewport'];
-    this.columnHeaderSections = this['_columnHeaderSections'];
-    this.rowHeaderSections = this['_rowHeaderSections'];
-    this.rowSections = this['_rowSections'];
-    this.columnSections = this['_columnSections'];
-    this.canvasGC = this['_canvasGC'];
     this.tableDisplayView = tableDisplayView;
     this.resize = DataGridHelpers.throttle(this.resize, 150, this);
     this.init(dataStore);
@@ -106,22 +91,22 @@ export class BeakerXDataGrid extends DataGrid {
     this.columnPosition = new ColumnPosition(this);
     this.rowManager = new RowManager(
       store,
-      selectHasIndex(store.state),
+      store.selectHasIndex(),
       this.columnManager,
-      selectRowsToShow(store.state),
+      store.selectRowsToShow(),
     );
     this.cellSelectionManager = new CellSelectionManager(this);
     this.cellManager = new CellManager(this);
-    this.eventManager = new EventManager(this);
+    this.mouseHandler = new MouseEventManager(this);
+    this.keyHandler = new KeyEventManager();
     this.cellFocusManager = new CellFocusManager(this);
     this.cellTooltipManager = new CellTooltipManager(this);
     this.dataGridResize = new DataGridResize(this);
-    this.model = new BeakerXDataGridModel(store, this.columnManager, this.rowManager);
+    this.dataModel = new BeakerXDataGridModel(store, this.columnManager, this.rowManager);
     this.focused = false;
-
     this.columnManager.addColumns();
     this.rowManager.createFilterExpressionVars();
-    this.store.changed.connect(DataGridHelpers.throttle<void, void>(this.handleStateChanged, 100, this));
+    this.store.store.changed.connect(DataGridHelpers.throttle<void, void>(this.handleStateChanged, 100, this));
 
     this.dataGridResize.setInitialSize();
     this.addHighlighterManager();
@@ -137,7 +122,7 @@ export class BeakerXDataGrid extends DataGrid {
     }
   }
 
-  getColumn(config: CellRenderer.ICellConfig): DataGridColumn {
+  getColumn(config: CellRenderer.CellConfig): DataGridColumn {
     return this.columnManager.getColumn(config);
   }
 
@@ -151,25 +136,25 @@ export class BeakerXDataGrid extends DataGrid {
 
   getColumnOffset(position: number, region: DataModel.ColumnRegion): number {
     if (region === 'row-header') {
-      return this.rowHeaderSections.sectionOffset(position);
+      return this.rowHeaderSections.offsetOf(position);
     }
 
-    return this.rowHeaderSections.totalSize + this.columnSections.sectionOffset(position);
+    return this.rowHeaderSections.length + this.columnSections.offsetOf(position);
   }
 
   getRowOffset(row: number) {
-    return this.rowSections.sectionOffset(row);
+    return this.rowSections.offsetOf(row);
   }
 
   updateModelData(state: IDataGridModelState) {
-    this.model.updateData(state);
+    this.dataModel.updateData(state);
     this.columnManager.recalculateMinMaxValues();
     this.dataGridResize.setInitialSize();
     this.addHighlighterManager();
   }
 
   updateModelValues(state: IDataGridModelState) {
-    this.model.updateValues(state);
+    this.dataModel.updateValues(state);
     this.columnManager.recalculateMinMaxValues();
     this.dataGridResize.setInitialSize();
   }
@@ -210,13 +195,8 @@ export class BeakerXDataGrid extends DataGrid {
     DataGridHelpers.enableKeyboardManager();
   }
 
-  handleEvent(event: Event): void {
-    this.eventManager.handleEvent(event, super.handleEvent);
-  }
-
   destroy() {
-    this.model && this.model.destroy();
-    this.eventManager.destroy();
+    this.dataModel && this.dataModel.destroy();
     this.columnManager.destroy();
     this.columnPosition.destroy();
     this.cellFocusManager.destroy();
@@ -237,7 +217,6 @@ export class BeakerXDataGrid extends DataGrid {
       this.dataGridResize = null;
       this.columnPosition = null;
       this.columnManager = null;
-      this.eventManager = null;
       this.cellManager = null;
       this.rowManager = null;
       this.store = null;
@@ -269,8 +248,8 @@ export class BeakerXDataGrid extends DataGrid {
     const { column, region } = data;
     const sectionList =
       region === 'corner-header' || region === 'row-header' ? this.rowHeaderSections : this.columnSections;
-    const sectionSize = sectionList.sectionSize(column);
-    const sectionOffset = sectionList.sectionOffset(column);
+    const sectionSize = sectionList.sizeOf(column);
+    const sectionOffset = sectionList.offsetOf(column);
     let x = sectionOffset;
     const height = this.totalHeight;
 
@@ -279,7 +258,7 @@ export class BeakerXDataGrid extends DataGrid {
     }
 
     if (region !== 'corner-header' && region !== 'row-header') {
-      x = x + this.rowHeaderSections.totalSize - this.scrollX;
+      x = x + this.rowHeaderSections.length - this.scrollX;
     }
 
     this.canvasGC.beginPath();
@@ -291,6 +270,78 @@ export class BeakerXDataGrid extends DataGrid {
     this.canvasGC.stroke();
   }
 
+  set defaultRowHeight (rowHeight: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight,
+      columnWidth: oldDefaultSizes.columnWidth,
+      rowHeaderWidth: oldDefaultSizes.rowHeaderWidth,
+      columnHeaderHeight: oldDefaultSizes.columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultRowHeight () : number {
+    return this.defaultSizes.rowHeight;
+  }
+
+  set defaultColumnWidth (columnWidth: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight: oldDefaultSizes.rowHeight,
+      columnWidth,
+      rowHeaderWidth: oldDefaultSizes.rowHeaderWidth,
+      columnHeaderHeight: oldDefaultSizes.columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultColumnWidth () : number {
+    return this.defaultSizes.columnWidth;
+  }
+
+  set defaultRowHeaderWidth (rowHeaderWidth: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight: oldDefaultSizes.rowHeight,
+      columnWidth: oldDefaultSizes.columnWidth,
+      rowHeaderWidth,
+      columnHeaderHeight: oldDefaultSizes.columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultRowHeaderWidth () : number {
+    return this.defaultSizes.rowHeaderWidth;
+  }
+
+  set defaultColumnHeaderHeight (columnHeaderHeight: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight: oldDefaultSizes.rowHeight,
+      columnWidth: oldDefaultSizes.columnWidth,
+      rowHeaderWidth: oldDefaultSizes.rowHeaderWidth,
+      columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultColumnHeaderHeight () : number {
+    return this.defaultSizes.columnHeaderHeight;
+  }
+
+  getHScrollBar() : ScrollBar {
+    return this["_hScrollBar"];
+  }
+
+  getVScrollBar() : ScrollBar {
+    return this["_vScrollBar"];
+  }
+
   private addHighlighterManager() {
     this.highlighterManager = new HighlighterManager(this);
   }
@@ -299,23 +350,44 @@ export class BeakerXDataGrid extends DataGrid {
     const defaultRenderer = CellRendererFactory.getRenderer(this);
     const headerCellRenderer = CellRendererFactory.getHeaderRenderer(this);
 
-    this.cellRenderers.set(
-      'body',
-      { dataType: ALL_TYPES[ALL_TYPES.html] },
-      CellRendererFactory.getRenderer(this, ALL_TYPES.html),
-    );
-    this.cellRenderers.set(
-      'body',
-      { dataType: ALL_TYPES[ALL_TYPES.image] },
-      CellRendererFactory.getRenderer(this, ALL_TYPES.image),
-    );
-    this.cellRenderers.set('body', {}, defaultRenderer);
-    this.cellRenderers.set('column-header', {}, headerCellRenderer);
-    this.cellRenderers.set('corner-header', {}, headerCellRenderer);
-    this.cellRenderers.set('row-header', {}, defaultRenderer);
+    this.cellRenderers.update({
+      'body': config => CellRendererFactory.getRenderer(this, getTypeByName(config.metadata['dataType'])),
+      'column-header': headerCellRenderer,
+      'corner-header': headerCellRenderer,
+      'row-header': defaultRenderer
+    })
   }
 
   private handleStateChanged() {
-    this.model && this.model.reset();
+    this.dataModel && this.dataModel.reset();
+  }
+
+  public getColumnSections(): SectionList {
+    return super.columnSections;
+  }
+
+  public getColumnHeaderSections(): SectionList {
+    return super.columnHeaderSections;
+  }
+
+  public getRowHeaderSections(): SectionList {
+    return super.rowHeaderSections;
+  }
+
+  public getRowSections(): SectionList {
+    return super.rowSections;
+  }
+
+  public getViewport(): Widget {
+    return super.viewport;
+  }
+
+  public repaintBody() {
+    this.repaintContent();
+  }
+
+  public repaintRegion(region: DataModel.CellRegion, r1: number, c1: number, r2: number, c2: number) {
+    // @ts-ignore: Until this gets released https://github.com/jupyterlab/lumino/pull/145
+    this._repaintRegion(region, r1, c1, r2, c2);
   }
 }

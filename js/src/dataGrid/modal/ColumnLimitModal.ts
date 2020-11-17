@@ -16,8 +16,6 @@
 
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ColumnManager } from '../column/ColumnManager';
-import { selectOutputColumnLimit } from '../column/selectors';
-import { selectColumnNames } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { createModalTemplate } from './columnLimitModalTemplate';
 
@@ -37,7 +35,7 @@ export class ColumnLimitModal {
   }
 
   shouldOpenModal() {
-    return selectOutputColumnLimit(this.store.state) < selectColumnNames(this.store.state).length;
+    return this.store.selectOutputColumnLimit() < this.store.selectColumnNames().length;
   }
 
   init() {
@@ -50,8 +48,8 @@ export class ColumnLimitModal {
     modal.id = this.modalId;
     modal.style.display = 'none';
     modal.innerHTML = createModalTemplate(
-      selectOutputColumnLimit(this.store.state),
-      selectColumnNames(this.store.state).length,
+      this.store.selectOutputColumnLimit(),
+      this.store.selectColumnNames().length,
     );
 
     this.container.appendChild(modal);

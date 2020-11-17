@@ -17,7 +17,6 @@
 import { IMenuItem } from '../../contextMenu/IMenuItem';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { COLUMN_TYPES } from '../column/enums';
-import { selectBodyColumnStates } from '../column/selectors';
 import { createFormatMenuItems } from './createFormatMenuItems';
 import { IContextMenuItem } from '../../contextMenu';
 import { DEFAULT_PAGE_LENGTH, scopeData } from '../consts';
@@ -31,7 +30,7 @@ export function createIndexMenuItems(column: DataGridColumn): IMenuItem[] {
 
   const createShowColumnSubmenu = (): IContextMenuItem[] => {
     const items: IContextMenuItem[] = [];
-    const columnsStates = selectBodyColumnStates(dataGrid.store.state);
+    const columnsStates = dataGrid.store.selectBodyColumnStates();
 
     columnsStates.forEach((state) => {
       items.push({

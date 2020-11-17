@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-import { each, filter, iter, toArray } from '@phosphor/algorithm';
-import { CellRenderer } from '@phosphor/datagrid';
+import { each, filter, iter, toArray } from '@lumino/algorithm';
+import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { HIGHLIGHTER_STYLE, HIGHLIGHTER_TYPE, IHighlighterState } from '../interface/IHighlighterState';
-import { ADD_COLUMN_HIGHLIGHTER, REMOVE_COLUMN_HIGHLIGHTER } from '../model/reducer';
-import { selectCellHighlighters } from '../model/selectors/model';
+import { ADD_COLUMN_HIGHLIGHTER, REMOVE_COLUMN_HIGHLIGHTER } from '../model/BeakerXDataGridModel';
+// import { selectCellHighlighters } from '../model/selectors/model';
 import { DataGridColumnAction } from '../store/DataGridAction';
 import { Highlighter } from './Highlighter';
 import { HighlighterFactory } from './HighlighterFactory';
@@ -51,7 +51,7 @@ export class HighlighterManager {
   }
 
   createHighlighters() {
-    const state = selectCellHighlighters(this.dataGrid.store.state);
+    const state = this.dataGrid.store.selectCellHighlighters();
 
     state.forEach(this.createHighlighter);
   }
@@ -162,15 +162,15 @@ export class HighlighterManager {
       this.addColumnHighlighter(column, highlighterType);
     }
 
-    this.dataGrid.repaint();
+    this.dataGrid.repaintBody();
   }
 
   removeHighlighters() {
     this.highlighters.splice(0, this.highlighters.length);
-    this.dataGrid.repaint();
+    this.dataGrid.repaintBody();
   }
 
-  getCellBackground(config: CellRenderer.ICellConfig): string {
+  getCellBackground(config: CellRenderer.CellConfig): string {
     let background = Theme.DEFAULT_CELL_BACKGROUND;
     const column = this.dataGrid.getColumn(config);
 

@@ -18,7 +18,6 @@ import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ColumnManager } from '../column/ColumnManager';
 import { COLUMN_TYPES } from '../column/enums';
 import { ICellData } from '../interface/ICell';
-import { selectHasIndex, selectTooltips } from '../model/selectors';
 import { CellTooltip } from './CellTooltip';
 import { DataGridCell } from './DataGridCell';
 
@@ -30,8 +29,8 @@ export class CellTooltipManager {
   hasIndex: boolean;
 
   constructor(dataGrid: BeakerXDataGrid) {
-    this.tooltips = selectTooltips(dataGrid.store.state);
-    this.hasIndex = selectHasIndex(dataGrid.store.state);
+    this.tooltips = dataGrid.store.selectTooltips();
+    this.hasIndex = dataGrid.store.selectHasIndex();
     this.dataGrid = dataGrid;
 
     this.dataGrid.cellHovered.connect(this.handleCellHovered, this);
