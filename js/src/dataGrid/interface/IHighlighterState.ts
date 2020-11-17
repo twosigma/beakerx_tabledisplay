@@ -14,6 +14,8 @@
  *  limitations under the License.
  */
 
+import {JSONObject} from "@lumino/coreutils";
+
 export enum HIGHLIGHTER_STYLE {
   SINGLE_COLUMN = 'SINGLE_COLUMN',
   FULL_ROW = 'FULL_ROW',
@@ -27,7 +29,7 @@ export enum HIGHLIGHTER_TYPE {
   sort = 'SortHighlighter',
 }
 
-export interface IHighlighterState {
+export interface IHighlighterState extends JSONObject{
   colName: string;
   maxColor: string | null;
   maxVal: number | null;

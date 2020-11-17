@@ -22,6 +22,8 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
   private _currentScope: DataGridScope;
 
   render(): void {
+    console.log('TableDisplayView.render');
+
     this._currentScope = null;
     this.$el.addClass('beaker-table-display');
 
@@ -35,6 +37,7 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
       this.initDataGridTable(tableModel);
 
       this.listenTo(this.model, 'beakerx-tabSelected', () => {
+        console.log('beakerx-tabSelected');
         this._currentScope?.setInitialSize();
       });
 
@@ -44,6 +47,7 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
   }
 
   handleModelUpdate(model, value, options): void {
+    console.log('handleModelUpdate');
     let shouldReset = options.shouldResetModel==undefined || options.shouldResetModel;
     if (shouldReset){
       this._currentScope.doResetAll();
@@ -51,6 +55,7 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
     }
   }
   handleUpdateData(model, value, options): void {
+    console.log('handleUpdateData');
     const change = this.model.get('updateData');
     const currentModel = this.model.get('model');
     if (change.hasOwnProperty('values')){
@@ -97,6 +102,7 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
   }
 
   remove(): void {
+    console.log('remove');
     this._currentScope && this._currentScope.doDestroy();
 
     if (this.pWidget) {

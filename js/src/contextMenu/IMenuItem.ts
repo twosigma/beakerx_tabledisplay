@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { CommandRegistry } from '@phosphor/commands';
-import { ReadonlyJSONObject } from '@phosphor/coreutils';
+import { CommandRegistry } from '@lumino/commands';
+import { ReadonlyJSONObject } from '@lumino/coreutils';
 import { DataGridColumn } from '../dataGrid/column/DataGridColumn';
 import { IContextMenuItem } from './IContextMenuItem';
 

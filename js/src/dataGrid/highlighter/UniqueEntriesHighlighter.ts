@@ -14,12 +14,12 @@
  *  limitations under the License.
  */
 
-import { reduce } from '@phosphor/algorithm';
-import { CellRenderer } from '@phosphor/datagrid';
+import { reduce } from '@lumino/algorithm';
+import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { IHighlighterState } from '../interface/IHighlighterState';
-import { selectColumnNames } from '../model/selectors/column';
+// import { selectColumnNames } from '../model/selectors/column';
 import { Highlighter } from './Highlighter';
 
 const MAX_HUE_VALUE = 360;
@@ -35,7 +35,7 @@ export class UniqueEntriesHighlighter extends Highlighter {
     this.generateUniqueValues();
   }
 
-  getBackgroundColor(config: CellRenderer.ICellConfig) {
+  getBackgroundColor(config: CellRenderer.CellConfig) {
     return this.uniqueColors[this.getValueToHighlight(config)] || Theme.DEFAULT_CELL_BACKGROUND;
   }
 
@@ -59,7 +59,7 @@ export class UniqueEntriesHighlighter extends Highlighter {
 
   getColorGenerationFn(initialSaturationRatio = 1, initialLightnessRatio = 1) {
     const goldenRatioConjugate = 0.618033988749895;
-    let hueRatio = this.column.index / selectColumnNames(this.column.store.state).length;
+    let hueRatio = this.column.index / this.column.store.selectColumnNames().length;
     let saturationRatio = initialSaturationRatio;
     let lightnessRatio = initialLightnessRatio;
     let saturationStepCount = 0;

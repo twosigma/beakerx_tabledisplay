@@ -14,21 +14,21 @@
  *  limitations under the License.
  */
 
-import { chain, find } from '@phosphor/algorithm';
-import { CellRenderer, DataModel } from '@phosphor/datagrid';
-import { Signal } from '@phosphor/signaling';
+import { chain, find } from '@lumino/algorithm';
+import { CellRenderer, DataModel } from '@lumino/datagrid';
+import { Signal } from '@lumino/signaling';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { DataGridHelpers } from '../Helpers';
 import { ICellData } from '../interface/ICell';
 import { IColumnPosition, IColumns } from '../interface/IColumn';
 import { RESET_COLUMNS_ORDER, UPDATE_COLUMNS_VISIBLE } from '../model/reducer';
-import { selectBodyColumnNames, selectColumnNames, selectHasIndex, selectIndexColumnNames } from '../model/selectors';
+// import { selectBodyColumnNames, selectColumnNames, selectHasIndex, selectIndexColumnNames } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridAction, DataGridColumnsAction } from '../store/DataGridAction';
 import { DataGridColumn } from './DataGridColumn';
 import { COLUMN_TYPES, SORT_ORDER } from './enums';
 import { UPDATE_COLUMNS_FILTERS } from './reducer';
-import { selectColumnIndexByPosition } from './selectors';
+// import { selectColumnIndexByPosition } from './selectors';
 
 export interface IBkoColumnsChangedArgs {
   type: COLUMN_CHANGED_TYPES;
@@ -51,14 +51,14 @@ export class ColumnManager {
     this.store = this.dataGrid.store;
   }
 
-  static createPositionFromCell(config: CellRenderer.ICellConfig | ICellData): IColumnPosition {
+  static createPositionFromCell(config: CellRenderer.CellConfig | ICellData): IColumnPosition {
     const region = ColumnManager.getColumnRegionByCell(config);
 
     return { region, value: config.column };
   }
 
   static getColumnRegionByCell(
-    config: CellRenderer.ICellConfig | ICellData | { region: DataModel.CellRegion },
+    config: CellRenderer.CellConfig | ICellData | { region: DataModel.CellRegion },
   ): DataModel.ColumnRegion {
     return config.region === 'row-header' || config.region === 'corner-header' ? 'row-header' : 'body';
   }
@@ -72,11 +72,11 @@ export class ColumnManager {
   }
 
   get bodyColumnNames(): string[] {
-    return selectBodyColumnNames(this.store.state);
+    return this.store.selectBodyColumnNames();
   }
 
   get indexColumnNames(): string[] {
-    return selectIndexColumnNames(this.store.state);
+    return this.store.selectIndexColumnNames();
   }
 
   addColumns() {
@@ -85,9 +85,9 @@ export class ColumnManager {
     this.addBodyColumns();
   }
 
-  getColumn(config: CellRenderer.ICellConfig): DataGridColumn {
+  getColumn(config: CellRenderer.CellConfig): DataGridColumn {
     const columnType = DataGridColumn.getColumnTypeByRegion(config.region, config.column);
-    const columnIndex = selectColumnIndexByPosition(this.store.state, ColumnManager.createPositionFromCell(config));
+    const columnIndex = this.store.selectColumnIndexByPosition(ColumnManager.createPositionFromCell(config));
 
     return this.columns[columnType][columnIndex];
   }
@@ -124,8 +124,8 @@ export class ColumnManager {
 
     this.store.dispatch(
       new DataGridColumnsAction(UPDATE_COLUMNS_FILTERS, {
-        hasIndex: selectHasIndex(this.store.state),
-        value: selectColumnNames(this.store.state).map(() => ''),
+        hasIndex: this.store.selectHasIndex(),
+        value: this.store.selectColumnNames().map(() => ''),
         defaultValue: [''],
       }),
     );
@@ -201,8 +201,8 @@ export class ColumnManager {
   }
 
   showAllColumns() {
-    const columnNames = selectColumnNames(this.store.state);
-    const hasIndex = selectHasIndex(this.store.state);
+    const columnNames = this.store.selectColumnNames();
+    const hasIndex = this.store.selectHasIndex();
 
     this.store.dispatch(
       new DataGridColumnsAction(UPDATE_COLUMNS_VISIBLE, {
@@ -246,11 +246,13 @@ export class ColumnManager {
   }
 
   recalculateMinMaxValues() {
+    console.log('recalculateColumnsMinMax');
     this.recalculateColumnsMinMax(this.bodyColumns);
     this.recalculateColumnsMinMax(this.indexColumns);
   }
 
   createColumnMenus() {
+    console.log('createColumnMenus');
     this.indexColumns.forEach((column) => column.createMenu());
     this.bodyColumns.forEach((column) => column.createMenu());
   }
@@ -278,14 +280,15 @@ export class ColumnManager {
   }
 
   private addBodyColumns() {
-    selectBodyColumnNames(this.store.state).forEach((name, index) => this.addColumn(name, index, COLUMN_TYPES.body));
+    this.store.selectBodyColumnNames().forEach((name, index) => this.addColumn(name, index, COLUMN_TYPES.body));
   }
 
   private addIndexColumns(): void {
-    selectIndexColumnNames(this.store.state).forEach((name, index) => this.addColumn(name, index, COLUMN_TYPES.index));
+    this.store.selectIndexColumnNames().forEach((name, index) => this.addColumn(name, index, COLUMN_TYPES.index));
   }
 
   private addColumn(name, index, type) {
+    console.log('addColumn',name,index,type);
     const column = new DataGridColumn(
       {
         name,

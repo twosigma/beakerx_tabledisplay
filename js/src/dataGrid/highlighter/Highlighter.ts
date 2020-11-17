@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
+import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { HIGHLIGHTER_STYLE, IHighlighterState } from '../interface/IHighlighterState';
@@ -37,11 +37,11 @@ export class Highlighter {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getBackgroundColor(config: CellRenderer.ICellConfig) {
+  getBackgroundColor(config: CellRenderer.CellConfig) {
     return Theme.DEFAULT_CELL_BACKGROUND;
   }
 
-  getValueToHighlight(config: CellRenderer.ICellConfig) {
+  getValueToHighlight(config: CellRenderer.CellConfig) {
     let value = config.value;
     const valueResolver = this.model.getColumnValueResolver(this.column.getDataType());
 

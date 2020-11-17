@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from '@phosphor/datagrid';
+import { CellRenderer } from '@lumino/datagrid';
 import * as d3scale from 'd3-scale';
 import { Theme } from '../../utils';
 import { DataGridColumn } from '../column/DataGridColumn';
@@ -37,7 +37,7 @@ export class HeatmapHighlighter extends Highlighter {
       .range([this.state.minColor, this.state.maxColor]);
   }
 
-  getBackgroundColor(config: CellRenderer.ICellConfig): string {
+  getBackgroundColor(config: CellRenderer.CellConfig): string {
     const value = this.getValueToHighlight(config);
     if (this.state.style === HIGHLIGHTER_STYLE.FULL_ROW) {
       return this.colorScale(value);

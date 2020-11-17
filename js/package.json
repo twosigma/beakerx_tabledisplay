@@ -29,8 +29,6 @@
     "prettier:fix": "prettier --check src/**/*.{ts,js} --write"
   },
   "devDependencies": {
-    "@jupyter-widgets/base": "^1.2.5 || ^2.0.2",
-    "@jupyter-widgets/controls": "^1.5.3",
     "@jupyterlab/application": "^1.2.8",
     "@types/chai": "^4.2.11",
     "@types/expect.js": "^0.3.29",
@@ -70,9 +68,17 @@
     "webpack-cli": "^3.3.11"
   },
   "dependencies": {
-    "@phosphor/datagrid": "0.1.10",
-    "@phosphor/datastore": "0.7.1",
-    "@phosphor/widgets": "1.9.3",
+    "@jupyter-widgets/base": "^1.2.5 || ^2.0.2",
+    "@jupyter-widgets/controls": "^1.5.3",
+    "@lumino/algorithm": "^1.3.3",
+    "@lumino/commands": "^1.11.3",
+    "@lumino/coreutils": "^1.5.3",
+    "@lumino/datagrid": "^0.14.0",
+    "@lumino/datastore": "^0.11.0",
+    "@lumino/disposable": "^1.4.3",
+    "@lumino/messaging": "^1.4.3",
+    "@lumino/signaling": "^1.4.3",
+    "@lumino/widgets": "^1.14.0",
     "d3-scale": "2",
     "file-loader": "^6.0.0",
     "katex": "^0.11.1",

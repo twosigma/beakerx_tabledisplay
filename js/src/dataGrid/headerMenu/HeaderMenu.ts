@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { CommandRegistry } from '@phosphor/commands';
-import { Widget } from '@phosphor/widgets';
+import { CommandRegistry } from '@lumino/commands';
+import { Widget } from '@lumino/widgets';
 import { IMenu } from '../../contextMenu';
 import { IMenuItem } from '../../contextMenu/IMenuItem';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
