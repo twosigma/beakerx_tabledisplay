@@ -35,7 +35,6 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
       this.initDataGridTable(tableModel);
 
       this.listenTo(this.model, 'beakerx-tabSelected', () => {
-        console.log('beakerx-tabSelected');
         this._currentScope?.setInitialSize();
       });
 
