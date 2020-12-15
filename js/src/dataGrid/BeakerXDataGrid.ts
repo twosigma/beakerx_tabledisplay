@@ -15,8 +15,9 @@
  */
 
 import { CellRenderer, DataGrid, DataModel } from '@lumino/datagrid';
+import { SectionList } from '@lumino/datagrid/types/sectionlist';
 import { Signal } from '@lumino/signaling';
-// import { Widget } from '@lumino/widgets';
+import { Widget } from '@lumino/widgets';
 import { TableDisplayView } from '../TableDisplayView';
 import { TableDisplayWidget } from '../TableDisplayWidget';
 import { CommonUtils, Theme } from '../utils';
@@ -42,9 +43,6 @@ import { BeakerXDataStore } from './store/BeakerXDataStore';
 import { ActionDetailsMessage } from './message/ActionDetailsMessage';
 import { DoubleClickMessage } from './message/DoubleClickMessage';
 import { ContextMenuClickMessage } from './message/ContextMenuClickMessage';
-import {SectionList} from "@lumino/datagrid/types/sectionlist";
-import {Widget} from "@lumino/widgets";
-// import {SectionList} from "@lumino/datagrid/types/sectionlist";
 
 declare global {
   interface Window {
@@ -55,12 +53,7 @@ declare global {
 export class BeakerXDataGrid extends DataGrid {
   id: string;
   store: BeakerXDataStore;
-  // columnSections: SectionList;
-  // columnHeaderSections: SectionList;
   model: BeakerXDataGridModel;
-  // rowHeaderSections: SectionList;
-  // rowSections: SectionList;
-  // viewport: Widget;
   highlighterManager: HighlighterManager;
   columnManager: ColumnManager;
   columnPosition: ColumnPosition;
@@ -71,7 +64,6 @@ export class BeakerXDataGrid extends DataGrid {
   cellFocusManager: CellFocusManager;
   cellTooltipManager: CellTooltipManager;
   dataGridResize: DataGridResize;
-  // canvasGC: CanvasRenderingContext2D;
   focused: boolean;
   wrapperId: string;
   tableDisplayView: TableDisplayWidget & TableDisplayView;
@@ -91,13 +83,6 @@ export class BeakerXDataGrid extends DataGrid {
   ) {
     super(options);
 
-    //this is hack to use private DataGrid properties
-    // this.viewport = this['_viewport'];
-    // this.columnHeaderSections = this['_columnHeaderSections'];
-    // this.rowHeaderSections = this['_rowHeaderSections'];
-    // this.rowSections = this['_rowSections'];
-    // this.columnSections = this['_columnSections'];
-    // this.canvasGC = this['_canvasGC'];
     this.tableDisplayView = tableDisplayView;
     this.resize = DataGridHelpers.throttle(this.resize, 150, this);
     this.init(dataStore);
@@ -329,28 +314,30 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   private handleStateChanged() {
-    console.log('handle state change');
     this.model && this.model.reset();
   }
 
   public getColumnSections(): SectionList {
     return super.columnSections;
   }
+
   public getColumnHeaderSections(): SectionList {
     return super.columnHeaderSections;
   }
+
   public getRowHeaderSections(): SectionList {
     return super.rowHeaderSections;
   }
+
   public getRowSections(): SectionList {
     return super.rowSections;
   }
+
   public getViewport(): Widget {
     return super.viewport;
   }
 
   public repaintBody() {
-    console.log('repaintBody');
     this.repaintContent();
   }
 }
