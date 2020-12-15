@@ -86,7 +86,6 @@ export class BeakerXDataStore {
     } finally {
       this.store.endTransaction();
     }
-    console.log(initialColumnsState);
   }
   selectValues() {
     let schema = this.store.get(BEAKERX_SCHEMA);
@@ -214,12 +213,12 @@ export class BeakerXDataStore {
     let schema = this.store.get(BEAKERX_SCHEMA);
     return schema.get('init')!.model[0].show_publication;
   }
-  
+
   selectColumnNames() {
     const names = this.selectRawColumnNames();
     return names.map(processColumnName);
   }
-  
+
   selectBodyColumnNames() {
     const columnNames = this.selectColumnNames();
     const hasIndex = this.selectHasIndex();
@@ -475,8 +474,6 @@ export class BeakerXDataStore {
   }
 
   dispatch(action: DataGridAction | DataGridColumnAction | DataGridColumnsAction) {
-    console.log('action is ', action.type, action.payload);
-
     let schema = this.store.get(BEAKERX_SCHEMA);
     switch (action.type) {
       case UPDATE_MODEL_DATA:
@@ -772,7 +769,6 @@ export class BeakerXDataStore {
 
       const newState = [];
       stateArray.forEach(columnState => {
-        console.log('loop', columnState);
         if (columnState.columnType !== COLUMN_TYPES.body) {
           return true;
         }

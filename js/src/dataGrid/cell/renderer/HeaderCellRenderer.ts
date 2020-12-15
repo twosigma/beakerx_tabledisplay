@@ -16,7 +16,6 @@
 
 import { CellRenderer, GraphicsContext } from '@lumino/datagrid';
 import { Theme } from '../../../utils';
-// import { selectHeadersVertical } from '../../model/selectors';
 import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 
 export class HeaderCellRenderer extends BeakerXCellRenderer {

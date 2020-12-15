@@ -42,6 +42,7 @@ import { BeakerXDataStore } from './store/BeakerXDataStore';
 import { ActionDetailsMessage } from './message/ActionDetailsMessage';
 import { DoubleClickMessage } from './message/DoubleClickMessage';
 import { ContextMenuClickMessage } from './message/ContextMenuClickMessage';
+import { getTypeByName } from './dataTypes';
 
 declare global {
   interface Window {
@@ -289,7 +290,7 @@ export class BeakerXDataGrid extends DataGrid {
     const headerCellRenderer = CellRendererFactory.getHeaderRenderer(this);
 
     this.cellRenderers.update({
-      'body': config => CellRendererFactory.getRenderer(this, config.metadata['dataType']),
+      'body': config => CellRendererFactory.getRenderer(this, getTypeByName(config.metadata['dataType'])),
       'column-header': headerCellRenderer,
       'corner-header': headerCellRenderer,
       'row-header': defaultRenderer

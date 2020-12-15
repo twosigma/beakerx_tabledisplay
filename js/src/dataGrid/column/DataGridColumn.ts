@@ -108,7 +108,6 @@ export class DataGridColumn {
   }
 
   createMenu(): void {
-    console.log('createMenu');
     if (this.type === COLUMN_TYPES.index) {
       this.menu = new IndexMenu(this);
 

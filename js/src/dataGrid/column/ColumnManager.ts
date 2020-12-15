@@ -246,13 +246,11 @@ export class ColumnManager {
   }
 
   recalculateMinMaxValues() {
-    console.log('recalculateColumnsMinMax');
     this.recalculateColumnsMinMax(this.bodyColumns);
     this.recalculateColumnsMinMax(this.indexColumns);
   }
 
   createColumnMenus() {
-    console.log('createColumnMenus');
     this.indexColumns.forEach((column) => column.createMenu());
     this.bodyColumns.forEach((column) => column.createMenu());
   }
@@ -288,7 +286,6 @@ export class ColumnManager {
   }
 
   private addColumn(name, index, type) {
-    console.log('addColumn',name,index,type);
     const column = new DataGridColumn(
       {
         name,

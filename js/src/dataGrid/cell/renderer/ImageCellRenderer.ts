@@ -17,7 +17,6 @@
 import { CellRenderer, GraphicsContext } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../../BeakerXDataGrid';
 import { ColumnManager } from '../../column/ColumnManager';
-// import { selectColumnWidth } from '../../column/selectors';
 import { DataGridHelpers } from '../../Helpers';
 import { BeakerXDataStore } from '../../store/BeakerXDataStore';
 
@@ -85,8 +84,9 @@ export class ImageCellRenderer extends CellRenderer {
     setTimeout(() => {
       const column = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(config));
 
-      // if (this.dataGrid.sectionSize('row', config.row) < height) {
-      //   this.dataGrid.resizeSection('row', config.row, height);
+      // TODO Resize is now asynchronous, find a way to resize and trigger another redraw
+      // if (this.dataGrid.rowSize('body', config.row) < height) {
+      //   this.dataGrid.resizeRow('body', config.row, height);
       // }
 
       if (this.dataGrid.store.selectColumnWidth(column) < width) {

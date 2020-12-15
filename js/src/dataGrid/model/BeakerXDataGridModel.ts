@@ -80,7 +80,6 @@ export class BeakerXDataGridModel extends DataModel {
   }
 
   updateData(state: IDataGridModelState) {
-    console.log('model update data');
     this.columnManager.resetColumnStates();
     this.store.dispatch(new DataGridAction(UPDATE_MODEL_DATA, state));
     // this._data = this.store.selectValues();
@@ -90,7 +89,6 @@ export class BeakerXDataGridModel extends DataModel {
   }
 
   updateValues(state: IDataGridModelState) {
-    console.log('model update values');
     this.store.dispatch(new DataGridAction(UPDATE_MODEL_VALUES, state));
     this.store.dispatch(new DataGridAction(UPDATE_MODEL_FONT_COLOR, state));
     // this._data = selectValues(this.store.state);
