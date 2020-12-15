@@ -19,7 +19,6 @@ import { BEAKERX_MODULE_VERSION } from './version';
 
 export class TableDisplayModel extends widgets.DOMWidgetModel {
   defaults() {
-    console.log('pippo1');
     return {
       ...super.defaults(),
       _model_name: 'TableDisplayModel',
