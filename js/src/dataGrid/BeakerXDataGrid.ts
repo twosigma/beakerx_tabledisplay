@@ -37,7 +37,6 @@ import { HighlighterManager } from './highlighter/HighlighterManager';
 import { ICellData } from './interface/ICell';
 import { IDataGridModelState } from './interface/IDataGridModelState';
 import { BeakerXDataGridModel } from './model/BeakerXDataGridModel';
-// import { selectHasIndex, selectRowsToShow } from './model/selectors';
 import { RowManager } from './row/RowManager';
 import { BeakerXDataStore } from './store/BeakerXDataStore';
 import { ActionDetailsMessage } from './message/ActionDetailsMessage';
@@ -71,10 +70,11 @@ export class BeakerXDataGrid extends DataGrid {
   cellHovered = new Signal<this, { data: ICellData | null; event: MouseEvent }>(this);
   commSignal = new Signal<this, ActionDetailsMessage | DoubleClickMessage | ContextMenuClickMessage>(this);
 
-  static FOCUS_CSS_CLASS = 'bko-focused';
   baseRowSize: number;
   baseColumnHeaderSize: number;
   baseColumnSize: number;
+
+  static FOCUS_CSS_CLASS = 'bko-focused';
 
   constructor(
     options: DataGrid.IOptions,
@@ -89,8 +89,6 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   init(store: BeakerXDataStore) {
-    console.log('init datagrid');
-
     this.id = 'grid_' + CommonUtils.generateId(6);
     this.store = store;
     this.columnManager = new ColumnManager(this);
@@ -109,7 +107,6 @@ export class BeakerXDataGrid extends DataGrid {
     this.dataGridResize = new DataGridResize(this);
     this.model = new BeakerXDataGridModel(store, this.columnManager, this.rowManager);
     this.focused = false;
-    this.dataModel = this.model;
     this.columnManager.addColumns();
     this.rowManager.createFilterExpressionVars();
     this.store.store.changed.connect(DataGridHelpers.throttle<void, void>(this.handleStateChanged, 100, this));
@@ -289,21 +286,6 @@ export class BeakerXDataGrid extends DataGrid {
   private addCellRenderers() {
     const defaultRenderer = CellRendererFactory.getRenderer(this);
     const headerCellRenderer = CellRendererFactory.getHeaderRenderer(this);
-
-    // this.cellRenderers.set(
-    //   'body',
-    //   { dataType: ALL_TYPES[ALL_TYPES.html] },
-    //   CellRendererFactory.getRenderer(this, ALL_TYPES.html),
-    // );
-    // this.cellRenderers.set(
-    //   'body',
-    //   { dataType: ALL_TYPES[ALL_TYPES.image] },
-    //   CellRendererFactory.getRenderer(this, ALL_TYPES.image),
-    // );
-    // this.cellRenderers.set('body', {}, defaultRenderer);
-    // this.cellRenderers.set('column-header', {}, headerCellRenderer);
-    // this.cellRenderers.set('corner-header', {}, headerCellRenderer);
-    // this.cellRenderers.set('row-header', {}, defaultRenderer);
 
     this.cellRenderers.update({
       'body': config => CellRendererFactory.getRenderer(this, config.metadata['dataType']),
