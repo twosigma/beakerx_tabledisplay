@@ -18,10 +18,8 @@ import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { DataGridColumn } from '../column/DataGridColumn';
-// import { selectVisibleBodyColumns } from '../column/selectors';
 import { KEYBOARD_KEYS } from '../event/enums';
 import { ICellData } from '../interface/ICell';
-// import { selectColumnsFrozenNames } from '../model/selectors';
 
 export class CellFocusManager {
   dataGrid: BeakerXDataGrid;

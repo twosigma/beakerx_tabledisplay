@@ -63,6 +63,7 @@ export class DataGridScope {
     this.initColumnLimitModal();
   }
 
+  // TODO
   // get state(): IDataGridModelState {
   //   return this.store.selectModel();
   // }

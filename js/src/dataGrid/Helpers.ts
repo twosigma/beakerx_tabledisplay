@@ -15,14 +15,13 @@
  */
 
 import { CellRenderer } from '@lumino/datagrid';
-// import { SectionList } from '@lumino/datagrid';
+import { SectionList } from "@lumino/datagrid/types/sectionlist";
 import moment from 'moment-timezone';
 import { SanitizeUtils, Theme } from '../utils';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
 import { DataGridColumn } from './column/DataGridColumn';
 import { KEYBOARD_KEYS } from './event/enums';
 import { DataGridStyle } from './style/DataGridStyle';
-import {SectionList} from "@lumino/datagrid/types/sectionlist";
 
 export class DataGridHelpers {
   public static readonly urlRegex = /((https?|ftp|file):\/\/)(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#/%=~_|$?!:,.]*\)|[A-Z0-9+&@#/%=~_|$])/i;

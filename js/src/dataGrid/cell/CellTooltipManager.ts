@@ -18,7 +18,6 @@ import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ColumnManager } from '../column/ColumnManager';
 import { COLUMN_TYPES } from '../column/enums';
 import { ICellData } from '../interface/ICell';
-// import { selectHasIndex, selectTooltips } from '../model/selectors';
 import { CellTooltip } from './CellTooltip';
 import { DataGridCell } from './DataGridCell';
 

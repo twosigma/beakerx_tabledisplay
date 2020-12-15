@@ -19,7 +19,6 @@ import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { COLUMN_TYPES } from '../column/enums';
 import { DataGridHelpers } from '../Helpers';
 import { ICellData } from '../interface/ICell';
-// import { selectHasIndex } from '../model/selectors';
 import { IRangeCells } from './CellSelectionManager';
 
 export interface ICellDataOptions {
@@ -59,7 +58,7 @@ export class CellManager {
       return;
     }
 
-    this.dataGrid.repaintBody(); //cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.baseRowSize);
+    this.dataGrid.repaintRegion('body', cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.baseRowSize);
   }
 
   setHoveredCellData(data: ICellData | null) {

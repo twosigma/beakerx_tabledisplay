@@ -323,4 +323,9 @@ export class BeakerXDataGrid extends DataGrid {
   public repaintBody() {
     this.repaintContent();
   }
+
+  public repaintRegion(region: DataModel.CellRegion, r1: number, c1: number, r2: number, c2: number) {
+    // @ts-ignore: Until this gets released https://github.com/jupyterlab/lumino/pull/145
+    this._repaintRegion(region, r1, c1, r2, c2);
+  }
 }

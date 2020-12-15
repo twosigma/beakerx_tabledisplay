@@ -75,7 +75,7 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
     img.src = data;
 
     if (!img.complete) {
-      img.onload = this.repaintCellCallback(config.x, config.y, config.width, config.height);
+      img.onload = this.repaintCellCallback(config.row, config.column);
     } else {
       gc.drawImage(img, x, y, width, height);
     }
@@ -125,8 +125,8 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
     return `${JSON.stringify(config)}|${vAlign}|${hAlign}`;
   }
 
-  private repaintCellCallback(x: number, y: number, width: number, height: number) {
-    return () => {}; //this.dataGrid.repaint(x, y, width, height);
+  private repaintCellCallback(row: number, column: number) {
+    return () => this.dataGrid.repaintRegion('body', row, row, column, column);
   }
 
   private getHTMLImageData(

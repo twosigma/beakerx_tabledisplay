@@ -20,8 +20,6 @@ import { BeakerXDataGrid } from '../../BeakerXDataGrid';
 import { DEFAULT_ALIGNMENT } from '../../column/ColumnAlignment';
 import { DataGridHelpers } from '../../Helpers';
 import { IRenderer, RENDERER_TYPE } from '../../interface/IRenderer';
-// import { selectRenderer } from '../../model/selectors/column';
-// import { selectDataFontSize, selectHeaderFontSize } from '../../model/selectors/model';
 import { BeakerXDataStore } from '../../store/BeakerXDataStore';
 import { DataGridStyle } from '../../style/DataGridStyle';
 import { DataGridCell } from '../DataGridCell';
