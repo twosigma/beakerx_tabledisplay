@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-// import { RendererMap } from '@lumino/datagrid';
+import { RendererMap } from '@lumino/datagrid';
 import { Widget } from '@lumino/widgets';
 import { TableDisplayView } from '../TableDisplayView';
-// import { Theme } from '../utils/Theme';
+import { Theme } from '../utils/Theme';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
 import { DataGridContextMenu } from './contextMenu/DataGridContextMenu';
 // import { IDataGridModelState } from './interface/IDataGridModelState';
@@ -40,7 +40,6 @@ export class DataGridScope {
   }
 
   constructor(options: IDataGridScopeOptions) {
-    console.log('create scope');
     if (Object.keys(options.data).length === 0 && options.data.constructor === Object) {
       throw new Error('options.data can not be empty');
     }
@@ -50,8 +49,8 @@ export class DataGridScope {
     this.tableDisplayView = options.widgetView;
     this._dataGrid = new BeakerXDataGrid(
       {
-        // style: Theme.getStyle(),
-        // cellRenderers: new RendererMap({ /*priority: ['body|{dataType: html}', 'body|']*/ }),
+        style: Theme.getStyle(),
+        cellRenderers: new RendererMap({ /*priority: ['body|{dataType: html}', 'body|']*/ }),
       },
       this.store,
       this.tableDisplayView,
@@ -69,7 +68,6 @@ export class DataGridScope {
   // }
 
   render(): void {
-    console.log('render scope');
     Widget.attach((this.dataGrid as unknown) as Widget, this.element); // todo investigate
   }
 
@@ -84,17 +82,14 @@ export class DataGridScope {
   }
 
   updateModelData(newData) {
-    console.log('update model data');
     this.dataGrid.updateModelData(newData);
   }
 
   updateModelValues(newData) {
-    console.log('update model value');
     this.dataGrid.updateModelValues(newData);
   }
 
   doResetAll() {
-    console.log('do reset all');
     this.dataGrid.highlighterManager.removeHighlighters();
     this.dataGrid.cellSelectionManager.clear();
     this.dataGrid.rowManager.resetSorting();
@@ -119,7 +114,6 @@ export class DataGridScope {
   }
 
   setInitialSize() {
-    console.log('initial size');
     this.dataGrid.setInitialSize();
   }
 }

@@ -14,16 +14,16 @@
  *  limitations under the License.
  */
 
-// import { DataGrid } from '@lumino/datagrid';
+import { DataGrid } from '@lumino/datagrid';
 
 export class Theme {
   public static get isDark(): boolean {
-    return false; //document.body.classList.contains('bx-dark-theme');
+    return document.body.getAttribute('data-jp-theme-light') != 'true';
   }
 
-  // public static getStyle(): DataGrid.IStyle & { isDark: boolean } {
-  //   return this.isDark ? this.getDarkStyle() : this.getLightStyle();
-  // }
+  public static getStyle(): DataGrid.Style & { isDark: boolean } {
+    return this.isDark ? this.getDarkStyle() : this.getLightStyle();
+  }
 
   public static get DEFAULT_DATA_FONT_COLOR(): string {
     return this.isDark ? '#ffffff' : '#000000';
@@ -64,28 +64,28 @@ export class Theme {
   public static get MIN_SATURATION_VALUE(): number {
     return this.isDark ? 15 : 35;
   }
-  //
-  // private static getDarkStyle(): DataGrid.IStyle & { isDark: boolean } {
-  //   return {
-  //     ...DataGrid.defaultStyle,
-  //     voidColor: '#636363',
-  //     backgroundColor: '#212121',
-  //     headerBackgroundColor: '#252525',
-  //     rowBackgroundColor: (i) => (i % 2 === 0 ? '#424242' : ''),
-  //     gridLineColor: '#626262',
-  //     headerGridLineColor: '#626262',
-  //     isDark: true,
-  //   };
-  // }
-  //
-  // private static getLightStyle(): DataGrid.IStyle & { isDark: boolean } {
-  //   return {
-  //     ...DataGrid.defaultStyle,
-  //     voidColor: '#ffffff',
-  //     headerBackgroundColor: '#e6e6e6',
-  //     rowBackgroundColor: (i) => (i % 2 === 0 ? '#f9f9f9' : ''),
-  //     gridLineColor: '#d4d0d0',
-  //     isDark: false,
-  //   };
-  // }
+
+  private static getDarkStyle(): DataGrid.Style & { isDark: boolean } {
+    return {
+      ...DataGrid.defaultStyle,
+      voidColor: '#636363',
+      backgroundColor: '#212121',
+      headerBackgroundColor: '#252525',
+      rowBackgroundColor: (i) => (i % 2 === 0 ? '#424242' : ''),
+      gridLineColor: '#626262',
+      headerGridLineColor: '#626262',
+      isDark: true,
+    };
+  }
+
+  private static getLightStyle(): DataGrid.Style & { isDark: boolean } {
+    return {
+      ...DataGrid.defaultStyle,
+      voidColor: '#ffffff',
+      headerBackgroundColor: '#e6e6e6',
+      rowBackgroundColor: (i) => (i % 2 === 0 ? '#f9f9f9' : ''),
+      gridLineColor: '#d4d0d0',
+      isDark: false,
+    };
+  }
 }

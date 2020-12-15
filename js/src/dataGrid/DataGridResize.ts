@@ -19,10 +19,8 @@ import { MessageLoop } from '@lumino/messaging';
 import { ResizeObserver } from 'resize-observer';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
 import { DataGridColumn } from './column/DataGridColumn';
-// import { selectColumnWidth } from './column/selectors';
 import { ALL_TYPES } from './dataTypes';
 import { DataGridHelpers } from './Helpers';
-// import { selectDataFontSize, selectHeaderFontSize, selectHeadersVertical } from './model/selectors';
 import { DataGridStyle } from './style/DataGridStyle';
 
 const DEFAULT_RESIZE_SECTION_SIZE_IN_PX = 6;
@@ -57,7 +55,6 @@ export class DataGridResize {
   }
 
   setInitialSize(): void {
-    console.log('setInitialSize');
     this.setBaseRowSize();
     this.resizeHeader();
     this.updateWidgetHeight();
@@ -67,7 +64,6 @@ export class DataGridResize {
   }
 
   resize(): void {
-    console.log('resize');
     this.updateWidgetHeight();
     this.resizeHeader();
     this.resizeSections();
@@ -217,7 +213,6 @@ export class DataGridResize {
   }
 
   setSectionWidth(area, column: DataGridColumn, value: number): void {
-    console.log('set section width', column, column.getPosition().value, value)
     this.dataGrid.resizeColumn(column.getPosition().region, column.getPosition().value, value);
     column.setWidth(value);
   }

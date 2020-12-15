@@ -21,14 +21,6 @@ import * as _ from 'underscore';
 import { ALL_TYPES, getDoublePrecisionByType, isDoubleWithPrecision } from './dataTypes';
 import { DataGridHelpers } from './Helpers';
 import { IColumnState } from './interface/IColumn';
-// import {
-//   selectColumnNames,
-//   selectFormatForTimes,
-//   selectStringFormatForColumn,
-//   selectStringFormatForType,
-//   selectTimeStrings,
-//   selectTimeZone,
-// } from './model/selectors';
 import { BeakerXDataStore } from './store/BeakerXDataStore';
 import { TIME_UNIT_FORMATS } from './consts';
 
