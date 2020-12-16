@@ -27,18 +27,6 @@ import { IColumnOptions } from '../interface/IColumn';
 import { HIGHLIGHTER_TYPE } from '../interface/IHighlighterState';
 import { RENDERER_TYPE } from '../interface/IRenderer';
 import { UPDATE_COLUMN_FROZEN, UPDATE_COLUMN_RENDERER, UPDATE_COLUMN_VISIBLE } from '../model/reducer';
-// import {
-//   this.store.selectColumnsVisible,
-//   this.store.selectColumnVisible,
-//   this.store.selectFormatForTimes,
-//   this.store.selectHasIndex,
-//   this.store.selectInitialColumnAlignment,
-//   this.store.selectIsColumnFrozen,
-//   this.store.selectRenderer,
-//   this.store.selectStringFormatForColumn,
-//   this.store.selectStringFormatForType,
-// } from '../model/selectors';
-// import { this.store.selectDataFontSize } from '../model/selectors/model';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridColumnAction } from '../store/DataGridAction';
 import { ColumnFilter } from './ColumnFilter';
@@ -53,18 +41,6 @@ import {
   UPDATE_COLUMN_SORT_ORDER,
   UPDATE_COLUMN_WIDTH,
 } from './reducer';
-// import {
-//   this.store.selectColumnDataType,
-//   this.store.selectColumnDataTypeName,
-//   this.store.selectColumnDisplayType,
-//   this.store.selectColumnFilter,
-//   this.store.selectColumnFormatForTimes,
-//   this.store.selectColumnHorizontalAlignment,
-//   this.store.selectColumnKeepTrigger,
-//   this.store.selectColumnPosition,
-//   this.store.selectColumnSortOrder,
-//   this.store.selectColumnState,
-// } from './selectors';
 
 export class DataGridColumn {
   index: number;
@@ -385,7 +361,7 @@ export class DataGridColumn {
   restoreState() {
     this.addMinMaxValues();
     this.restoreHighlighters();
-    // this.dataGrid.repaint();
+    this.dataGrid.repaintBody();
   }
 
   destroy() {
@@ -452,7 +428,7 @@ export class DataGridColumn {
       }
 
       if (size.height > this.dataGrid.getRowSections().sizeOf(index)) {
-        // this.dataGrid.resizeSection('row', index, size.height);
+        this.dataGrid.resizeRow('body', index, size.height);
       }
     });
 

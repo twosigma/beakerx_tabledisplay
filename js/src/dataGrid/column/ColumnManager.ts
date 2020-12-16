@@ -22,13 +22,11 @@ import { DataGridHelpers } from '../Helpers';
 import { ICellData } from '../interface/ICell';
 import { IColumnPosition, IColumns } from '../interface/IColumn';
 import { RESET_COLUMNS_ORDER, UPDATE_COLUMNS_VISIBLE } from '../model/reducer';
-// import { selectBodyColumnNames, selectColumnNames, selectHasIndex, selectIndexColumnNames } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridAction, DataGridColumnsAction } from '../store/DataGridAction';
 import { DataGridColumn } from './DataGridColumn';
 import { COLUMN_TYPES, SORT_ORDER } from './enums';
 import { UPDATE_COLUMNS_FILTERS } from './reducer';
-// import { selectColumnIndexByPosition } from './selectors';
 
 export interface IBkoColumnsChangedArgs {
   type: COLUMN_CHANGED_TYPES;

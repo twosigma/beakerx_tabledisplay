@@ -84,10 +84,9 @@ export class ImageCellRenderer extends CellRenderer {
     setTimeout(() => {
       const column = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(config));
 
-      // TODO Resize is now asynchronous, find a way to resize and trigger another redraw
-      // if (this.dataGrid.rowSize('body', config.row) < height) {
-      //   this.dataGrid.resizeRow('body', config.row, height);
-      // }
+      if (this.dataGrid.rowSize('body', config.row) < height) {
+        this.dataGrid.resizeRow('body', config.row, height);
+      }
 
       if (this.dataGrid.store.selectColumnWidth(column) < width) {
         column.dataGrid.dataGridResize.setSectionWidth('column', column, width);

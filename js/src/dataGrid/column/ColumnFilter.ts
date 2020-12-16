@@ -19,7 +19,6 @@ import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { KEYBOARD_KEYS } from '../event/enums';
 import { DataGridHelpers } from '../Helpers';
 import { DataGridColumn } from './DataGridColumn';
-// import { selectColumnWidth } from './selectors';
 
 export const FILTER_INPUT_TOOLTIP =
   'filter with an expression with a variable defined for each column and $ means the current column.  eg "$ > 5".';

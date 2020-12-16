@@ -19,7 +19,6 @@ import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { IHighlighterState } from '../interface/IHighlighterState';
-// import { selectColumnNames } from '../model/selectors/column';
 import { Highlighter } from './Highlighter';
 
 const MAX_HUE_VALUE = 360;

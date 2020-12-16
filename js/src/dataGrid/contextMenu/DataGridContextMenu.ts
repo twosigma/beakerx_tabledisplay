@@ -19,7 +19,6 @@ import { createHeaderContextMenuItems } from './createHeaderContextMenuItems';
 import { createCellContextMenuItems } from './createCellContextMenuItems';
 import { createPublishMenuItems } from './createPublishMenuItem';
 import { DataGridScope } from '../DataGridScope';
-// import { selectShowPublication } from '../model/selectors';
 
 export class DataGridContextMenu extends ContextMenu {
   private readonly showPublication: boolean = true;

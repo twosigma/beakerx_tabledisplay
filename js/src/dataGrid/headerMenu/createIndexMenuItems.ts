@@ -17,7 +17,6 @@
 import { IMenuItem } from '../../contextMenu/IMenuItem';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { COLUMN_TYPES } from '../column/enums';
-// import { selectBodyColumnStates } from '../column/selectors';
 import { createFormatMenuItems } from './createFormatMenuItems';
 import { IContextMenuItem } from '../../contextMenu';
 import { DEFAULT_PAGE_LENGTH, scopeData } from '../consts';

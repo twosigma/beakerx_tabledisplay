@@ -16,7 +16,6 @@
 
 import { IContextMenuItem } from '../../contextMenu/IContextMenuItem';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
-// import { selectHeadersVertical } from '../model/selectors';
 import { DataGridContextMenu } from './DataGridContextMenu';
 
 export function createHeaderContextMenuItems(

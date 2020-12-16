@@ -16,8 +16,6 @@
 
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ColumnManager } from '../column/ColumnManager';
-// import { selectOutputColumnLimit } from '../column/selectors';
-// import { selectColumnNames } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { createModalTemplate } from './columnLimitModalTemplate';
 

@@ -17,8 +17,6 @@
 import { IContextMenuItem } from '../../contextMenu';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ColumnManager } from '../column/ColumnManager';
-// import { selectColumnIndexByPosition } from '../column/selectors';
-// import { selectContextMenuItems, selectContextMenuTags } from '../model/selectors';
 import { DataGridContextMenu } from './DataGridContextMenu';
 import { ContextMenuClickMessage } from '../message/ContextMenuClickMessage';
 import { ActionDetailsMessage } from '../message/ActionDetailsMessage';

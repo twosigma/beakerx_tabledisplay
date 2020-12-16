@@ -22,7 +22,6 @@ import { COLUMN_TYPES } from '../column/enums';
 import { DataGridHelpers } from '../Helpers';
 import { ICellData } from '../interface/ICell';
 import { HIGHLIGHTER_TYPE } from '../interface/IHighlighterState';
-// import { selectAutoLinkTableLinks, selectDoubleClickTag, selectHasDoubleClickAction } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { KEYBOARD_KEYS } from './enums';
 import { EventHelpers } from './EventHelpers';
