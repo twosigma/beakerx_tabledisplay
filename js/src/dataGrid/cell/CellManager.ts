@@ -58,7 +58,7 @@ export class CellManager {
       return;
     }
 
-    this.dataGrid.repaintRegion('body', cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.baseRowSize);
+    this.dataGrid.repaintRegion('body', cellData.offset, cellData.offsetTop, this.dataGrid.bodyWidth, this.dataGrid.defaultRowHeight);
   }
 
   setHoveredCellData(data: ICellData | null) {

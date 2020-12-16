@@ -71,10 +71,6 @@ export class BeakerXDataGrid extends DataGrid {
   cellHovered = new Signal<this, { data: ICellData | null; event: MouseEvent }>(this);
   commSignal = new Signal<this, ActionDetailsMessage | DoubleClickMessage | ContextMenuClickMessage>(this);
 
-  baseRowSize: number;
-  baseColumnHeaderSize: number;
-  baseColumnSize: number;
-
   static FOCUS_CSS_CLASS = 'bko-focused';
 
   constructor(
@@ -279,6 +275,70 @@ export class BeakerXDataGrid extends DataGrid {
     this.canvasGC.lineTo(x - 0.5, height);
     this.canvasGC.strokeStyle = color;
     this.canvasGC.stroke();
+  }
+
+  set defaultRowHeight (rowHeight: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight,
+      columnWidth: oldDefaultSizes.columnWidth,
+      rowHeaderWidth: oldDefaultSizes.rowHeaderWidth,
+      columnHeaderHeight: oldDefaultSizes.columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultRowHeight () : number {
+    return this.defaultSizes.rowHeight;
+  }
+
+  set defaultColumnWidth (columnWidth: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight: oldDefaultSizes.rowHeight,
+      columnWidth,
+      rowHeaderWidth: oldDefaultSizes.rowHeaderWidth,
+      columnHeaderHeight: oldDefaultSizes.columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultColumnWidth () : number {
+    return this.defaultSizes.columnWidth;
+  }
+
+  set defaultRowHeaderWidth (rowHeaderWidth: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight: oldDefaultSizes.rowHeight,
+      columnWidth: oldDefaultSizes.columnWidth,
+      rowHeaderWidth,
+      columnHeaderHeight: oldDefaultSizes.columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultRowHeaderWidth () : number {
+    return this.defaultSizes.rowHeaderWidth;
+  }
+
+  set defaultColumnHeaderHeight (columnHeaderHeight: number) {
+    const oldDefaultSizes = this.defaultSizes;
+    const newDefaultSizes: DataGrid.DefaultSizes = {
+      rowHeight: oldDefaultSizes.rowHeight,
+      columnWidth: oldDefaultSizes.columnWidth,
+      rowHeaderWidth: oldDefaultSizes.rowHeaderWidth,
+      columnHeaderHeight
+    }
+
+    this.defaultSizes = newDefaultSizes;
+  }
+
+  get defaultColumnHeaderHeight () : number {
+    return this.defaultSizes.columnHeaderHeight;
   }
 
   private addHighlighterManager() {

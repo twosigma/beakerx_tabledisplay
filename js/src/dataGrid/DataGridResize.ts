@@ -262,7 +262,7 @@ export class DataGridResize {
     if (this.resizeMode === 'both' || this.resizeMode === 'v') {
       const height = this.getResizedHeight(event);
 
-      this.dataGrid.rowManager.setRowsToShow(Math.round(height / this.dataGrid.baseRowSize) || 1);
+      this.dataGrid.rowManager.setRowsToShow(Math.round(height / this.dataGrid.defaultRowHeight) || 1);
     }
   }
 
@@ -270,13 +270,13 @@ export class DataGridResize {
     const width =
       this.resizeStartRect.width + event.clientX - this.resizeStartRect.x + 2 * DataGridStyle.DEFAULT_GRID_PADDING;
 
-    return width < 2 * this.dataGrid.baseColumnSize ? 2 * this.dataGrid.baseColumnSize : Math.min(width, this.maxWidth);
+    return width < 2 * this.dataGrid.defaultColumnWidth ? 2 * this.dataGrid.defaultColumnWidth : Math.min(width, this.maxWidth);
   }
 
   private getResizedHeight(event: MouseEvent): number {
     const height = this.resizeStartRect.height + event.clientY - this.resizeStartRect.y;
 
-    return height < this.dataGrid.baseRowSize ? this.dataGrid.baseRowSize : height;
+    return height < this.dataGrid.defaultRowHeight ? this.dataGrid.defaultRowHeight : height;
   }
 
   private handleMouseUp(event: MouseEvent) {
@@ -334,7 +334,7 @@ export class DataGridResize {
     const headerFontSize = this.dataGrid.store.selectHeaderFontSize();
     const headerRowSize = isFinite(headerFontSize)
       ? headerFontSize + 2 * DEFAULT_ROW_PADDING
-      : this.dataGrid.baseRowSize;
+      : this.dataGrid.defaultRowHeight;
 
     if (this.dataGrid.store.selectHeadersVertical()) {
       const mapNameToWidth = (name) =>
@@ -344,7 +344,7 @@ export class DataGridResize {
       indexColumnNamesWidths = this.dataGrid.columnManager.indexColumnNames.map(mapNameToWidth);
     }
 
-    this.dataGrid.baseColumnHeaderSize = Math.max.apply(null, [
+    this.dataGrid.defaultColumnHeaderHeight = Math.max.apply(null, [
       ...bodyColumnNamesWidths,
       ...indexColumnNamesWidths,
       headerRowSize,
@@ -355,7 +355,7 @@ export class DataGridResize {
   private setBaseRowSize() {
     const dataFontSize = this.dataGrid.store.selectDataFontSize();
 
-    this.dataGrid.baseRowSize = Number.isFinite(dataFontSize)
+    this.dataGrid.defaultRowHeight = Number.isFinite(dataFontSize)
       ? dataFontSize + 2 * DEFAULT_ROW_PADDING
       : DataGridStyle.DEFAULT_ROW_HEIGHT;
   }
