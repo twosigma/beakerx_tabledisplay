@@ -196,10 +196,6 @@ export class BeakerXDataGrid extends DataGrid {
     DataGridHelpers.enableKeyboardManager();
   }
 
-  handleEvent(event: Event): void {
-    this.eventManager.handleEvent(event, super.handleEvent);
-  }
-
   destroy() {
     this.model && this.model.destroy();
     this.eventManager.destroy();

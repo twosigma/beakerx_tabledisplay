@@ -14,6 +14,7 @@
  *  limitations under the License.
  */
 
+import { DataGrid } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { CellManager } from '../cell/CellManager';
 import { ColumnManager } from '../column/ColumnManager';
@@ -30,7 +31,10 @@ import { ActionDetailsMessage } from '../message/ActionDetailsMessage';
 
 const COLUMN_RESIZE_AREA_WIDTH = 4;
 
-export class EventManager {
+
+export
+class EventManager implements DataGrid.IMouseHandler {
+
   dataGrid: BeakerXDataGrid;
   store: BeakerXDataStore;
   cellHoverControl = { timerId: undefined };
@@ -39,57 +43,57 @@ export class EventManager {
     this.store = dataGrid.store;
     this.dataGrid = dataGrid;
 
-    this.handleEvent = this.handleEvent.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleMouseOut = this.handleMouseOut.bind(this);
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleDoubleClick = this.handleDoubleClick.bind(this);
-    this.handleHeaderClick = this.handleHeaderClick.bind(this);
-    this.handleBodyClick = this.handleBodyClick.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
-    this.handleScrollBarMouseUp = this.handleScrollBarMouseUp.bind(this);
-    this.handleCellHover = DataGridHelpers.throttle<MouseEvent, void>(
-      this.handleCellHover,
-      100,
-      this,
-      this.cellHoverControl,
-    );
-    this.handleMouseMoveOutsideArea = DataGridHelpers.throttle<MouseEvent, void>(
-      this.handleMouseMoveOutsideArea,
-      100,
-      this,
-    );
-    this.handleWindowResize = DataGridHelpers.throttle<Event, void>(this.handleWindowResize, 200, this);
+    // this.handleEvent = this.handleEvent.bind(this);
+    // this.handleKeyDown = this.handleKeyDown.bind(this);
+    // this.handleMouseOut = this.handleMouseOut.bind(this);
+    // this.handleMouseDown = this.handleMouseDown.bind(this);
+    // this.handleDoubleClick = this.handleDoubleClick.bind(this);
+    // this.handleHeaderClick = this.handleHeaderClick.bind(this);
+    // this.handleBodyClick = this.handleBodyClick.bind(this);
+    // this.handleMouseUp = this.handleMouseUp.bind(this);
+    // this.handleMouseMove = this.handleMouseMove.bind(this);
+    // this.handleScrollBarMouseUp = this.handleScrollBarMouseUp.bind(this);
+    // this.handleCellHover = DataGridHelpers.throttle<MouseEvent, void>(
+    //   this.handleCellHover,
+    //   100,
+    //   this,
+    //   this.cellHoverControl,
+    // );
+    // this.handleMouseMoveOutsideArea = DataGridHelpers.throttle<MouseEvent, void>(
+    //   this.handleMouseMoveOutsideArea,
+    //   100,
+    //   this,
+    // );
+    // this.handleWindowResize = DataGridHelpers.throttle<Event, void>(this.handleWindowResize, 200, this);
 
-    this.dataGrid.node.addEventListener('selectstart', this.handleSelectStart);
-    this.dataGrid.node.addEventListener('mouseout', this.handleMouseOut);
-    this.dataGrid.node.addEventListener('dblclick', this.handleDoubleClick, true);
-    this.dataGrid.node.addEventListener('mouseup', this.handleMouseUp);
-    this.dataGrid.node.addEventListener('mousemove', this.handleMouseMove);
+    // this.dataGrid.node.addEventListener('selectstart', this.handleSelectStart);
+    // this.dataGrid.node.addEventListener('mouseout', this.handleMouseOut);
+    // this.dataGrid.node.addEventListener('dblclick', this.handleDoubleClick, true);
+    // this.dataGrid.node.addEventListener('mouseup', this.handleMouseUp);
+    // this.dataGrid.node.addEventListener('mousemove', this.handleMouseMove);
 
-    this.dataGrid['_vScrollBar'].node.addEventListener('mousedown', this.handleMouseDown);
-    this.dataGrid['_hScrollBar'].node.addEventListener('mousedown', this.handleMouseDown);
-    this.dataGrid['_scrollCorner'].node.addEventListener('mousedown', this.handleMouseDown);
+    // this.dataGrid['_vScrollBar'].node.addEventListener('mousedown', this.handleMouseDown);
+    // this.dataGrid['_hScrollBar'].node.addEventListener('mousedown', this.handleMouseDown);
+    // this.dataGrid['_scrollCorner'].node.addEventListener('mousedown', this.handleMouseDown);
 
-    document.addEventListener('mousemove', this.handleMouseMoveOutsideArea);
-    document.addEventListener('keydown', this.handleKeyDown, true);
+    // document.addEventListener('mousemove', this.handleMouseMoveOutsideArea);
+    // document.addEventListener('keydown', this.handleKeyDown, true);
 
-    window.addEventListener('resize', this.handleWindowResize);
+    // window.addEventListener('resize', this.handleWindowResize);
   }
 
-  handleEvent(event: Event, parentHandler: (event: MouseEvent) => void): void {
-    switch (event.type) {
-      case 'mousedown':
-        this.handleMouseDown(event as MouseEvent);
-        break;
-      case 'wheel':
-        this.handleMouseWheel(event as MouseEvent, parentHandler);
-        return;
-    }
+  // handleEvent(event: Event, parentHandler: (event: MouseEvent) => void): void {
+  //   switch (event.type) {
+  //     case 'mousedown':
+  //       this.handleMouseDown(event as MouseEvent);
+  //       break;
+  //     case 'wheel':
+  //       this.handleMouseWheel(event as MouseEvent, parentHandler);
+  //       return;
+  //   }
 
-    parentHandler.call(this.dataGrid, event);
-  }
+  //   parentHandler.call(this.dataGrid, event);
+  // }
 
   isOverHeader(event: MouseEvent) {
     const rect = this.dataGrid.viewport.node.getBoundingClientRect();
@@ -99,7 +103,20 @@ export class EventManager {
     return x < this.dataGrid.bodyWidth + this.dataGrid.getRowHeaderSections().length && y < this.dataGrid.headerHeight;
   }
 
-  destroy(): void {
+  dispose(): void {
+    // Bail early if the handler is already disposed.
+    if (this._disposed) {
+      return;
+    }
+
+    // Release any held resources.
+    this.release();
+
+    // Mark the handler as disposed.
+    this._disposed = true;
+  }
+
+  release(): void {
     this.removeEventListeners();
     this.clearReferences();
   }
@@ -209,28 +226,26 @@ export class EventManager {
     this.dataGrid.cellSelectionManager.handleBodyCellHover(event);
   }
 
-  private handleMouseDown(event: MouseEvent): void {
+  onMouseDown(grid: BeakerXDataGrid, event: MouseEvent): void {
     if (event.buttons !== 1) {
       return;
     }
 
-    document.addEventListener('mouseup', this.handleScrollBarMouseUp, true);
+    !grid.focused && grid.setFocus(true);
 
-    !this.dataGrid.focused && this.dataGrid.setFocus(true);
-
-    if (!this.isHeaderClicked(event) && this.dataGrid.dataGridResize.shouldResizeDataGrid(event)) {
-      return this.dataGrid.dataGridResize.startResizing(event);
+    if (!this.isHeaderClicked(event) && grid.dataGridResize.shouldResizeDataGrid(event)) {
+      return grid.dataGridResize.startResizing(event);
     }
 
     if (this.isOutsideViewport(event)) {
       return;
     }
 
-    this.dataGrid.cellSelectionManager.handleMouseDown(event);
-    this.handleStartDragging(event);
+    grid.cellSelectionManager.handleMouseDown(event);
+    this.handleStartDragging(grid, event);
   }
 
-  private handleStartDragging(event: MouseEvent) {
+  private handleStartDragging(grid: BeakerXDataGrid, event: MouseEvent) {
     const data = this.dataGrid.getCellData(event.clientX, event.clientY);
 
     if (
@@ -242,28 +257,50 @@ export class EventManager {
       return;
     }
 
-    this.dataGrid.columnPosition.startDragging(data);
+    grid.columnPosition.startDragging(data);
   }
 
-  private handleMouseOut(event: MouseEvent): void {
-    if (this.isNodeInsideGrid(event) || event.buttons !== 0) {
+  onMouseLeave(grid: BeakerXDataGrid, event: MouseEvent): void {
+    if (this.isNodeInsideGrid(grid, event) || event.buttons !== 0) {
       return;
     }
 
-    this.dataGrid.columnPosition.stopDragging();
-    this.dataGrid.setFocus(false);
+    grid.columnPosition.stopDragging();
+    grid.setFocus(false);
   }
 
-  private isNodeInsideGrid(event: MouseEvent) {
-    return EventHelpers.isInsideGridNode(event, this.dataGrid.node);
+  private isNodeInsideGrid(grid: BeakerXDataGrid, event: MouseEvent) {
+    return EventHelpers.isInsideGridNode(event, grid.node);
   }
 
-  private handleMouseWheel(event: MouseEvent, parentHandler: (event: MouseEvent) => void): void {
-    if (!this.dataGrid.focused) {
+  onWheel(grid: BeakerXDataGrid, event: WheelEvent) {
+    if (!grid.focused) {
       return;
     }
 
-    parentHandler.call(this.dataGrid, event);
+    // Extract the delta X and Y movement.
+    let dx = event.deltaX;
+    let dy = event.deltaY;
+
+    // Convert the delta values to pixel values.
+    switch (event.deltaMode) {
+    case 0:  // DOM_DELTA_PIXEL
+      break;
+    case 1:  // DOM_DELTA_LINE
+      const ds = grid.defaultSizes;
+      dx *= ds.columnWidth;
+      dy *= ds.rowHeight;
+      break;
+    case 2:  // DOM_DELTA_PAGE
+      dx *= grid.pageWidth;
+      dy *= grid.pageHeight;
+      break;
+    default:
+      throw 'unreachable';
+    }
+
+    // Scroll by the desired amount.
+    grid.scrollBy(dx, dy);
   }
 
   private handleHeaderClick(event: MouseEvent): void {
@@ -428,4 +465,6 @@ export class EventManager {
   private getRowIndex(renderedRowIndex: number): number {
     return this.dataGrid.rowManager.rows[renderedRowIndex].index;
   }
+
+  private _disposed = false;
 }
