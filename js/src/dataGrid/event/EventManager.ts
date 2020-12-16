@@ -96,7 +96,7 @@ export class EventManager {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    return x < this.dataGrid.bodyWidth + this.dataGrid.getRowHeaderSections().defaultSize && y < this.dataGrid.headerHeight;
+    return x < this.dataGrid.bodyWidth + this.dataGrid.getRowHeaderSections().length && y < this.dataGrid.headerHeight;
   }
 
   destroy(): void {

@@ -55,21 +55,21 @@ export class DataGridCell {
           offset: dataGrid.getColumnOffset(
             column.index,
             ColumnManager.getColumnRegionByCell({ region: 'corner-header' }),
-          ),
-          offsetTop: dataGrid.headerHeight,
-          region: 'corner-header',
-          value: dataGrid.model.data('corner-header', 0, column.index),
-          width: dataGrid.getRowHeaderSections().sizeOf(column.index),
-        };
-      }
+            ),
+            offsetTop: dataGrid.headerHeight,
+            region: 'corner-header',
+            value: dataGrid.model.data('corner-header', 0, column.index),
+            width: dataGrid.getRowHeaderSections().sizeOf(column.index),
+          };
+        }
 
-      return null;
-    }
+        return null;
+      }
 
     let region: DataModel.CellRegion = 'body';
     let section = dataGrid.getColumnSections();
     let pos = x + dataGrid.scrollX - dataGrid.headerWidth;
-    if (x <= dataGrid.getRowHeaderSections().defaultSize) {
+    if (x <= dataGrid.getRowHeaderSections().length) {
       section = dataGrid.getRowHeaderSections();
       pos += dataGrid.headerWidth;
       region = 'row-header';

@@ -144,7 +144,7 @@ export class BeakerXDataGrid extends DataGrid {
       return this.rowHeaderSections.offsetOf(position);
     }
 
-    return this.rowHeaderSections.defaultSize + this.columnSections.offsetOf(position);
+    return this.rowHeaderSections.length + this.columnSections.offsetOf(position);
   }
 
   getRowOffset(row: number) {
@@ -269,7 +269,7 @@ export class BeakerXDataGrid extends DataGrid {
     }
 
     if (region !== 'corner-header' && region !== 'row-header') {
-      x = x + this.rowHeaderSections.defaultSize - this.scrollX;
+      x = x + this.rowHeaderSections.length - this.scrollX;
     }
 
     this.canvasGC.beginPath();

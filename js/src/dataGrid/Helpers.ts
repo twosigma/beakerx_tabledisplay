@@ -96,7 +96,7 @@ export class DataGridHelpers {
 
   public static findSectionIndex(list: SectionList, cursorPosition: number): { index: number; delta: number } | null {
     // Bail early if the list is empty or the position is invalid.
-    if (list.count === 0 || cursorPosition < 0 || cursorPosition - list.defaultSize > 0) {
+    if (list.count === 0 || cursorPosition < 0 || cursorPosition - list.length > 0) {
       return null;
     }
 
