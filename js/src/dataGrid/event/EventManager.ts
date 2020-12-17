@@ -36,6 +36,28 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
 
   cellHoverControl = { timerId: undefined };
 
+  constructor(grid: BeakerXDataGrid) {
+    this.grid = grid;
+
+    this.handleMouseMove = (event: MouseEvent) => {
+      return this.onMouseMove(this.grid, event);
+    };
+    this.handleMouseLeave = (event: MouseEvent) => {
+      return this.onMouseLeave(this.grid, event);
+    };
+    this.handleMouseDown = (event: MouseEvent) => {
+      return this.onMouseDown(this.grid, event);
+    };
+
+    // We need a better approach for the following event listeners, maybe upstream the resizing?
+    // This is needed for changing the cursor to a resize icon
+    this.grid.node.addEventListener('mousemove', this.handleMouseMove);
+    // This is needed for setting the cursor back to normal
+    this.grid.node.addEventListener('mouseout', this.handleMouseLeave);
+    // This is needed for starting the resize
+    this.grid.tableDisplayView.el.addEventListener('mousedown', this.handleMouseDown);
+  }
+
   get isDisposed(): boolean {
     return this._disposed;
   }
@@ -47,6 +69,10 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     }
 
     this.clearReferences();
+
+    this.grid.node.removeEventListener('mousemove', this.handleMouseMove);
+    this.grid.node.removeEventListener('mousemove', this.handleMouseLeave);
+    this.grid.tableDisplayView.el.removeEventListener('mousedown', this.handleMouseDown);
 
     // Mark the handler as disposed.
     this._disposed = true;
@@ -339,4 +365,8 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
   }
 
   private _disposed = false;
+  private handleMouseMove: (MouseEvent) => void;
+  private handleMouseLeave: (MouseEvent) => void;
+  private handleMouseDown: (MouseEvent) => void;
+  private grid: BeakerXDataGrid;
 }

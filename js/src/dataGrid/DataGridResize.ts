@@ -147,14 +147,12 @@ export class DataGridResize {
   }
 
   startResizing(event: MouseEvent) {
-    console.log('start resizing', this.dataGrid.node.parentElement)
     if (!this.dataGrid.node.parentElement) {
       return;
     }
 
     const width = this.dataGrid.viewport.node.clientWidth + this.dataGrid['_vScrollBar'].node.clientWidth + 3;
     const height = this.dataGrid.viewport.node.clientHeight + this.dataGrid['_hScrollBar'].node.clientHeight + 3;
-    console.log(width, height)
 
     this.resizeStartRect = { width, height, x: event.clientX, y: event.clientY };
     this.resizing = true;

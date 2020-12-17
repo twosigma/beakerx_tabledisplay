@@ -98,7 +98,7 @@ export class BeakerXDataGrid extends DataGrid {
     );
     this.cellSelectionManager = new CellSelectionManager(this);
     this.cellManager = new CellManager(this);
-    this.eventManager = new EventManager();
+    this.eventManager = new EventManager(this);
     this.keyHandler = this.eventManager;
     this.mouseHandler = this.eventManager;
     this.cellFocusManager = new CellFocusManager(this);
