@@ -18,7 +18,7 @@ import { DataGrid } from '@lumino/datagrid';
 
 export class Theme {
   public static get isDark(): boolean {
-    return document.body.getAttribute('data-jp-theme-light') != 'true';
+    return document.body.getAttribute('data-jp-theme-light') == 'false';
   }
 
   public static getStyle(): DataGrid.Style & { isDark: boolean } {
