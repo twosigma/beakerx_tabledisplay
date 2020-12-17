@@ -56,40 +56,6 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     //
   }
 
-  // handleMouseMoveOutsideArea(event: MouseEvent) {
-  //   if (this.isOutsideViewport(event)) {
-  //     clearTimeout(this.cellHoverControl.timerId);
-  //     this.dataGrid.cellTooltipManager.hideTooltips();
-  //   }
-
-  //   if (this.isOutsideGrid(event)) {
-  //     this.dataGrid.cellHovered.emit({ data: null, event: event });
-  //     this.dataGrid.dataGridResize.setCursorStyle('auto');
-  //   }
-  // }
-
-  // private handleSelectStart(event) {
-  //   const target = event.target as HTMLElement;
-
-  //   if (target && target.classList.contains('filter-input')) {
-  //     return true;
-  //   }
-
-  //   return false;
-  // }
-
-  // private handleScrollBarMouseUp(event: MouseEvent) {
-  //   document.removeEventListener('mouseup', this.handleScrollBarMouseUp, true);
-
-  //   if (!this.isNodeInsideGrid(event)) {
-  //     this.dataGrid.setFocus(false);
-  //   }
-  // }
-
-  // private handleWindowResize() {
-  //   this.dataGrid.resize();
-  // }
-
   onMouseUp(grid: BeakerXDataGrid, event: MouseEvent) {
     if (grid.dataGridResize.isResizing()) {
       return grid.dataGridResize.stopResizing();
@@ -119,13 +85,8 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     }
 
     grid.columnPosition.moveDraggedHeader(event);
-    // Do we need this?
-    // this.handleCellHover(grid, event);
+    this.onMouseHover(grid, event);
   }
-
-  // private isOutsideGrid(event) {
-  //   return !EventHelpers.isInsideGrid(event);
-  // }
 
   onMouseHover(grid: BeakerXDataGrid, event) {
     const data = grid.getCellData(event.clientX, event.clientY);
@@ -158,9 +119,11 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
   }
 
   onMouseLeave(grid: BeakerXDataGrid, event: MouseEvent): void {
-    if (this.isNodeInsideGrid(grid, event) || event.buttons !== 0) {
-      return;
-    }
+    clearTimeout(this.cellHoverControl.timerId);
+
+    grid.cellTooltipManager.hideTooltips();
+    grid.cellHovered.emit({ data: null, event: event });
+    grid.dataGridResize.setCursorStyle('auto');
 
     grid.columnPosition.stopDragging();
     grid.setFocus(false);
@@ -190,10 +153,6 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
   onContextMenu(grid: DataGrid, event: MouseEvent): void {}
 
   onWheel(grid: BeakerXDataGrid, event: WheelEvent) {
-    if (!grid.focused) {
-      return;
-    }
-
     // Extract the delta X and Y movement.
     let dx = event.deltaX;
     let dy = event.deltaY;
@@ -227,6 +186,10 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     if (!code) {
       return;
     }
+
+    // Prevent propagation
+    event.stopPropagation();
+    event.preventDefault();
 
     this.handleEnterKeyDown(grid, code, event.shiftKey, focusedCell);
     this.handleHighlighterKeyDown(code, column);
@@ -295,10 +258,6 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     }
 
     grid.columnPosition.startDragging(data);
-  }
-
-  private isNodeInsideGrid(grid: BeakerXDataGrid, event: MouseEvent) {
-    return EventHelpers.isInsideGridNode(event, grid.node);
   }
 
   private isOutsideViewport(grid: BeakerXDataGrid, event: MouseEvent) {
