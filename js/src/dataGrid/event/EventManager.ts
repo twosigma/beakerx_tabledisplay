@@ -234,6 +234,14 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     this.handleNavigationKeyDown(grid, code, event);
   }
 
+  isOverHeader(grid: BeakerXDataGrid, event: MouseEvent) {
+    const rect = grid.viewport.node.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    return x < grid.bodyWidth + grid.getRowHeaderSections().length && y < grid.headerHeight;
+  }
+
   private handleHeaderClick(grid: BeakerXDataGrid, event: MouseEvent): void {
     if (!this.isHeaderClicked(grid, event) || grid.columnPosition.dropCellData) {
       return;
@@ -369,14 +377,6 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     setTimeout(() => {
       this.cellHoverControl = null;
     });
-  }
-
-  private isOverHeader(grid: BeakerXDataGrid, event: MouseEvent) {
-    const rect = grid.viewport.node.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
-
-    return x < grid.bodyWidth + grid.getRowHeaderSections().length && y < grid.headerHeight;
   }
 
   private _disposed = false;

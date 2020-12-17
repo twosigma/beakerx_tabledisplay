@@ -154,7 +154,7 @@ export class CellSelectionManager {
   }
 
   handleMouseDown(event: MouseEvent) {
-    if (this.dataGrid.eventManager.isOverHeader(event) || this.dataGrid.columnPosition.isDragging()) {
+    if (this.dataGrid.eventManager.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
@@ -176,7 +176,7 @@ export class CellSelectionManager {
     if (
       event.buttons !== 1 ||
       this.dataGrid.columnPosition.isDragging() ||
-      this.dataGrid.eventManager.isOverHeader(event)
+      this.dataGrid.eventManager.isOverHeader(this.dataGrid, event)
     ) {
       return;
     }
@@ -191,7 +191,7 @@ export class CellSelectionManager {
   }
 
   handleMouseUp(event: MouseEvent) {
-    if (this.dataGrid.eventManager.isOverHeader(event) || this.dataGrid.columnPosition.isDragging()) {
+    if (this.dataGrid.eventManager.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 

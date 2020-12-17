@@ -98,7 +98,9 @@ export class BeakerXDataGrid extends DataGrid {
     );
     this.cellSelectionManager = new CellSelectionManager(this);
     this.cellManager = new CellManager(this);
-    this.eventManager = new EventManager(this);
+    this.eventManager = new EventManager();
+    this.keyHandler = this.eventManager;
+    this.mouseHandler = this.eventManager;
     this.cellFocusManager = new CellFocusManager(this);
     this.cellTooltipManager = new CellTooltipManager(this);
     this.dataGridResize = new DataGridResize(this);
@@ -198,7 +200,6 @@ export class BeakerXDataGrid extends DataGrid {
 
   destroy() {
     this.model && this.model.destroy();
-    this.eventManager.destroy();
     this.columnManager.destroy();
     this.columnPosition.destroy();
     this.cellFocusManager.destroy();
