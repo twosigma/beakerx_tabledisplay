@@ -20,6 +20,7 @@
     "build:css": "sass sass/table_display.scss css/table_display.css",
     "build:js": "tsc",
     "watch:js": "tsc --watch",
+    "watch:webpack": "webpack --watch",
     "prepublish": "yarn run build",
     "test": "karma start --single-run",
     "clean": "rimraf lib css dist",
