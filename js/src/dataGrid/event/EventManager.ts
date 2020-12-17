@@ -33,15 +33,15 @@ const COLUMN_RESIZE_AREA_WIDTH = 4;
 
 
 export
-class EventManager implements DataGrid.IMouseHandler {
+class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
 
-  dataGrid: BeakerXDataGrid;
+  // dataGrid: BeakerXDataGrid;
   store: BeakerXDataStore;
   cellHoverControl = { timerId: undefined };
 
-  constructor(dataGrid: BeakerXDataGrid) {
-    this.store = dataGrid.store;
-    this.dataGrid = dataGrid;
+  constructor(grid: BeakerXDataGrid) {
+    this.store = grid.store;
+    // this.dataGrid = dataGrid;
 
     // this.handleEvent = this.handleEvent.bind(this);
     // this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -95,12 +95,12 @@ class EventManager implements DataGrid.IMouseHandler {
   //   parentHandler.call(this.dataGrid, event);
   // }
 
-  isOverHeader(event: MouseEvent) {
-    const rect = this.dataGrid.viewport.node.getBoundingClientRect();
+  private isOverHeader(grid: BeakerXDataGrid, event: MouseEvent) {
+    const rect = grid.viewport.node.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
 
-    return x < this.dataGrid.bodyWidth + this.dataGrid.getRowHeaderSections().length && y < this.dataGrid.headerHeight;
+    return x < grid.bodyWidth + grid.getRowHeaderSections().length && y < grid.headerHeight;
   }
 
   dispose(): void {
@@ -109,29 +109,24 @@ class EventManager implements DataGrid.IMouseHandler {
       return;
     }
 
-    // Release any held resources.
-    this.release();
+    this.removeEventListeners();
+    this.clearReferences();
 
     // Mark the handler as disposed.
     this._disposed = true;
   }
 
-  release(): void {
-    this.removeEventListeners();
-    this.clearReferences();
-  }
+  // handleMouseMoveOutsideArea(event: MouseEvent) {
+  //   if (this.isOutsideViewport(event)) {
+  //     clearTimeout(this.cellHoverControl.timerId);
+  //     this.dataGrid.cellTooltipManager.hideTooltips();
+  //   }
 
-  handleMouseMoveOutsideArea(event: MouseEvent) {
-    if (this.isOutsideViewport(event)) {
-      clearTimeout(this.cellHoverControl.timerId);
-      this.dataGrid.cellTooltipManager.hideTooltips();
-    }
-
-    if (this.isOutsideGrid(event)) {
-      this.dataGrid.cellHovered.emit({ data: null, event: event });
-      this.dataGrid.dataGridResize.setCursorStyle('auto');
-    }
-  }
+  //   if (this.isOutsideGrid(event)) {
+  //     this.dataGrid.cellHovered.emit({ data: null, event: event });
+  //     this.dataGrid.dataGridResize.setCursorStyle('auto');
+  //   }
+  // }
 
   private handleSelectStart(event) {
     const target = event.target as HTMLElement;
@@ -151,32 +146,48 @@ class EventManager implements DataGrid.IMouseHandler {
     }
   }
 
-  private handleWindowResize() {
-    this.dataGrid.resize();
-  }
+  // private handleWindowResize() {
+  //   this.dataGrid.resize();
+  // }
 
-  private handleMouseUp(event: MouseEvent) {
-    if (this.dataGrid.dataGridResize.isResizing()) {
-      return this.dataGrid.dataGridResize.stopResizing();
+  onMouseUp(grid: BeakerXDataGrid, event: MouseEvent) {
+    if (grid.dataGridResize.isResizing()) {
+      return grid.dataGridResize.stopResizing();
     }
 
-    this.dataGrid.cellSelectionManager.handleMouseUp(event);
-    this.handleHeaderClick(event);
-    this.handleBodyClick(event);
-    this.dropColumn();
+    grid.cellSelectionManager.handleMouseUp(event);
+    this.handleHeaderClick(grid, event);
+    this.handleBodyClick(grid, event);
+    this.dropColumn(grid);
   }
 
-  private dropColumn() {
-    this.dataGrid.columnPosition.dropColumn();
-  }
-
-  private handleBodyClick(event: MouseEvent) {
-    if (this.isOverHeader(event) || this.dataGrid.columnPosition.isDragging()) {
+  private handleHeaderClick(grid: BeakerXDataGrid, event: MouseEvent): void {
+    if (!this.isHeaderClicked(grid, event) || grid.columnPosition.dropCellData) {
       return;
     }
 
-    const cellData = this.dataGrid.getCellData(event.clientX, event.clientY);
-    const hoveredCellData = this.dataGrid.cellManager.hoveredCellData;
+    const data = grid.getCellData(event.clientX, event.clientY);
+
+    if (!data) {
+      return;
+    }
+
+    const destColumn = grid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(data));
+
+    destColumn.toggleSort();
+  }
+
+  private isHeaderClicked(grid: BeakerXDataGrid, event) {
+    return this.isOverHeader(grid, event) && event.button === 0 && event.target === grid['_canvas'];
+  }
+
+  private handleBodyClick(grid: BeakerXDataGrid, event: MouseEvent) {
+    if (this.isOverHeader(grid, event) || grid.columnPosition.isDragging()) {
+      return;
+    }
+
+    const cellData = grid.getCellData(event.clientX, event.clientY);
+    const hoveredCellData = grid.cellManager.hoveredCellData;
 
     if (!cellData || !hoveredCellData || !CellManager.cellsEqual(cellData, hoveredCellData)) {
       return;
@@ -190,40 +201,49 @@ class EventManager implements DataGrid.IMouseHandler {
     url && window.open(url);
   }
 
-  private handleMouseMove(event: MouseEvent): void {
-    if (this.dataGrid.dataGridResize.isResizing()) {
+  private dropColumn(grid: BeakerXDataGrid) {
+    grid.columnPosition.dropColumn();
+  }
+
+  onMouseMove(grid: BeakerXDataGrid, event: MouseEvent): void {
+    if (grid.dataGridResize.isResizing()) {
       return;
     }
 
     if (event.buttons !== 1) {
-      this.dataGrid.columnPosition.stopDragging();
+      grid.columnPosition.stopDragging();
     }
 
-    if (!this.dataGrid.dataGridResize.isResizing()) {
-      this.dataGrid.dataGridResize.setResizeMode(event);
+    if (!grid.dataGridResize.isResizing()) {
+      grid.dataGridResize.setResizeMode(event);
     }
 
-    if (this.dataGrid.dataGridResize.isResizing() || this.isOutsideViewport(event)) {
+    if (grid.dataGridResize.isResizing() || this.isOutsideViewport(grid, event)) {
       return;
     }
 
-    this.dataGrid.columnPosition.moveDraggedHeader(event);
-    this.handleCellHover(event);
+    grid.columnPosition.moveDraggedHeader(event);
+    // Do we need this?
+    // this.handleCellHover(grid, event);
   }
 
-  private isOutsideViewport(event: MouseEvent) {
-    return EventHelpers.isOutsideNode(event, this.dataGrid.viewport.node);
+  private isOutsideViewport(grid: BeakerXDataGrid, event: MouseEvent) {
+    return EventHelpers.isOutsideNode(event, grid.viewport.node);
   }
 
-  private isOutsideGrid(event) {
-    return !EventHelpers.isInsideGrid(event);
-  }
+  // private isOutsideGrid(event) {
+  //   return !EventHelpers.isInsideGrid(event);
+  // }
 
-  private handleCellHover(event) {
-    const data = this.dataGrid.getCellData(event.clientX, event.clientY);
+  onMouseHover(grid: BeakerXDataGrid, event) {
+    const data = grid.getCellData(event.clientX, event.clientY);
 
-    this.dataGrid.cellHovered.emit({ data, event });
-    this.dataGrid.cellSelectionManager.handleBodyCellHover(event);
+    if (data === null) {
+      return;
+    }
+
+    grid.cellHovered.emit({ data, event });
+    grid.cellSelectionManager.handleBodyCellHover(event);
   }
 
   onMouseDown(grid: BeakerXDataGrid, event: MouseEvent): void {
@@ -233,11 +253,11 @@ class EventManager implements DataGrid.IMouseHandler {
 
     !grid.focused && grid.setFocus(true);
 
-    if (!this.isHeaderClicked(event) && grid.dataGridResize.shouldResizeDataGrid(event)) {
+    if (!this.isHeaderClicked(grid, event) && grid.dataGridResize.shouldResizeDataGrid(event)) {
       return grid.dataGridResize.startResizing(event);
     }
 
-    if (this.isOutsideViewport(event)) {
+    if (this.isOutsideViewport(grid, event)) {
       return;
     }
 
@@ -246,11 +266,11 @@ class EventManager implements DataGrid.IMouseHandler {
   }
 
   private handleStartDragging(grid: BeakerXDataGrid, event: MouseEvent) {
-    const data = this.dataGrid.getCellData(event.clientX, event.clientY);
+    const data = grid.getCellData(event.clientX, event.clientY);
 
     if (
       !data ||
-      !this.isHeaderClicked(event) ||
+      !this.isHeaderClicked(grid, event) ||
       (data.region === 'corner-header' && data.column === 0) ||
       data.width - data.delta < COLUMN_RESIZE_AREA_WIDTH
     ) {
@@ -301,26 +321,6 @@ class EventManager implements DataGrid.IMouseHandler {
 
     // Scroll by the desired amount.
     grid.scrollBy(dx, dy);
-  }
-
-  private handleHeaderClick(event: MouseEvent): void {
-    if (!this.isHeaderClicked(event) || this.dataGrid.columnPosition.dropCellData) {
-      return;
-    }
-
-    const data = this.dataGrid.getCellData(event.clientX, event.clientY);
-
-    if (!data) {
-      return;
-    }
-
-    const destColumn = this.dataGrid.columnManager.getColumnByPosition(ColumnManager.createPositionFromCell(data));
-
-    destColumn.toggleSort();
-  }
-
-  private isHeaderClicked(event) {
-    return this.isOverHeader(event) && event.button === 0 && event.target === this.dataGrid['_canvas'];
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
