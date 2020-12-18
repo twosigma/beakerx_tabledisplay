@@ -252,7 +252,7 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
   }
 
   private isHeaderClicked(grid: BeakerXDataGrid, event) {
-    return this.isOverHeader(grid, event) && event.button === 0 && event.target === grid['_canvas'];
+    return this.isOverHeader(grid, event) && event.button === 0;
   }
 
   private handleBodyClick(grid: BeakerXDataGrid, event: MouseEvent) {
