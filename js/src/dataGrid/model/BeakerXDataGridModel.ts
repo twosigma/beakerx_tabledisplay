@@ -26,7 +26,18 @@ import { DataGridRow } from '../row/DataGridRow';
 import { RowManager } from '../row/RowManager';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridAction } from '../store/DataGridAction';
-import { UPDATE_MODEL_DATA, UPDATE_MODEL_FONT_COLOR, UPDATE_MODEL_VALUES } from './reducer';
+
+export const UPDATE_MODEL_DATA = 'UPDATE_MODEL_DATA';
+export const UPDATE_MODEL_VALUES = 'UPDATE_MODEL_VALUES';
+export const UPDATE_MODEL_FONT_COLOR = 'UPDATE_MODEL_FONT_COLOR';
+export const UPDATE_COLUMN_RENDERER = 'UPDATE_COLUMN_RENDERER';
+export const UPDATE_COLUMN_ORDER = 'UPDATE_COLUMN_ORDER';
+export const UPDATE_COLUMN_FROZEN = 'UPDATE_COLUMN_FROZEN';
+export const UPDATE_COLUMN_VISIBLE = 'UPDATE_COLUMN_VISIBLE';
+export const UPDATE_COLUMNS_VISIBLE = 'UPDATE_COLUMNS_VISIBLE';
+export const RESET_COLUMNS_ORDER = 'RESET_COLUMNS_ORDER';
+export const ADD_COLUMN_HIGHLIGHTER = 'ADD_COLUMN_HIGHLIGHTER';
+export const REMOVE_COLUMN_HIGHLIGHTER = 'REMOVE_COLUMN_HIGHLIGHTER';
 
 
 export class BeakerXDataGridModel extends DataModel {
@@ -37,8 +48,6 @@ export class BeakerXDataGridModel extends DataModel {
   headerRowsCount: number;
 
   static DEFAULT_INDEX_COLUMN_TYPE = ALL_TYPES[1]; // integer
-
-  // private _data: Array<any>;
 
   constructor(store: BeakerXDataStore, columnManager: ColumnManager, rowManager: RowManager) {
     super();
@@ -72,8 +81,6 @@ export class BeakerXDataGridModel extends DataModel {
     this.rowManager = rowManager;
     this.headerRowsCount = 1;
 
-    // this._data = store.selectValues();
-
     this.setState({
       columnsVisible: this.store.selectColumnsVisible() || {},
     });
@@ -82,7 +89,6 @@ export class BeakerXDataGridModel extends DataModel {
   updateData(state: IDataGridModelState) {
     this.columnManager.resetColumnStates();
     this.store.dispatch(new DataGridAction(UPDATE_MODEL_DATA, state));
-    // this._data = this.store.selectValues();
     this.rowManager.createRows(this.store, this.store.selectHasIndex());
     this.rowManager.setRowsToShow(this.store.selectRowsToShow());
     this.reset();
@@ -91,7 +97,6 @@ export class BeakerXDataGridModel extends DataModel {
   updateValues(state: IDataGridModelState) {
     this.store.dispatch(new DataGridAction(UPDATE_MODEL_VALUES, state));
     this.store.dispatch(new DataGridAction(UPDATE_MODEL_FONT_COLOR, state));
-    // this._data = selectValues(this.store.state);
     this.rowManager.createRows(this.store, this.store.selectHasIndex());
     this.rowManager.filterRows();
     this.rowManager.keepSorting();

@@ -26,7 +26,7 @@ import { Highlighter } from '../highlighter/Highlighter';
 import { IColumnOptions } from '../interface/IColumn';
 import { HIGHLIGHTER_TYPE } from '../interface/IHighlighterState';
 import { RENDERER_TYPE } from '../interface/IRenderer';
-import { UPDATE_COLUMN_FROZEN, UPDATE_COLUMN_RENDERER, UPDATE_COLUMN_VISIBLE } from '../model/reducer';
+import { UPDATE_COLUMN_FROZEN, UPDATE_COLUMN_RENDERER, UPDATE_COLUMN_VISIBLE } from '../model/BeakerXDataGridModel';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridColumnAction } from '../store/DataGridAction';
 import { ColumnFilter } from './ColumnFilter';
@@ -40,7 +40,7 @@ import {
   UPDATE_COLUMN_HORIZONTAL_ALIGNMENT,
   UPDATE_COLUMN_SORT_ORDER,
   UPDATE_COLUMN_WIDTH,
-} from './reducer';
+} from '../store/BeakerXDataStore';
 
 export class DataGridColumn {
   index: number;

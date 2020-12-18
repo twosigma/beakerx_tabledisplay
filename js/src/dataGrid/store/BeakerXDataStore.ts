@@ -20,14 +20,12 @@ import {ALL_TYPES, getDisplayType, getTypeByName} from '../dataTypes';
 import {IDataGridModelState} from '../interface/IDataGridModelState';
 import {Datastore, Fields} from "@lumino/datastore";
 import {IColumnPosition, IColumnState} from "../interface/IColumn";
-import {DEFAULT_INDEX_COLUMN_NAME} from '../model/selectors';
 import {BeakerXDataGridModel} from "../model/BeakerXDataGridModel";
 import {DEFAULT_PAGE_LENGTH, TIME_UNIT_FORMATS} from "../consts";
 import {getAlignmentByChar, getAlignmentByType} from "../column/ColumnAlignment";
 import {DataGridAction, DataGridColumnAction, DataGridColumnsAction} from "./DataGridAction";
 import {DataModel} from "@lumino/datagrid";
 import {each, find} from "@lumino/algorithm";
-import {defaultColumnState} from "../column/selectors";
 import {
   ADD_COLUMN_HIGHLIGHTER,
   REMOVE_COLUMN_HIGHLIGHTER,
@@ -37,14 +35,41 @@ import {
   UPDATE_MODEL_DATA,
   UPDATE_MODEL_FONT_COLOR,
   UPDATE_MODEL_VALUES
-} from "../model/reducer";
+} from "../model/BeakerXDataGridModel";
 import {IHighlighterState} from "../interface/IHighlighterState";
-import {
-  UPDATE_COLUMN_DISPLAY_TYPE,
-  UPDATE_COLUMN_FORMAT_FOR_TIMES, UPDATE_COLUMN_POSITIONS,
-  UPDATE_COLUMN_SORT_ORDER,
-  UPDATE_COLUMN_WIDTH
-} from "../column/reducer";
+
+
+const DEFAULT_INDEX_COLUMN_NAME = '';
+
+export const UPDATE_COLUMNS_STATES = 'UPDATE_COLUMNS_STATES';
+export const UPDATE_COLUMN_STATE = 'UPDATE_COLUMNS_STATE';
+export const UPDATE_COLUMN_POSITIONS = 'UPDATE_COLUMN_POSITIONS';
+export const UPDATE_COLUMNS_TYPES = 'UPDATE_COLUMNS_TYPES';
+export const UPDATE_COLUMNS_NAMES = 'UPDATE_COLUMNS_NAMES';
+export const UPDATE_COLUMNS_FILTERS = 'UPDATE_COLUMNS_FILTERS';
+export const UPDATE_COLUMN_FILTER = 'UPDATE_COLUMN_FILTER';
+export const UPDATE_COLUMN_HORIZONTAL_ALIGNMENT = 'UPDATE_COLUMN_HORIZONTAL_ALIGNMENT';
+export const UPDATE_COLUMN_FORMAT_FOR_TIMES = 'UPDATE_COLUMN_FORMAT_FOR_TIMES';
+export const UPDATE_COLUMN_DISPLAY_TYPE = 'UPDATE_COLUMN_DISPLAY_TYPE';
+export const UPDATE_COLUMN_SORT_ORDER = 'UPDATE_COLUMN_SORT_ORDER';
+export const UPDATE_COLUMN_WIDTH = 'UPDATE_COLUMN_WIDTH';
+
+
+const defaultColumnState: IColumnState = {
+  key: '',
+  name: '',
+  index: 0,
+  columnType: COLUMN_TYPES.body,
+  dataTypeName: '',
+  dataType: ALL_TYPES.string,
+  displayType: ALL_TYPES.string,
+  keepTrigger: false,
+  horizontalAlignment: 'left',
+  formatForTimes: null,
+  sortOrder: SORT_ORDER.NO_SORT,
+  filter: null,
+  position: { value: 0, region: 'body' },
+};
 
 
 let BEAKERX_SCHEMA = {

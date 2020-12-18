@@ -17,14 +17,14 @@
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { ICellData } from '../interface/ICell';
 import { IColumnPosition } from '../interface/IColumn';
-import { UPDATE_COLUMN_ORDER } from '../model/reducer';
+import { UPDATE_COLUMN_ORDER } from '../model/BeakerXDataGridModel';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridColumnAction, DataGridColumnsAction } from '../store/DataGridAction';
 import { DataGridStyle } from '../style/DataGridStyle';
 import { ColumnManager } from './ColumnManager';
 import { DataGridColumn } from './DataGridColumn';
 import { COLUMN_SIDE, COLUMN_TYPES } from './enums';
-import { UPDATE_COLUMN_POSITIONS } from './reducer';
+import { UPDATE_COLUMN_POSITIONS } from '../store/BeakerXDataStore';
 
 const DATA_GRID_PADDING = 20;
 const DRAG_START_DEBOUNCE_TIME = 150;
