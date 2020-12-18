@@ -26,7 +26,6 @@ import {DEFAULT_PAGE_LENGTH, TIME_UNIT_FORMATS} from "../consts";
 import {getAlignmentByChar, getAlignmentByType} from "../column/ColumnAlignment";
 import {DataGridAction, DataGridColumnAction, DataGridColumnsAction} from "./DataGridAction";
 import {DataModel} from "@lumino/datagrid";
-// import {createSelector} from "reselect";
 import {each, find} from "@lumino/algorithm";
 import {defaultColumnState} from "../column/selectors";
 import {
@@ -46,7 +45,6 @@ import {
   UPDATE_COLUMN_SORT_ORDER,
   UPDATE_COLUMN_WIDTH
 } from "../column/reducer";
-// import {UPDATE_COLUMNS_STATES} from "../column/reducer";
 
 
 let BEAKERX_SCHEMA = {
@@ -721,11 +719,11 @@ export class BeakerXDataStore {
     //     this.store.endTransaction();
     //   }
     //   break;
-      //       return action.payload.value;
-//
-//     case UPDATE_COLUMN_STATE:
-//       return reduceColumnState(state, action);
-//
+    //         return action.payload.value;
+
+    // case UPDATE_COLUMN_STATE:
+    //   return reduceColumnState(state, action);
+
     case UPDATE_COLUMN_POSITIONS: {
       let stateArray = schema.get('init').columns;
       const {value, hasIndex, columnsFrozenNames = [], columnsVisible = {}} = action.payload;
@@ -770,7 +768,8 @@ export class BeakerXDataStore {
       const newState = [];
       stateArray.forEach(columnState => {
         if (columnState.columnType !== COLUMN_TYPES.body) {
-          return true;
+          newState.push(columnState);
+          return;
         }
 
         let positionInBody = order.indexOf(columnState.name);
