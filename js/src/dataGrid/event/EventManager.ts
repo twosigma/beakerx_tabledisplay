@@ -145,6 +145,10 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
   }
 
   onMouseLeave(grid: BeakerXDataGrid, event: MouseEvent): void {
+    if (this.isNodeInsideGrid(grid, event) || event.buttons !== 0) {
+      return;
+    }
+
     clearTimeout(this.cellHoverControl.timerId);
 
     grid.cellTooltipManager.hideTooltips();
@@ -288,6 +292,10 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
 
   private isOutsideViewport(grid: BeakerXDataGrid, event: MouseEvent) {
     return EventHelpers.isOutsideNode(event, grid.viewport.node);
+  }
+
+  private isNodeInsideGrid(grid: BeakerXDataGrid, event: MouseEvent) {
+    return EventHelpers.isInsideGridNode(event, grid.node);
   }
 
   private getRowIndex(grid: BeakerXDataGrid, renderedRowIndex: number): number {
