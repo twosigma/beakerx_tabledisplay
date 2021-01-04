@@ -199,6 +199,7 @@ export class ColumnFilter {
     };
 
     this.filterInput.addEventListener('keyup', DataGridHelpers.throttle(this.filterHandler, 100, this), true);
+    this.filterInput.addEventListener('keydown', (event: KeyboardEvent) => { event.stopPropagation(); }, true);
     this.filterInput.addEventListener('mousedown', handleMouseDown, true);
     this.filterNode.addEventListener('mousedown', handleMouseDown, true);
   }
