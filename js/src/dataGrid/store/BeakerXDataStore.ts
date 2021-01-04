@@ -823,10 +823,9 @@ export class BeakerXDataStore {
     }
     break;
 
-//
-//     case UPDATE_COLUMNS_TYPES:
-//       return reduceColumnsTypes(state, action);
-//
+    // case UPDATE_COLUMNS_TYPES:
+    //   return reduceColumnsTypes(state, action);
+
 //     case UPDATE_COLUMNS_NAMES:
 //       return reduceColumnsNames(state, action);
 //
@@ -905,6 +904,9 @@ export class BeakerXDataStore {
           this.store.endTransaction();
         }
       }
+      break;
+    default:
+      throw 'action.type';
       break;
     }
   }
