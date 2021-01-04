@@ -31,7 +31,7 @@ import { ColumnManager } from './column/ColumnManager';
 import { ColumnPosition } from './column/ColumnPosition';
 import { DataGridColumn } from './column/DataGridColumn';
 import { DataGridResize } from './DataGridResize';
-import { EventManager } from './event/EventManager';
+import { MouseEventManager, KeyEventManager } from './event/EventManager';
 import { DataGridHelpers } from './Helpers';
 import { HighlighterManager } from './highlighter/HighlighterManager';
 import { ICellData } from './interface/ICell';
@@ -60,7 +60,6 @@ export class BeakerXDataGrid extends DataGrid {
   rowManager: RowManager;
   cellSelectionManager: CellSelectionManager;
   cellManager: CellManager;
-  eventManager: EventManager;
   cellFocusManager: CellFocusManager;
   cellTooltipManager: CellTooltipManager;
   dataGridResize: DataGridResize;
@@ -98,9 +97,8 @@ export class BeakerXDataGrid extends DataGrid {
     );
     this.cellSelectionManager = new CellSelectionManager(this);
     this.cellManager = new CellManager(this);
-    this.eventManager = new EventManager(this);
-    this.keyHandler = this.eventManager;
-    this.mouseHandler = this.eventManager;
+    this.mouseHandler = new MouseEventManager(this);
+    this.keyHandler = new KeyEventManager();
     this.cellFocusManager = new CellFocusManager(this);
     this.cellTooltipManager = new CellTooltipManager(this);
     this.dataGridResize = new DataGridResize(this);
@@ -220,7 +218,6 @@ export class BeakerXDataGrid extends DataGrid {
       this.dataGridResize = null;
       this.columnPosition = null;
       this.columnManager = null;
-      this.eventManager = null;
       this.cellManager = null;
       this.rowManager = null;
       this.store = null;

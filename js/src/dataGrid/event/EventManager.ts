@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { DataGrid, BasicMouseHandler } from '@lumino/datagrid';
+import { BasicMouseHandler, BasicKeyHandler } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { CellManager } from '../cell/CellManager';
 import { ColumnManager } from '../column/ColumnManager';
@@ -27,13 +27,12 @@ import { KEYBOARD_KEYS } from './enums';
 import { EventHelpers } from './EventHelpers';
 import { DoubleClickMessage } from '../message/DoubleClickMessage';
 import { ActionDetailsMessage } from '../message/ActionDetailsMessage';
-// import { inherits } from 'util';
 
 const COLUMN_RESIZE_AREA_WIDTH = 4;
 
 
 export
-class EventManager extends BasicMouseHandler implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
+class MouseEventManager extends BasicMouseHandler {
 
   cellHoverControl = { timerId: undefined };
 
@@ -190,25 +189,6 @@ class EventManager extends BasicMouseHandler implements DataGrid.IMouseHandler, 
     }
   }
 
-  onKeyDown(grid: BeakerXDataGrid, event: KeyboardEvent): void {
-    const focusedCell = grid.cellFocusManager.focusedCellData;
-    const column: DataGridColumn | null = focusedCell && grid.columnManager.takeColumnByCell(focusedCell);
-    const code = DataGridHelpers.getEventKeyCode(event);
-
-    if (!code) {
-      return;
-    }
-
-    // Prevent propagation
-    event.stopPropagation();
-    event.preventDefault();
-
-    this.handleEnterKeyDown(grid, code, event.shiftKey, focusedCell);
-    this.handleHighlighterKeyDown(code, column);
-    this.handleNumKeyDown(grid, code, event.shiftKey, column);
-    this.handleNavigationKeyDown(grid, code, event);
-  }
-
   isOverHeader(grid: BeakerXDataGrid, event: MouseEvent) {
     const rect = grid.viewport.node.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -284,6 +264,40 @@ class EventManager extends BasicMouseHandler implements DataGrid.IMouseHandler, 
     return grid.rowManager.rows[renderedRowIndex].index;
   }
 
+  private clearReferences() {
+    setTimeout(() => {
+      this.cellHoverControl = null;
+    });
+  }
+
+  private handleMouseMove: (event: MouseEvent) => void;
+  private handleMouseLeave: (event: MouseEvent) => void;
+  private handleMouseDown: (event: MouseEvent) => void;
+  private grid: BeakerXDataGrid;
+}
+
+export
+class KeyEventManager extends BasicKeyHandler {
+
+  onKeyDown(grid: BeakerXDataGrid, event: KeyboardEvent): void {
+    const focusedCell = grid.cellFocusManager.focusedCellData;
+    const column: DataGridColumn | null = focusedCell && grid.columnManager.takeColumnByCell(focusedCell);
+    const code = DataGridHelpers.getEventKeyCode(event);
+
+    if (!code) {
+      return;
+    }
+
+    // Prevent propagation
+    event.stopPropagation();
+    event.preventDefault();
+
+    this.handleEnterKeyDown(grid, code, event.shiftKey, focusedCell);
+    this.handleHighlighterKeyDown(code, column);
+    this.handleNumKeyDown(grid, code, event.shiftKey, column);
+    this.handleNavigationKeyDown(grid, code, event);
+  }
+
   private handleHighlighterKeyDown(code: number, column: DataGridColumn | null) {
     switch (code) {
       case KEYBOARD_KEYS.KeyH:
@@ -348,14 +362,4 @@ class EventManager extends BasicMouseHandler implements DataGrid.IMouseHandler, 
     grid.columnManager.setColumnsDataTypePrecission(number);
   }
 
-  private clearReferences() {
-    setTimeout(() => {
-      this.cellHoverControl = null;
-    });
-  }
-
-  private handleMouseMove: (event: MouseEvent) => void;
-  private handleMouseLeave: (event: MouseEvent) => void;
-  private handleMouseDown: (event: MouseEvent) => void;
-  private grid: BeakerXDataGrid;
 }

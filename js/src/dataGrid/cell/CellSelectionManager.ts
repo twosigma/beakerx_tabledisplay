@@ -154,7 +154,8 @@ export class CellSelectionManager {
   }
 
   handleMouseDown(event: MouseEvent) {
-    if (this.dataGrid.eventManager.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
+    // @ts-ignore TODO Remove this class entirely and rely on Lumino
+    if (this.dataGrid.mouseHandler.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
@@ -176,7 +177,8 @@ export class CellSelectionManager {
     if (
       event.buttons !== 1 ||
       this.dataGrid.columnPosition.isDragging() ||
-      this.dataGrid.eventManager.isOverHeader(this.dataGrid, event)
+      // @ts-ignore TODO Remove this class entirely and rely on Lumino
+      this.dataGrid.mouseHandler.isOverHeader(this.dataGrid, event)
     ) {
       return;
     }
@@ -191,7 +193,8 @@ export class CellSelectionManager {
   }
 
   handleMouseUp(event: MouseEvent) {
-    if (this.dataGrid.eventManager.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
+    // @ts-ignore TODO Remove this class entirely and rely on Lumino
+    if (this.dataGrid.mouseHandler.isOverHeader(this.dataGrid, event) || this.dataGrid.columnPosition.isDragging()) {
       return;
     }
 
