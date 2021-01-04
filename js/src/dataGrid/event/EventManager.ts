@@ -108,6 +108,12 @@ class MouseEventManager extends BasicMouseHandler {
 
     super.onMouseMove(grid, event);
 
+    if (this.isResizingHeader) {
+      grid.columnManager.updateColumnFilterNodes();
+      grid.columnManager.updateColumnMenuTriggers();
+      return;
+    }
+
     if (event.buttons !== 1) {
       grid.columnPosition.stopDragging();
     }
