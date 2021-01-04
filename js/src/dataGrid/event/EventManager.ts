@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { DataGrid } from '@lumino/datagrid';
+import { DataGrid, BasicMouseHandler } from '@lumino/datagrid';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { CellManager } from '../cell/CellManager';
 import { ColumnManager } from '../column/ColumnManager';
@@ -27,16 +27,19 @@ import { KEYBOARD_KEYS } from './enums';
 import { EventHelpers } from './EventHelpers';
 import { DoubleClickMessage } from '../message/DoubleClickMessage';
 import { ActionDetailsMessage } from '../message/ActionDetailsMessage';
+// import { inherits } from 'util';
 
 const COLUMN_RESIZE_AREA_WIDTH = 4;
 
 
 export
-class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
+class EventManager extends BasicMouseHandler implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
 
   cellHoverControl = { timerId: undefined };
 
   constructor(grid: BeakerXDataGrid) {
+    super();
+
     this.grid = grid;
 
     this.handleMouseMove = (event: MouseEvent) => {
@@ -58,13 +61,19 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     this.grid.tableDisplayView.el.addEventListener('mousedown', this.handleMouseDown);
   }
 
-  get isDisposed(): boolean {
-    return this._disposed;
+  // TODO Remove this when https://github.com/jupyterlab/lumino/pull/146 is merged and released
+  get pressData () {
+    // @ts-ignore
+    return this._pressData || null;
+  }
+
+  get isResizingHeader () {
+    return this.pressData !== null && (this.pressData.type == 'column-resize' || this.pressData.type == 'row-resize');
   }
 
   dispose(): void {
     // Bail early if the handler is already disposed.
-    if (this._disposed) {
+    if (this.isDisposed) {
       return;
     }
 
@@ -74,12 +83,7 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     this.grid.node.removeEventListener('mousemove', this.handleMouseLeave);
     this.grid.tableDisplayView.el.removeEventListener('mousedown', this.handleMouseDown);
 
-    // Mark the handler as disposed.
-    this._disposed = true;
-  }
-
-  release(): void {
-    //
+    super.dispose();
   }
 
   onMouseUp(grid: BeakerXDataGrid, event: MouseEvent) {
@@ -87,16 +91,23 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
       return grid.dataGridResize.stopResizing();
     }
 
-    grid.cellSelectionManager.handleMouseUp(event);
-    this.handleHeaderClick(grid, event);
-    this.handleBodyClick(grid, event);
-    grid.columnPosition.dropColumn();
+    if (!this.isResizingHeader) {
+      grid.cellSelectionManager.handleMouseUp(event);
+      this.handleHeaderClick(grid, event);
+      this.handleBodyClick(grid, event);
+      grid.columnPosition.dropColumn();
+    }
+
+    // Call super in the end, this will release and clean pressData
+    super.onMouseUp(grid, event);
   }
 
   onMouseMove(grid: BeakerXDataGrid, event: MouseEvent): void {
     if (grid.dataGridResize.isResizing()) {
       return;
     }
+
+    super.onMouseMove(grid, event);
 
     if (event.buttons !== 1) {
       grid.columnPosition.stopDragging();
@@ -114,7 +125,9 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     this.onMouseHover(grid, event);
   }
 
-  onMouseHover(grid: BeakerXDataGrid, event) {
+  onMouseHover(grid: BeakerXDataGrid, event: MouseEvent) {
+    super.onMouseHover(grid, event);
+
     const data = grid.getCellData(event.clientX, event.clientY);
 
     if (data === null) {
@@ -126,18 +139,15 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
   }
 
   onMouseDown(grid: BeakerXDataGrid, event: MouseEvent): void {
-    if (event.buttons !== 1) {
+    super.onMouseDown(grid, event);
+
+    // Return now if it's a row/column resize handled by the superclass
+    if (this.isResizingHeader) {
       return;
     }
 
-    !grid.focused && grid.setFocus(true);
-
-    if (!this.isHeaderClicked(grid, event) && grid.dataGridResize.shouldResizeDataGrid(event)) {
+    if (!this.isHeaderClicked(grid, event) &&  grid.dataGridResize.shouldResizeDataGrid(event)) {
       return grid.dataGridResize.startResizing(event);
-    }
-
-    if (this.isOutsideViewport(grid, event)) {
-      return;
     }
 
     grid.cellSelectionManager.handleMouseDown(event);
@@ -178,34 +188,6 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     if (grid.store.selectDoubleClickTag()) {
       grid.commSignal.emit(new ActionDetailsMessage('DOUBLE_CLICK', row, data.column));
     }
-  }
-
-  onContextMenu(grid: DataGrid, event: MouseEvent): void {}
-
-  onWheel(grid: BeakerXDataGrid, event: WheelEvent) {
-    // Extract the delta X and Y movement.
-    let dx = event.deltaX;
-    let dy = event.deltaY;
-
-    // Convert the delta values to pixel values.
-    switch (event.deltaMode) {
-    case 0:  // DOM_DELTA_PIXEL
-      break;
-    case 1:  // DOM_DELTA_LINE
-      const ds = grid.defaultSizes;
-      dx *= ds.columnWidth;
-      dy *= ds.rowHeight;
-      break;
-    case 2:  // DOM_DELTA_PAGE
-      dx *= grid.pageWidth;
-      dy *= grid.pageHeight;
-      break;
-    default:
-      throw 'unreachable';
-    }
-
-    // Scroll by the desired amount.
-    grid.scrollBy(dx, dy);
   }
 
   onKeyDown(grid: BeakerXDataGrid, event: KeyboardEvent): void {
@@ -372,9 +354,8 @@ class EventManager implements DataGrid.IMouseHandler, DataGrid.IKeyHandler {
     });
   }
 
-  private _disposed = false;
-  private handleMouseMove: (MouseEvent) => void;
-  private handleMouseLeave: (MouseEvent) => void;
-  private handleMouseDown: (MouseEvent) => void;
+  private handleMouseMove: (event: MouseEvent) => void;
+  private handleMouseLeave: (event: MouseEvent) => void;
+  private handleMouseDown: (event: MouseEvent) => void;
   private grid: BeakerXDataGrid;
 }
