@@ -906,7 +906,7 @@ export class BeakerXDataStore {
       }
       break;
     default:
-      throw 'action.type';
+      throw `${action.type} not implemented`;
       break;
     }
   }
