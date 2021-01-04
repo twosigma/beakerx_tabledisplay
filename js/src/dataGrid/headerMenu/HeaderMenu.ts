@@ -253,6 +253,7 @@ export abstract class HeaderMenu implements IMenu {
 
   private handleMenuTriggerClick(event: MouseEvent) {
     event.preventDefault();
+    event.stopPropagation();
 
     this.toggleMenu(event);
   }
