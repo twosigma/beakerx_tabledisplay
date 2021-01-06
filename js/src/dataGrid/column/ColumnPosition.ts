@@ -37,6 +37,7 @@ export class ColumnPosition {
   draggableHeaderCanvas: HTMLCanvasElement;
   draggableHeaderOffsetLeft: number | null;
   dragStartTimeoutId: NodeJS.Timeout;
+  _isDragging: boolean = false;
 
   constructor(dataGrid: BeakerXDataGrid) {
     this.dataGrid = dataGrid;
@@ -59,6 +60,7 @@ export class ColumnPosition {
   }
 
   startDragging(data: ICellData) {
+    this._isDragging = true;
     this.debounceDragStart(data);
   }
 
@@ -75,10 +77,11 @@ export class ColumnPosition {
       this.dataGrid.node.removeChild(this.draggableHeaderCanvas);
     this.dataGrid.repaintBody();
     this.draggableHeaderOffsetLeft = null;
+    this._isDragging = false;
   }
 
   isDragging() {
-    return !!this.grabbedCellData;
+    return this._isDragging;
   }
 
   reset() {

@@ -140,7 +140,10 @@ class MouseEventManager extends BasicMouseHandler {
     }
 
     grid.cellHovered.emit({ data, event });
-    grid.cellSelectionManager.handleBodyCellHover(event);
+
+    if (!grid.columnPosition.isDragging()) {
+      grid.cellSelectionManager.handleBodyCellHover(event);
+    }
   }
 
   onMouseDown(grid: BeakerXDataGrid, event: MouseEvent): void {
@@ -155,8 +158,11 @@ class MouseEventManager extends BasicMouseHandler {
       return grid.dataGridResize.startResizing(event);
     }
 
-    grid.cellSelectionManager.handleMouseDown(event);
     this.handleStartDragging(grid, event);
+
+    if (!grid.columnPosition.isDragging()) {
+      grid.cellSelectionManager.handleMouseDown(event);
+    }
   }
 
   onMouseLeave(grid: BeakerXDataGrid, event: MouseEvent): void {
