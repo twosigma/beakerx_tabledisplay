@@ -425,7 +425,7 @@ export class DataGridResize {
       });
     }
 
-    if (msg.type === 'section-resize-request') {
+    if (msg.type === 'column-resize-request') {
       this.dataGrid.getColumnSections()['_sections'].forEach(this.updateColumnWidth('body'));
       this.dataGrid.getRowHeaderSections()['_sections'].forEach(this.updateColumnWidth('row-header'));
       this.updateWidgetWidth();
