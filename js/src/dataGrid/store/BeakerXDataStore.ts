@@ -829,12 +829,25 @@ export class BeakerXDataStore {
 //     case UPDATE_COLUMNS_NAMES:
 //       return reduceColumnsNames(state, action);
 //
-//     case UPDATE_COLUMNS_FILTERS:
-//       return reduceColumnsFilters(state, action);
+    // case UPDATE_COLUMNS_FILTERS:
 //
-//     case UPDATE_COLUMN_FILTER:
-//       return reduceColumnFilter(state, action);
-//
+    case UPDATE_COLUMN_FILTER:
+      if (action instanceof DataGridColumnAction) {
+        const {columnType, columnIndex, value} = action.payload;
+        const key = `${columnType}_${columnIndex}`;
+        try {
+          this.store.beginTransaction();
+          let state = schema.get('init').columns;
+          let colStateIdx = state.findIndex(item => item.key == key);
+          let colState = state[colStateIdx];
+          colState.filter = value;
+          schema.update({['init']: {columns: {index: colStateIdx, remove: 1, values: [colState]}}});
+        } finally {
+          this.store.endTransaction();
+        }
+      }
+      break;
+
 //     case UPDATE_COLUMN_HORIZONTAL_ALIGNMENT:
 //       return reduceColumnHorizontalAlignment(state, action);
 //
