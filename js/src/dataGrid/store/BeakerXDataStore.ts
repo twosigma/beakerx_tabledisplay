@@ -41,8 +41,6 @@ import {IHighlighterState} from "../interface/IHighlighterState";
 
 const DEFAULT_INDEX_COLUMN_NAME = '';
 
-export const UPDATE_COLUMNS_STATES = 'UPDATE_COLUMNS_STATES';
-export const UPDATE_COLUMN_STATE = 'UPDATE_COLUMNS_STATE';
 export const UPDATE_COLUMN_POSITIONS = 'UPDATE_COLUMN_POSITIONS';
 export const UPDATE_COLUMNS_TYPES = 'UPDATE_COLUMNS_TYPES';
 export const UPDATE_COLUMNS_NAMES = 'UPDATE_COLUMNS_NAMES';
@@ -734,21 +732,6 @@ export class BeakerXDataStore {
       }
       break;
 
-    // case UPDATE_COLUMNS_STATES:
-    //   try {
-    //     this.store.beginTransaction();
-    //     let state = schema.get('init').columns;
-    //     state = { ...state, ...action.payload.value }
-    //     schema.update({['init']: { model: { index: 0, remove: 1, values: [state] }}});
-    //   } finally {
-    //     this.store.endTransaction();
-    //   }
-    //   break;
-    //         return action.payload.value;
-
-    // case UPDATE_COLUMN_STATE:
-    //   return reduceColumnState(state, action);
-
     case UPDATE_COLUMN_POSITIONS: {
       let stateArray = schema.get('init').columns;
       const {value, hasIndex, columnsFrozenNames = [], columnsVisible = {}} = action.payload;
@@ -830,7 +813,7 @@ export class BeakerXDataStore {
 //       return reduceColumnsNames(state, action);
 //
     // case UPDATE_COLUMNS_FILTERS:
-//
+
     case UPDATE_COLUMN_FILTER:
       if (action instanceof DataGridColumnAction) {
         const {columnType, columnIndex, value} = action.payload;
