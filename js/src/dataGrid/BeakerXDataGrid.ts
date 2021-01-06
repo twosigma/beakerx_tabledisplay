@@ -53,7 +53,7 @@ declare global {
 export class BeakerXDataGrid extends DataGrid {
   id: string;
   store: BeakerXDataStore;
-  model: BeakerXDataGridModel;
+  dataModel: BeakerXDataGridModel;
   highlighterManager: HighlighterManager;
   columnManager: ColumnManager;
   columnPosition: ColumnPosition;
@@ -102,9 +102,8 @@ export class BeakerXDataGrid extends DataGrid {
     this.cellFocusManager = new CellFocusManager(this);
     this.cellTooltipManager = new CellTooltipManager(this);
     this.dataGridResize = new DataGridResize(this);
-    this.model = new BeakerXDataGridModel(store, this.columnManager, this.rowManager);
+    this.dataModel = new BeakerXDataGridModel(store, this.columnManager, this.rowManager);
     this.focused = false;
-    this.dataModel = this.model;
     this.columnManager.addColumns();
     this.rowManager.createFilterExpressionVars();
     this.store.store.changed.connect(DataGridHelpers.throttle<void, void>(this.handleStateChanged, 100, this));
@@ -148,14 +147,14 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   updateModelData(state: IDataGridModelState) {
-    this.model.updateData(state);
+    this.dataModel.updateData(state);
     this.columnManager.recalculateMinMaxValues();
     this.dataGridResize.setInitialSize();
     this.addHighlighterManager();
   }
 
   updateModelValues(state: IDataGridModelState) {
-    this.model.updateValues(state);
+    this.dataModel.updateValues(state);
     this.columnManager.recalculateMinMaxValues();
     this.dataGridResize.setInitialSize();
   }
@@ -197,7 +196,7 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   destroy() {
-    this.model && this.model.destroy();
+    this.dataModel && this.dataModel.destroy();
     this.columnManager.destroy();
     this.columnPosition.destroy();
     this.cellFocusManager.destroy();
@@ -352,7 +351,7 @@ export class BeakerXDataGrid extends DataGrid {
   }
 
   private handleStateChanged() {
-    this.model && this.model.reset();
+    this.dataModel && this.dataModel.reset();
   }
 
   public getColumnSections(): SectionList {

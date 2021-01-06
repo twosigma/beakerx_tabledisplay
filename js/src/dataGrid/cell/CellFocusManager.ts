@@ -154,7 +154,7 @@ export class CellFocusManager {
     }
 
     const row = this.focusedCellData.row + moveBy;
-    const rowCount = this.dataGrid.model.rowCount('body') - 1;
+    const rowCount = this.dataGrid.dataModel.rowCount('body') - 1;
 
     this.setFocusedCell({
       ...this.focusedCellData,

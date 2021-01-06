@@ -26,10 +26,10 @@ export class Highlighter {
   state: IHighlighterState;
 
   constructor(column: DataGridColumn, state: IHighlighterState) {
-    const valueResolver = column.dataGrid.model.getColumnValueResolver(column.getDataType());
+    const valueResolver = column.dataGrid.dataModel.getColumnValueResolver(column.getDataType());
 
     this.column = column;
-    this.model = column.dataGrid.model;
+    this.model = column.dataGrid.dataModel;
     this.state = { ...state };
     this.state.style = state.style || HIGHLIGHTER_STYLE.SINGLE_COLUMN;
     this.state.minVal = valueResolver(Number.isFinite(this.state.minVal) ? this.state.minVal : this.column.minValue);

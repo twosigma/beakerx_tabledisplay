@@ -80,7 +80,7 @@ export class DataGridColumn {
   }
 
   assignFormatFn() {
-    this.formatFn = this.dataGrid.model.dataFormatter.getFormatFnByDisplayType(this.getDisplayType(), this.getState());
+    this.formatFn = this.dataGrid.dataModel.dataFormatter.getFormatFnByDisplayType(this.getDisplayType(), this.getState());
   }
 
   createMenu(): void {
@@ -152,13 +152,13 @@ export class DataGridColumn {
 
     this.updateColumnFilter(filter);
     search ? this.dataGrid.rowManager.searchRows() : this.dataGrid.rowManager.filterRows();
-    this.dataGrid.model.reset();
+    this.dataGrid.dataModel.reset();
   }
 
   resetFilter() {
     this.updateColumnFilter('');
     this.dataGrid.rowManager.filterRows();
-    this.dataGrid.model.reset();
+    this.dataGrid.dataModel.reset();
   }
 
   connectToColumnsChanged() {
@@ -280,7 +280,7 @@ export class DataGridColumn {
   }
 
   getValueResolver(): (value: any) => any {
-    return this.dataGrid.model.getColumnValueResolver(this.getDataType());
+    return this.dataGrid.dataModel.getColumnValueResolver(this.getDataType());
   }
 
   move(destination: number) {
@@ -301,9 +301,9 @@ export class DataGridColumn {
     const dataType = this.getDataType();
     const displayType = this.getDisplayType();
     const valuesIterator = () => {
-      return this.dataGrid.model.getColumnValuesIterator(this);
+      return this.dataGrid.dataModel.getColumnValuesIterator(this);
     };
-    const valueResolver = this.dataGrid.model.getColumnValueResolver(
+    const valueResolver = this.dataGrid.dataModel.getColumnValueResolver(
       displayType === ALL_TYPES.html ? displayType : dataType,
     );
 
@@ -314,7 +314,7 @@ export class DataGridColumn {
     } else if (dataType === ALL_TYPES.string) {
       minMax = minmax(
         filter(valuesIterator(), (value) => this.canStringBeConvertedToNumber(value)),
-        ColumnValuesIterator.minMax(this.dataGrid.model.getColumnValueResolver(ALL_TYPES.double)),
+        ColumnValuesIterator.minMax(this.dataGrid.dataModel.getColumnValueResolver(ALL_TYPES.double)),
       );
       stringMinMax = minmax(valuesIterator(), ColumnValuesIterator.longestString(valueResolver));
     } else {

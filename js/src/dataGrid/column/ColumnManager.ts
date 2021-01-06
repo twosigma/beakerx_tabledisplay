@@ -114,7 +114,7 @@ export class ColumnManager {
       value: sortOrder,
     });
     this.dataGrid.rowManager.sortByColumn(column);
-    this.dataGrid.model.reset();
+    this.dataGrid.dataModel.reset();
   }
 
   resetFilters() {
@@ -127,7 +127,7 @@ export class ColumnManager {
         defaultValue: [''],
       }),
     );
-    this.dataGrid.model.setFilterHeaderVisible(false);
+    this.dataGrid.dataModel.setFilterHeaderVisible(false);
     this.bodyColumns.forEach(resetFilterFn);
     this.indexColumns.forEach(resetFilterFn);
     this.dataGrid.rowManager.filterRows();
@@ -221,7 +221,7 @@ export class ColumnManager {
     this.bodyColumns.forEach((column) => {
       column.resetAlignment();
     });
-    this.dataGrid.model.reset();
+    this.dataGrid.dataModel.reset();
   }
 
   resetColumnPositions() {
@@ -270,7 +270,7 @@ export class ColumnManager {
       );
     };
 
-    this.dataGrid.model.setFilterHeaderVisible(true);
+    this.dataGrid.dataModel.setFilterHeaderVisible(true);
     this.bodyColumns.forEach(showInputsFn);
     this.indexColumns.forEach(showInputsFn);
   }

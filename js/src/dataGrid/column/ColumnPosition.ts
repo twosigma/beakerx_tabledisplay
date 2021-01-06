@@ -98,7 +98,7 @@ export class ColumnPosition {
     );
 
     this.dataGrid.resize();
-    this.dataGrid.model.reset();
+    this.dataGrid.dataModel.reset();
   }
 
   getColumnByPosition(position: IColumnPosition) {

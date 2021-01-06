@@ -84,7 +84,7 @@ export class DataGridResize {
     const spacing = 2 * (DataGridStyle.DEFAULT_GRID_PADDING + DataGridStyle.DEFAULT_GRID_BORDER_WIDTH) + 1;
     const hasVScroll =
       this.dataGrid.rowManager.rowsToShow !== -1 &&
-      this.dataGrid.rowManager.rowsToShow <= this.dataGrid.model.rowCount('body');
+      this.dataGrid.rowManager.rowsToShow <= this.dataGrid.dataModel.rowCount('body');
     const vScrollWidth = hasVScroll ? SCROLLBAR_WIDTH : 0;
     const width = this.dataGrid.totalWidth + spacing + vScrollWidth;
 
@@ -296,7 +296,7 @@ export class DataGridResize {
   }
 
   private getWidgetHeight(): void {
-    const bodyRowCount = this.dataGrid.model.rowCount('body');
+    const bodyRowCount = this.dataGrid.dataModel.rowCount('body');
     const rowsToShow = this.dataGrid.rowManager.rowsToShow;
     const rowCount = rowsToShow < bodyRowCount && rowsToShow !== -1 ? rowsToShow : bodyRowCount;
     const hasHScroll = !this.dataGrid['_hScrollBar'].isHidden;

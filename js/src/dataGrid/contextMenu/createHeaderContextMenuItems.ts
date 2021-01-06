@@ -26,7 +26,7 @@ export function createHeaderContextMenuItems(
 
   const rotateMenuItemAction = function (headersVertical: boolean): () => void {
     return () => {
-      dataGrid.model.setHeaderTextVertical(headersVertical);
+      dataGrid.dataModel.setHeaderTextVertical(headersVertical);
       dataGrid.resize();
     };
   };
