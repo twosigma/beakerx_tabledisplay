@@ -42,8 +42,6 @@ import {IHighlighterState} from "../interface/IHighlighterState";
 const DEFAULT_INDEX_COLUMN_NAME = '';
 
 export const UPDATE_COLUMN_POSITIONS = 'UPDATE_COLUMN_POSITIONS';
-export const UPDATE_COLUMNS_TYPES = 'UPDATE_COLUMNS_TYPES';
-export const UPDATE_COLUMNS_NAMES = 'UPDATE_COLUMNS_NAMES';
 export const UPDATE_COLUMNS_FILTERS = 'UPDATE_COLUMNS_FILTERS';
 export const UPDATE_COLUMN_FILTER = 'UPDATE_COLUMN_FILTER';
 export const UPDATE_COLUMN_HORIZONTAL_ALIGNMENT = 'UPDATE_COLUMN_HORIZONTAL_ALIGNMENT';
@@ -806,13 +804,19 @@ export class BeakerXDataStore {
     }
     break;
 
-    // case UPDATE_COLUMNS_TYPES:
-    //   return reduceColumnsTypes(state, action);
+    case UPDATE_COLUMNS_FILTERS:
+      if (action instanceof DataGridColumnsAction) {
+        let stateArray = schema.get('init').columns;
 
-//     case UPDATE_COLUMNS_NAMES:
-//       return reduceColumnsNames(state, action);
-//
-    // case UPDATE_COLUMNS_FILTERS:
+        try {
+          this.store.beginTransaction();
+          const colState = updateColumnsState(Array.from(stateArray.values()), action, 'filter');
+          schema.update({['init']: {columns: {index: 0, remove: stateArray.length, values: colState}}});
+        } finally {
+          this.store.endTransaction();
+        }
+      }
+      break;
 
     case UPDATE_COLUMN_FILTER:
       if (action instanceof DataGridColumnAction) {
@@ -1024,4 +1028,26 @@ function createColumnsState({ value, defaultValue }, store: BeakerXDataStore) {
     [COLUMN_TYPES.body]: hasIndex ? value.slice(1) : value,
     [COLUMN_TYPES.index]: hasIndex ? value.slice(0, 1) : defaultValue,
   };
+}
+
+function updateColumnsState(state: IColumnState[], action: DataGridColumnsAction, property: string) {
+  const { value, hasIndex, defaultValue = [] } = action.payload;
+  const bodyColumnValues = hasIndex ? value.slice(1) : value;
+  const indexColumnValues = hasIndex ? value.slice(0, 1) : defaultValue;
+
+  const newState: IColumnState[] = [];
+
+  indexColumnValues.forEach((value, index) => {
+    let column = state[index];
+    column[property] = value
+    newState.push(column);
+  });
+
+  bodyColumnValues.forEach((value, index) => {
+    let column = state[indexColumnValues.length + index];
+    column[property] = value
+    newState.push(column);
+  });
+
+  return newState;
 }
