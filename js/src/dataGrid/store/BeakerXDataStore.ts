@@ -848,9 +848,23 @@ export class BeakerXDataStore {
       }
       break;
 
-//     case UPDATE_COLUMN_HORIZONTAL_ALIGNMENT:
-//       return reduceColumnHorizontalAlignment(state, action);
-//
+    case UPDATE_COLUMN_HORIZONTAL_ALIGNMENT:
+      if (action instanceof DataGridColumnAction) {
+        const {columnType, columnIndex, value} = action.payload;
+        const key = `${columnType}_${columnIndex}`;
+        try {
+          this.store.beginTransaction();
+          let state = schema.get('init').columns;
+          let colStateIdx = state.findIndex(item => item.key == key);
+          let colState = state[colStateIdx];
+          colState.horizontalAlignment = value;
+          schema.update({['init']: {columns: {index: colStateIdx, remove: 1, values: [colState]}}});
+        } finally {
+          this.store.endTransaction();
+        }
+      }
+      break;
+
     case UPDATE_COLUMN_FORMAT_FOR_TIMES:
       if (action instanceof DataGridColumnAction) {
         const {columnType, columnIndex, value} = action.payload;
