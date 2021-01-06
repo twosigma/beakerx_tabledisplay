@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { CellRenderer } from "@phosphor/datagrid";
+import { CellRenderer } from "@lumino/datagrid";
 
 export const cellConfigMock: CellRenderer.ICellConfig = {
   region: "body",
