@@ -20,10 +20,9 @@ import { TableDisplayView } from '../TableDisplayView';
 import { Theme } from '../utils/Theme';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
 import { DataGridContextMenu } from './contextMenu/DataGridContextMenu';
-// import { IDataGridModelState } from './interface/IDataGridModelState';
+import { IDataGridModelState } from './interface/IDataGridModelState';
 import IDataGridScopeOptions from './interface/IDataGridScopeOptions';
 import { ColumnLimitModal } from './modal/ColumnLimitModal';
-// import { selectModel } from './model/selectors';
 import { BeakerXDataStore } from './store/BeakerXDataStore';
 
 export class DataGridScope {
@@ -63,10 +62,9 @@ export class DataGridScope {
     this.initColumnLimitModal();
   }
 
-  // TODO
-  // get state(): IDataGridModelState {
-  //   return this.store.selectModel();
-  // }
+  get state() : IDataGridModelState {
+    return this.store.selectModel();
+  }
 
   render(): void {
     Widget.attach((this.dataGrid as unknown) as Widget, this.element); // todo investigate

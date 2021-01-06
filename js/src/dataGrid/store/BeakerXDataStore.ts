@@ -232,6 +232,10 @@ export class BeakerXDataStore {
     let schema = this.store.get(BEAKERX_SCHEMA);
     return schema.get('init')!.model[0].show_publication;
   }
+  selectModel() {
+    let schema = this.store.get(BEAKERX_SCHEMA);
+    return schema.get('init')!.model[0];
+  }
 
   selectColumnNames() {
     const names = this.selectRawColumnNames();
