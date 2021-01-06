@@ -127,7 +127,7 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
 
   private repaintCellCallback(row: number, column: number) {
     return () => {
-      this.dataGrid.repaintRegion('body', row, row, column, column);
+      this.dataGrid.repaintRegion('body', row, column, row, column);
     };
   }
 
