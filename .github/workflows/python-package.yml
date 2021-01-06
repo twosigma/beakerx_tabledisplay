@@ -68,9 +68,3 @@ jobs:
       with:
         name: screenshots
         path: ${{ github.workspace }}/beakerx_tests/autotests/resources/img/python
-    - name: Publish Test Report
-      if: always()
-      uses: scacap/action-surefire-report@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        report_paths: "**/test-results/test/TEST-*.xml" 
