@@ -162,12 +162,11 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (config.region === 'row-header') {
       return Theme.DEFAULT_DATA_FONT_COLOR;
     }
-
+    
     const dataFontColor =
       this.dataGrid.rowManager.rows[config.row] && this.dataGrid.rowManager.rows[config.row].cells
-        ? DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
+        ? this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor //DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
         : Theme.DEFAULT_DATA_FONT_COLOR;
-
     return config.region === 'column-header' || config.region === 'corner-header'
       ? Theme.DEFAULT_HEADER_FONT_COLOR
       : dataFontColor;
