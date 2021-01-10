@@ -17,11 +17,11 @@
 @import '~@lumino/widgets/style/menu.css';
 
 //Colors
-$alto: #DADADA;
-$gallery: #F0F0F0;
-$silver: #CDCDCD;
-$silverChalice: #A0A0A0;
-$highlightBlue: #39a9ed;
+$alto: var(--jp-layout-color2);
+$gallery: var(--jp-layout-color1);
+$silver: var(--jp-layout-color2);
+$silverChalice: var(--jp-layout-color3);
+$highlightBlue: var(--jp-brand-color0);;
 
 $gridBackgroundColor: $gallery;
 $borderColor: $silverChalice;
@@ -74,7 +74,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
   position: relative;
 
   input {
-    border: 1px solid #ccc;
+    border: 1px solid var(--jp-border-color0);
     padding-right: 20px;
     width: 100%;
   }
@@ -95,7 +95,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
   }
 
   input {
-    border: 1px solid #ccc;
+    border: 1px solid var(--jp-border-color0);
     padding: 0 20px 0 15px;
     width: 100%;
   }
@@ -106,7 +106,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
     bottom: 0;
     height: 14px;
     margin: auto;
-    color: #999999;
+    color: var(--jp-layout-color4);
 
     &.clear-filter {
       right: 5px;
@@ -131,7 +131,7 @@ div.dtmenu {
   overflow: hidden;
 
   &:hover {
-    background-color: #39A9ED;
+    background-color: $highlightBlue;
   }
 }
 
@@ -165,7 +165,7 @@ a.dtmenu {
 }
 
 .menu-separator {
-  border-top: solid 1px #CCC;
+  border-top: solid 1px var(--jp-layout-color4);
 }
 
 .header-text.rotate {
@@ -319,10 +319,10 @@ a.dtmenu {
 }
 
 .bko-table-menu {
-  background-color: #fff;
+  background-color: var(--jp-layout-color1);
   border-radius: 2px;
-  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  -webkit-box-shadow: 0 6px 12px var(--jp-layout-color2);
+  box-shadow: 0 6px 12px var(--jp-layout-color2);
   background-clip: padding-box;
 
   .p-Menu-content {
@@ -338,12 +338,12 @@ a.dtmenu {
       display: block;
       font-weight: normal;
       line-height: 1.42857143;
-      color: #333333;
+      color: var(--jp-ui-font-color1);
       cursor: pointer;
 
       &:hover {
-        color: #262626;
-        background-color: #f5f5f5;
+        color: var(--jp-ui-font-color0);
+        background-color: var(--jp-layout-color1);
       }
     }
 
@@ -382,13 +382,13 @@ a.dtmenu {
         display: block;
         content: "\f0da";
         float: right;
-        color: #333333;
+        color: var(--jp-ui-font-color3);
         margin-top: 2px;
       }
     }
 
     [data-type="separator"] {
-      border-bottom: 1px solid #ccc;
+      border-bottom: 1px solid var(--jp-layout-color4);
       height: 5px;
       min-height: 0;
       overflow: hidden;
@@ -488,8 +488,9 @@ a.dtmenu {
 }
 
 .p-DataGrid-tooltip {
-  background-color: #ffffff;
-  box-shadow: 0 0 3px #333333;
+  color: var(--jp-ui-font-color0);
+  background-color: var(--jp-layout-color2);
+  box-shadow: 0 0 3px var(--jp-layout-color3);
   border-radius: 3px;
   padding: 5px 10px;
   opacity: 0;
@@ -548,7 +549,7 @@ a.dtmenu {
       border-right: $gridBorder;
     }
 
-    .p-ScrollBar-button {
+    /*.p-ScrollBar-button {
       &[data-action='increment'] {
         &:before {
           content: "\f0da";
@@ -560,7 +561,7 @@ a.dtmenu {
           content: "\f0d9";
         }
       }
-    }
+    }*/
   }
 
   &[data-orientation='vertical'] {
@@ -579,7 +580,7 @@ a.dtmenu {
     }
 
 
-    .p-ScrollBar-button {
+    /*.p-ScrollBar-button {
       &[data-action='increment'] {
         &:before {
           content: "\f0d7";
@@ -591,7 +592,7 @@ a.dtmenu {
           content: "\f0d8";
         }
       }
-    }
+    }*/
   }
 }
 
@@ -630,5 +631,5 @@ a.dtmenu {
 
 .bko-dragged-header {
   position: absolute;
-  box-shadow: 0 0 3px #262626;
+  box-shadow: 0 0 3px var(--jp-layout-color4);
 }

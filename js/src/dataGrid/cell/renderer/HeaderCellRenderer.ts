@@ -21,12 +21,11 @@ import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 export class HeaderCellRenderer extends BeakerXCellRenderer {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getBackgroundColor(config: CellRenderer.CellConfig): string {
-    return Theme.DEFAULT_CELL_BACKGROUND;
+    return Theme.DEFAULT_HEADER_BACKGROUND;
   }
 
   drawText(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     const options = this.getOptions(config);
-
     if (!options.font || !options.color || options.boxHeight <= 0 || options.text === null) {
       return;
     }
