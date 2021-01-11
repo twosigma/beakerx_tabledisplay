@@ -115,4 +115,8 @@ export class DataGridScope {
   setInitialSize() {
     this.dataGrid.setInitialSize();
   }
+
+  computeCSSVariablesAndRedraw() {
+    this.dataGrid.style = Theme.getStyle();
+  }
 }

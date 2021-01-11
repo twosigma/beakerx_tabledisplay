@@ -113,6 +113,8 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
         throw 'unreachable';
     }
 
+    console.debug(color);
+
     gc.beginPath();
     gc.moveTo(underlineStartX, textY - 0.5);
     gc.lineTo(underlineEndX, textY - 0.5);
@@ -165,7 +167,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     
     const dataFontColor =
       this.dataGrid.rowManager.rows[config.row] && this.dataGrid.rowManager.rows[config.row].cells
-        ? this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor //DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
+        ? DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
         : Theme.DEFAULT_DATA_FONT_COLOR;
     return config.region === 'column-header' || config.region === 'corner-header'
       ? Theme.DEFAULT_HEADER_FONT_COLOR

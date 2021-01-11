@@ -17,20 +17,48 @@
 import * as beakerx_tabledisplay from './index';
 require('../css/table_display.css');
 import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application';
-import { IJupyterWidgetRegistry } from '@jupyter-widgets/base';
+import { IThemeManager } from '@jupyterlab/apputils';
+import { IJupyterWidgetRegistry, WidgetView } from '@jupyter-widgets/base';
 import { BEAKERX_MODULE_VERSION } from './version';
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'beakerx_tabledisplay:plugin',
   requires: [IJupyterWidgetRegistry],
-  activate: (app: JupyterFrontEnd, widgets: IJupyterWidgetRegistry): void => {
+  optional: [IThemeManager],
+  autoStart: true,
+  activate: (app: JupyterFrontEnd, widgets: IJupyterWidgetRegistry, themeManager: IThemeManager | null): void => {
+    class TableDisplayView extends beakerx_tabledisplay.TableDisplayView {
+      constructor(options?: WidgetView.InitializeParameters) {
+        super(options);
+        
+        if (themeManager) {
+          themeManager.themeChanged.connect(this._onThemeChanged, this);
+        }
+      }
+    
+      protected _onThemeChanged(): void {
+        // Recompute CSS variables and redraw
+        this.currentScope.computeCSSVariablesAndRedraw();
+      }
+    
+      public remove(): void {
+        if (themeManager) {
+          themeManager.themeChanged.disconnect(this._onThemeChanged, this);
+        }
+        return super.remove();
+      }
+    }
+
     widgets.registerWidget({
       name: 'beakerx_tabledisplay',
       version: BEAKERX_MODULE_VERSION,
-      exports: beakerx_tabledisplay,
+      exports: {
+        TableDisplayModel: beakerx_tabledisplay.TableDisplayModel,
+        TableDisplayView
+      }
     });
-  },
-  autoStart: true,
+    
+  }
 };
 
 export default [plugin] as JupyterFrontEndPlugin<any>[];
