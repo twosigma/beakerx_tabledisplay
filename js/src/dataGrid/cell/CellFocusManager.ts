@@ -18,6 +18,7 @@ import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { DataGridColumn } from '../column/DataGridColumn';
+import { COLUMN_TYPES } from '../column/enums';
 import { KEYBOARD_KEYS } from '../event/enums';
 import { ICellData } from '../interface/ICell';
 
@@ -66,16 +67,18 @@ export class CellFocusManager {
 
   getFocussedCellBackground(config: CellRenderer.CellConfig): string {
     const cellType = DataGridColumn.getColumnTypeByRegion(config.region, config.column);
-
-    if (!this.focusedCellData || cellType !== this.focusedCellData.type) {
-      return Theme.DEFAULT_CELL_BACKGROUND;
+    
+    if (!this.focusedCellData) {
+      return cellType === COLUMN_TYPES.index ?
+        Theme.DEFAULT_HEADER_BACKGROUND :
+        Theme.DEFAULT_COLOR;
     }
-
+    
     return config.row === this.focusedCellData.row &&
       config.column === this.focusedCellData.column &&
       config.region === this.focusedCellData.region
       ? Theme.FOCUSED_CELL_BACKGROUND
-      : Theme.DEFAULT_CELL_BACKGROUND;
+      : Theme.DEFAULT_COLOR;
   }
 
   private setRightFocusedCell() {
