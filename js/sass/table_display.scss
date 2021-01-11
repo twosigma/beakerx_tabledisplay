@@ -95,6 +95,8 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
   }
 
   input {
+    color: var(--jp-layout-color4);
+    background-color: var(--jp-layout-color0);
     border: 1px solid var(--jp-border-color0);
     padding: 0 20px 0 15px;
     width: 100%;
@@ -114,12 +116,13 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 
       &:hover {
         opacity: 0.8;
+        color: $highlightBlue;
       }
     }
 
     &.filter-icon {
-      cursor: auto;
       left: 3px;
+      cursor: auto;
     }
   }
 }

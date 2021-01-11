@@ -15,10 +15,11 @@
  */
 
 import { DataGrid } from '@lumino/datagrid';
+import { CommonUtils } from './CommonUtils';
 
 const defaults: { [keys: string]: string; } = {
-  '--jp-layout-color0': 'white',
-  '--jp-layout-color1': 'white',
+  '--jp-layout-color0': '#ffffff',
+  '--jp-layout-color1': '#ffffff',
   '--jp-layout-color2': '#eeeeee',
   '--jp-layout-color3': '#bdbdbd',
   '--jp-layout-color4': '#757575',
@@ -57,9 +58,27 @@ const defaults: { [keys: string]: string; } = {
 
 };
 
+export function formatColor(color: string): string {
+  const match = color.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(\d+\.?\d*)\)/);
+  if (match) {
+    const r: number = Math.ceil(Number.parseInt(match[1], 10));
+    const g: number = Math.ceil(Number.parseInt(match[2], 10));
+    const b: number = Math.ceil(Number.parseInt(match[3], 10));
+    const a: number = Math.ceil(Number.parseInt(match[4], 10));
+    const hexColor = CommonUtils.rgbaToHex(r, g, b, a);
+    return hexColor;
+  } else {
+    return color;
+  }
+}
+
 export function evaluateCSSVariable(name: string) {
   const value = window.getComputedStyle(document.documentElement).getPropertyValue(name);
-  return value ? value : defaults[name];
+  if (value) {
+    return formatColor(value);
+  } else {
+    return defaults[name];
+  }
 }
 
 export class Theme {

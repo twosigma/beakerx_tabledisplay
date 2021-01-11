@@ -43,6 +43,10 @@ export class TableDisplayView extends widgets.DOMWidgetView implements TableDisp
     });
   }
 
+  protected get currentScope(): DataGridScope {
+    return this._currentScope;
+  }
+
   handleModelUpdate(model, value, options): void {
     let shouldReset = options.shouldResetModel==undefined || options.shouldResetModel;
     if (shouldReset){
