@@ -66,7 +66,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (renderer && renderer.type === RENDERER_TYPE.DataBars && !isHeaderCell) {
       const barWidth = (config.width / 2) * renderer.percent;
 
-      gc.fillStyle = Theme.DEFAULT_HIGHLIGHT_COLOR;
+      gc.fillStyle = Theme.DATA_BARS_COLOR;
       gc.fillRect(
         config.x + config.width / 2 - (renderer.direction === 'RIGHT' ? 0 : barWidth),
         config.y,
@@ -130,11 +130,10 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
 
     return (
-      (focusedColor && initialColor && DataGridStyle.darken(initialColor)) ||
       focusedColor ||
-      initialColor ||
-      highlighterColor ||
       selectionColor ||
+      highlighterColor ||
+      initialColor ||
       Theme.DEFAULT_CELL_BACKGROUND
     );
   }
