@@ -113,8 +113,6 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
         throw 'unreachable';
     }
 
-    console.debug(color);
-
     gc.beginPath();
     gc.moveTo(underlineStartX, textY - 0.5);
     gc.lineTo(underlineEndX, textY - 0.5);
@@ -128,13 +126,13 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     const highlighterColor = this.dataGrid.highlighterManager.getCellBackground(config);
     const focusedColor = this.dataGrid.cellFocusManager.getFocussedCellBackground(config);
     const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
-
+    
     return (
       focusedColor ||
       selectionColor ||
       highlighterColor ||
       initialColor ||
-      Theme.DEFAULT_CELL_BACKGROUND
+      Theme.DEFAULT_COLOR
     );
   }
 
@@ -160,17 +158,23 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
   }
 
   getTextColor(config): string {
-    if (config.region === 'row-header') {
-      return Theme.DEFAULT_DATA_FONT_COLOR;
+    if (
+      config.region === 'row-header' ||
+      config.region === 'column-header' ||
+      config.region === 'corner-header'
+    ) {
+      return Theme.DEFAULT_HEADER_FONT_COLOR;
     }
     
-    const dataFontColor =
-      this.dataGrid.rowManager.rows[config.row] && this.dataGrid.rowManager.rows[config.row].cells
-        ? DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
-        : Theme.DEFAULT_DATA_FONT_COLOR;
-    return config.region === 'column-header' || config.region === 'corner-header'
-      ? Theme.DEFAULT_HEADER_FONT_COLOR
-      : dataFontColor;
+    if (
+      config.region === 'body' &&
+      this.dataGrid.rowManager.rows[config.row] &&
+      this.dataGrid.rowManager.rows[config.row].cells
+    ) {
+      return DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor);
+    } 
+
+    return Theme.DEFAULT_DATA_FONT_COLOR;
   }
 
   getRenderer(config: CellRenderer.CellConfig): IRenderer | undefined {
@@ -195,7 +199,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (!result.font) {
       return result;
     }
-
+    
     // Resolve the text color for the cell.
     result.color = CellRenderer.resolveOption(this.textColor, config);
 

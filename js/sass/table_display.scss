@@ -18,15 +18,15 @@
 
 //Colors
 $alto: var(--jp-layout-color2);
-$gallery: var(--jp-layout-color1);
+$gallery: var(--jp-layout-color0);
 $silver: var(--jp-layout-color2);
 $silverChalice: var(--jp-layout-color3);
 $highlightBlue: var(--jp-brand-color0);;
 
-$gridBackgroundColor: $gallery;
-$borderColor: var(--jp-border-color0);
-$buttonActive: $silver;
-$gridBorder: 1px solid $borderColor;
+$gridBackgroundColor: var(--jp-layout-color0);
+$borderColor: var(--jp-border-color3);
+$buttonActive: var(--jp-layout-color4);
+$gridBorder: 1px solid var(--jp-border-color3);
 $tooltipTransition: opacity 300ms ease-in-out 300ms;
 $sortAscendingIconBlue: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgaGVpZ2h0PSI2NCIgd2lkdGg9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPg0KICA8cG9seWdvbiBmaWxsPSIjNmJhMmM3IiBwb2ludHM9IjMwLDQgNCw2MCA2MCw2MCI+PC9wb2x5Z29uPg0KPC9zdmc+DQo=');
 $sortDescendingIconBlue: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNjQiIHdpZHRoPSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8cG9seWdvbiBmaWxsPSIjNmJhMmM3IiBwb2ludHM9IjMwLDYwIDYwLDQgNCw0Ij48L3BvbHlnb24+Cjwvc3ZnPgo=');
@@ -73,7 +73,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 .input-clear-growing {
   position: relative;
   background-color: var(--jp-layout-color0);
-  border: 1px solid $borderColor;
+  border: $gridBorder;
 
   input {
     width: 85%;
@@ -113,7 +113,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
     bottom: 0;
     height: 14px;
     margin: auto;
-    color: var(--jp-layout-color4);
+    color: var(--jp-ui-font-color0);
 
     &.clear-filter {
       right: 5px;
@@ -173,7 +173,7 @@ a.dtmenu {
 }
 
 .menu-separator {
-  border-top: solid 1px var(--jp-layout-color4);
+  border-top: $gridBorder;
 }
 
 .header-text.rotate {
@@ -396,7 +396,7 @@ a.dtmenu {
     }
 
     [data-type="separator"] {
-      border-bottom: 1px solid var(--jp-layout-color4);
+      border-bottom: $gridBorder;
       height: 5px;
       min-height: 0;
       overflow: hidden;
@@ -517,6 +517,7 @@ a.dtmenu {
 
 .p-DataGrid-viewport {
   border: $gridBorder;
+  background-color: $gridBackgroundColor;
 }
 
 .p-DataGrid-scrollCorner {
@@ -536,6 +537,8 @@ a.dtmenu {
 }
 
 .p-ScrollBar {
+  background-color: $gallery;
+
   .p-ScrollBar-button {
     font: normal normal normal 14px/1 FontAwesome;
     text-align: center;
@@ -545,9 +548,8 @@ a.dtmenu {
     min-height: 16px;
     max-height: 16px;
     min-width: 45px;
-    border-bottom: $gridBorder;
-    border-left: $gridBorder;
-    border-right: $gridBorder;
+    border: $gridBorder;
+    border-top: none;
 
     .p-ScrollBar-thumb {
       height: 100%;
@@ -555,29 +557,14 @@ a.dtmenu {
       border-left: $gridBorder;
       border-right: $gridBorder;
     }
-
-    /*.p-ScrollBar-button {
-      &[data-action='increment'] {
-        &:before {
-          content: "\f0da";
-        }
-      }
-
-      &[data-action='decrement'] {
-        &:before {
-          content: "\f0d9";
-        }
-      }
-    }*/
   }
 
   &[data-orientation='vertical'] {
     min-width: 16px;
     max-width: 16px;
     min-height: 45px;
-    border-right: $gridBorder;
-    border-top: $gridBorder;
-    border-bottom: $gridBorder;
+    border: $gridBorder;
+    border-left: none;
 
     .p-ScrollBar-thumb {
       width: 100%;
@@ -585,21 +572,20 @@ a.dtmenu {
       border-top: $gridBorder;
       border-bottom: $gridBorder;
     }
+  }
+}
 
+.lm-ScrollBar {
+  background-color: $gallery;
 
-    /*.p-ScrollBar-button {
-      &[data-action='increment'] {
-        &:before {
-          content: "\f0d7";
-        }
-      }
+  &[data-orientation='horizontal'] {
+    border: $gridBorder;
+    border-top: none;
+  }
 
-      &[data-action='decrement'] {
-        &:before {
-          content: "\f0d8";
-        }
-      }
-    }*/
+  &[data-orientation='vertical'] {
+    border: $gridBorder;
+    border-left: none;
   }
 }
 

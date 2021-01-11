@@ -30,6 +30,11 @@ const defaults: { [keys: string]: string; } = {
   '--jp-inverse-layout-color3': '#616161',
   '--jp-inverse-layout-color4': '#757575',
 
+  '--jp-border-color0': '#9e9e9e',
+  '--jp-border-color1': '#bdbdbd',
+  '--jp-border-color2': '#e0e0e0',
+  '--jp-border-color3': '#eeeeee',
+
   '--jp-ui-font-color0': '#00000000',
   '--jp-ui-font-color1': '#000000CC',
   '--jp-ui-font-color2': '#0000007F',
@@ -51,6 +56,21 @@ const defaults: { [keys: string]: string; } = {
   '--jp-accent-color2': '#81c784',
   '--jp-accent-color3': '#c8e6c9',
 
+  '--jp-warn-color0': '#f57c00',
+  '--jp-warn-color1': '#ff9800',
+  '--jp-warn-color2': '#ffb74d',
+  '--jp-warn-color3': '#ffe0b2',
+
+  '--jp-error-color0': '#d32f2f',
+  '--jp-error-color1': '#f44336',
+  '--jp-error-color2': '#e57373',
+  '--jp-error-color3': '#ffcdd2',
+
+  '--jp-success-color0': '#388e3c',
+  '--jp-success-color1': '#4caf50',
+  '--jp-success-color2': '#81c784',
+  '--jp-success-color3': '#c8e6c9',
+
   '--jp-info-color0': '#0097a7',
   '--jp-info-color1': '#00bcd4',
   '--jp-info-color2': '#4dd0e1',
@@ -59,7 +79,7 @@ const defaults: { [keys: string]: string; } = {
   '--md-blue-A100': '#82b1ff',
   '--md-blue-A200': '#448aff',
   '--md-blue-A400': '#2979ff',
-  '--md-blue-A700': '#2962ff'
+  '--md-blue-A700': '#2962ff',
 
 };
 
@@ -74,6 +94,7 @@ export function formatColor(color: string): string {
     return hexColor;
   } else {
     return color;
+    
   }
 }
 
@@ -87,20 +108,16 @@ export function evaluateCSSVariable(name: string) {
 }
 
 export class Theme {
-  public static get isDark(): boolean {
-    return document.body.getAttribute('data-jp-theme-light') == 'false';
-  }
-
-  public static getStyle(): DataGrid.Style & { isDark: boolean } {
+  public static getStyle(): DataGrid.Style {
     return {
       ...DataGrid.defaultStyle,
-      voidColor: evaluateCSSVariable('--jp-layout-color1'),
-      backgroundColor: evaluateCSSVariable('--jp-layout-color0'),
-      headerBackgroundColor: evaluateCSSVariable('--jp-layout-color2'),
+      voidColor: evaluateCSSVariable('--jp-layout-color0'),
+      backgroundColor: evaluateCSSVariable('--jp-layout-color1'),
       rowBackgroundColor: (i) => (i % 2 === 0 ? evaluateCSSVariable('--jp-layout-color1') : evaluateCSSVariable('--jp-layout-color2')),
-      gridLineColor: evaluateCSSVariable('--jp-layout-color3'),
-      headerGridLineColor: evaluateCSSVariable('--jp-layout-color4'),
-      isDark: this.isDark,
+      gridLineColor: evaluateCSSVariable('--jp-border-color3'),
+      
+      headerBackgroundColor: evaluateCSSVariable('--jp-layout-color3'),
+      headerGridLineColor: evaluateCSSVariable('--jp-border-color3'),
     };
   }
 
@@ -110,7 +127,11 @@ export class Theme {
   }
 
   public static get DEFAULT_HEADER_BACKGROUND(): string {
-    return evaluateCSSVariable('--jp-layout-color2');
+    return evaluateCSSVariable('--jp-layout-color3');
+  }
+
+  public static get DEFAULT_COLOR(): string {
+    return '';
   }
 
   // Cell color
@@ -119,7 +140,7 @@ export class Theme {
   }
 
   public static get DEFAULT_CELL_BACKGROUND(): string {
-    return '';// evaluateCSSVariable('--jp-layout-color0');
+    return evaluateCSSVariable('--jp-layout-color1');
   }
 
   public static get FOCUSED_CELL_BACKGROUND(): string {
@@ -135,22 +156,22 @@ export class Theme {
   }
 
   public static get DEFAULT_HIGHLIGHT_COLOR(): string {
-    return evaluateCSSVariable('--jp-inverse-layout-color0');
+    return evaluateCSSVariable('--jp-warn-color1');
   }
 
   public static get HIGHLIGHTED_CELL_BACKGROUND_EVEN(): string {
-    return evaluateCSSVariable('--jp-layout-color3');
+    return evaluateCSSVariable('--jp-success-color1');
   }
 
   public static get HIGHLIGHTED_CELL_BACKGROUND_ODD(): string {
-    return evaluateCSSVariable('--jp-layout-color2');
+    return evaluateCSSVariable('--jp-info-color1');
   }
 
   public static get MIN_LIGHTNESS_VALUE(): number {
-    return this.isDark ? 15 : 35;
+    return 25;
   }
 
   public static get MIN_SATURATION_VALUE(): number {
-    return this.isDark ? 15 : 35;
+    return 25;
   }
 }

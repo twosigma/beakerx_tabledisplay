@@ -35,7 +35,7 @@ export class UniqueEntriesHighlighter extends Highlighter {
   }
 
   getBackgroundColor(config: CellRenderer.CellConfig) {
-    return this.uniqueColors[this.getValueToHighlight(config)] || Theme.DEFAULT_CELL_BACKGROUND;
+    return this.uniqueColors[this.getValueToHighlight(config)] || Theme.DEFAULT_COLOR;
   }
 
   generateUniqueValues() {

@@ -38,7 +38,7 @@ export class Highlighter {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getBackgroundColor(config: CellRenderer.CellConfig) {
-    return Theme.DEFAULT_CELL_BACKGROUND;
+    return Theme.DEFAULT_COLOR;
   }
 
   getValueToHighlight(config: CellRenderer.CellConfig) {

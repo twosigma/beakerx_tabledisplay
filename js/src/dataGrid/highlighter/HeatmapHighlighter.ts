@@ -43,7 +43,7 @@ export class HeatmapHighlighter extends Highlighter {
       return this.colorScale(value);
     }
     if (isNaN(value)) {
-      return Theme.DEFAULT_CELL_BACKGROUND;
+      return Theme.DEFAULT_COLOR;
     }
     return this.colorScale(value);
   }

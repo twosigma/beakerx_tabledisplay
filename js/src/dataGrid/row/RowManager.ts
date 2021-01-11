@@ -72,7 +72,6 @@ export class RowManager {
 
   private defineFontFun(store: BeakerXDataStore, data) {
     const fontColors = store.selectFontColor();
-
     if (fontColors && fontColors.length == data.length) {
       return (row: number, col: number): string => fontColors[row][col];
     } else {
