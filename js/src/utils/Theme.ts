@@ -54,7 +54,12 @@ const defaults: { [keys: string]: string; } = {
   '--jp-info-color0': '#0097a7',
   '--jp-info-color1': '#00bcd4',
   '--jp-info-color2': '#4dd0e1',
-  '--jp-info-color3': '#b2ebf2'
+  '--jp-info-color3': '#b2ebf2',
+
+  '--md-blue-A100': '#82b1ff',
+  '--md-blue-A200': '#448aff',
+  '--md-blue-A400': '#2979ff',
+  '--md-blue-A700': '#2962ff'
 
 };
 
@@ -123,6 +128,10 @@ export class Theme {
 
   public static get SELECTED_CELL_BACKGROUND(): string {
     return evaluateCSSVariable('--jp-info-color0');
+  }
+
+  public static get DATA_BARS_COLOR(): string {
+    return evaluateCSSVariable('--md-blue-A200');
   }
 
   public static get DEFAULT_HIGHLIGHT_COLOR(): string {
