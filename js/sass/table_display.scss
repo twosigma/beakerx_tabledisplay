@@ -18,13 +18,13 @@
 
 //Colors
 $alto: var(--jp-layout-color2);
-$gallery: var(--jp-layout-color0);
+$gallery: var(--jp-layout-color2);
 $silver: var(--jp-layout-color2);
 $silverChalice: var(--jp-layout-color3);
 $highlightBlue: var(--jp-brand-color0);;
 
 $gridBackgroundColor: var(--jp-layout-color0);
-$borderColor: var(--jp-border-color3);
+$borderColor: var(--jp-border-color4);
 $buttonActive: var(--jp-layout-color4);
 $gridBorder: 1px solid var(--jp-border-color3);
 $tooltipTransition: opacity 300ms ease-in-out 300ms;
@@ -521,7 +521,7 @@ a.dtmenu {
 }
 
 .p-DataGrid-scrollCorner {
-  background-color: $gridBackgroundColor;
+  background-color: $gallery;
   border-right: $gridBorder;
   border-bottom: $gridBorder;
 }
@@ -625,5 +625,5 @@ a.dtmenu {
 
 .bko-dragged-header {
   position: absolute;
-  box-shadow: 0 0 3px var(--jp-layout-color4);
+  box-shadow: 0 0 3px var(--jp-layout-color2);
 }
