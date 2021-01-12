@@ -119,21 +119,21 @@ export class Theme {
 
   public static updateStyle(): void {
     // Header color
-    this.DEFAULT_HEADER_FONT_COLOR = evaluateCSSVariable('--jp-ui-font-color1');
-    this.DEFAULT_HEADER_BACKGROUND = evaluateCSSVariable('--jp-layout-color3');
-    this.DEFAULT_COLOR = '';
+    this._default_header_font_color = evaluateCSSVariable('--jp-ui-font-color1');
+    this._default_header_background = evaluateCSSVariable('--jp-layout-color3');
+    this._default_color = '';
 
     // Cell color
-    this.DEFAULT_DATA_FONT_COLOR = evaluateCSSVariable('--jp-ui-font-color0');
-    this.DEFAULT_CELL_BACKGROUND = evaluateCSSVariable('--jp-layout-color1');
-    this.FOCUSED_CELL_BACKGROUND = evaluateCSSVariable('--jp-accent-color2');
-    this.SELECTED_CELL_BACKGROUND = evaluateCSSVariable('--jp-brand-color1');
-    this.DATA_BARS_COLOR = evaluateCSSVariable('--md-blue-A200');
-    this.DEFAULT_HIGHLIGHT_COLOR = evaluateCSSVariable('--jp-warn-color0');
-    this.HIGHLIGHTED_CELL_BACKGROUND_EVEN = evaluateCSSVariable('--jp-layout-color3');
-    this.HIGHLIGHTED_CELL_BACKGROUND_ODD = evaluateCSSVariable('--jp-layout-color4');
-    this.MIN_LIGHTNESS_VALUE = 25;
-    this.MIN_SATURATION_VALUE = 25;
+    this._default_data_font_color = evaluateCSSVariable('--jp-ui-font-color0');
+    this._default_cell_background = evaluateCSSVariable('--jp-layout-color1');
+    this._focused_cell_backgraund = evaluateCSSVariable('--jp-accent-color2');
+    this._selected_cell_backgraund = evaluateCSSVariable('--jp-brand-color1');
+    this._data_bars_color = evaluateCSSVariable('--md-blue-A200');
+    this._default_highlight = evaluateCSSVariable('--jp-warn-color0');
+    this._highlighted_cell_dackgraund_even = evaluateCSSVariable('--jp-layout-color3');
+    this._highlighted_cell_dackgraund_odd = evaluateCSSVariable('--jp-layout-color4');
+    this._min_lightness_value = 25;
+    this._min_saturation_value = 25;
   }
 
   public static getStyle(): DataGrid.Style {
@@ -153,19 +153,62 @@ export class Theme {
   }
 
   // Header color
-  public static DEFAULT_HEADER_FONT_COLOR: string = evaluateCSSVariable('--jp-ui-font-color1');
-  public static DEFAULT_HEADER_BACKGROUND: string = evaluateCSSVariable('--jp-layout-color3');
-  public static DEFAULT_COLOR: string = '';
+  public static get DEFAULT_HEADER_FONT_COLOR(): string {
+    return this._default_header_font_color;
+  }
+  public static get DEFAULT_HEADER_BACKGROUND(): string {
+    return this._default_header_background;
+  }
+  public static get DEFAULT_COLOR(): string {
+    return this._default_color;
+  }
 
   // Cell color
-  public static DEFAULT_DATA_FONT_COLOR: string = evaluateCSSVariable('--jp-ui-font-color0');
-  public static DEFAULT_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-layout-color1');
-  public static FOCUSED_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-accent-color2');
-  public static SELECTED_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-brand-color1');
-  public static DATA_BARS_COLOR: string = evaluateCSSVariable('--md-blue-A200');
-  public static DEFAULT_HIGHLIGHT_COLOR: string = evaluateCSSVariable('--jp-warn-color0');
-  public static HIGHLIGHTED_CELL_BACKGROUND_EVEN: string = evaluateCSSVariable('--jp-layout-color3');
-  public static HIGHLIGHTED_CELL_BACKGROUND_ODD: string = evaluateCSSVariable('--jp-layout-color4');
-  public static MIN_LIGHTNESS_VALUE: number = 25;
-  public static MIN_SATURATION_VALUE: number = 25;
+  public static get DEFAULT_DATA_FONT_COLOR(): string {
+    return this._default_data_font_color;
+  }
+  public static get DEFAULT_CELL_BACKGROUND(): string {
+    return this._default_cell_background;
+  }
+  public static get FOCUSED_CELL_BACKGROUND(): string {
+    return this._focused_cell_backgraund;
+  }
+  public static get SELECTED_CELL_BACKGROUND(): string {
+    return this._selected_cell_backgraund;
+  }
+  public static get DATA_BARS_COLOR(): string {
+    return this._data_bars_color;
+  }
+  public static get DEFAULT_HIGHLIGHT_COLOR(): string {
+    return this._default_highlight;
+  }
+  public static get HIGHLIGHTED_CELL_BACKGROUND_EVEN(): string {
+    return this._highlighted_cell_dackgraund_even;
+  }
+  public static get HIGHLIGHTED_CELL_BACKGROUND_ODD(): string {
+    return this._highlighted_cell_dackgraund_odd;
+  }
+  public static get MIN_LIGHTNESS_VALUE(): number {
+    return this._min_lightness_value;
+  }
+  public static get MIN_SATURATION_VALUE(): number {
+    return this._min_saturation_value;
+  }
+
+  // Header color
+  private static _default_header_font_color: string;
+  private static _default_header_background: string;
+  private static _default_color: string;
+
+  // Cell color
+  private static _default_data_font_color: string;
+  private static _default_cell_background: string;
+  private static _focused_cell_backgraund: string;
+  private static _selected_cell_backgraund: string;
+  private static _data_bars_color: string;
+  private static _default_highlight: string;
+  private static _highlighted_cell_dackgraund_even: string;
+  private static _highlighted_cell_dackgraund_odd: string;
+  private static _min_lightness_value: number;
+  private static _min_saturation_value: number;
 }

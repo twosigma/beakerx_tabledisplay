@@ -20,6 +20,7 @@ import { JupyterFrontEnd, JupyterFrontEndPlugin } from '@jupyterlab/application'
 import { IThemeManager } from '@jupyterlab/apputils';
 import { IJupyterWidgetRegistry, WidgetView } from '@jupyter-widgets/base';
 import { BEAKERX_MODULE_VERSION } from './version';
+import { Theme } from './utils/Theme';
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'beakerx_tabledisplay:plugin',
@@ -31,6 +32,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       constructor(options?: WidgetView.InitializeParameters) {
         super(options);
         
+        Theme.updateStyle();
         if (themeManager) {
           themeManager.themeChanged.connect(this._onThemeChanged, this);
         }

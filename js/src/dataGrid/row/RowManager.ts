@@ -76,7 +76,7 @@ export class RowManager {
       return (row: number, col: number): string => fontColors[row][col];
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return (row: number, col: number): string => { return Theme.DEFAULT_DATA_FONT_COLOR; }
+      return (row: number, col: number): string => Theme.DEFAULT_COLOR;
     }
   }
 

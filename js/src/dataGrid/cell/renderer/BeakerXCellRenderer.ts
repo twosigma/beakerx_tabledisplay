@@ -169,7 +169,8 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (
       config.region === 'body' &&
       this.dataGrid.rowManager.rows[config.row] &&
-      this.dataGrid.rowManager.rows[config.row].cells
+      this.dataGrid.rowManager.rows[config.row].cells &&
+      this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor
     ) {
       return DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor);
     } 
