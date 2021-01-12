@@ -119,7 +119,7 @@ export class DataGridScope {
   computeCSSVariablesAndRedraw() {
     Theme.updateStyle();
     this.dataGrid.style = Theme.getStyle();
-    this.dataGrid.rowManager.createRows(this.store, this.store.selectHasIndex());
-    this.dataGrid.update();
+    //this.dataGrid.rowManager.createRows(this.store, this.store.selectHasIndex());
+    //this.dataGrid.update();
   }
 }

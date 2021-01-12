@@ -17,16 +17,16 @@
 @import '~@lumino/widgets/style/menu.css';
 
 //Colors
-$alto: var(--jp-layout-color2);
-$gallery: var(--jp-layout-color2);
-$silver: var(--jp-layout-color2);
-$silverChalice: var(--jp-layout-color3);
-$highlightBlue: var(--jp-brand-color0);;
+$background: var(--jp-layout-color0);// on hover scroll bar button
+$backgroundDetail: var(--jp-layout-color2);
+$shadow: var(--jp-inverse-layout-color0);
+$buttonBackground: var(--jp-layout-color2);
+$buttonDetail: var(--jp-layout-color3);
+$buttonHover: var(--jp-layout-color4);
+$border: var(--jp-border-color0);
+$font: var(--jp-ui-font-color0);
 
-$gridBackgroundColor: var(--jp-layout-color0);
-$borderColor: var(--jp-border-color4);
-$buttonActive: var(--jp-layout-color4);
-$gridBorder: 1px solid var(--jp-border-color3);
+$gridBorder: 1px solid $border;
 $tooltipTransition: opacity 300ms ease-in-out 300ms;
 $sortAscendingIconBlue: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgaGVpZ2h0PSI2NCIgd2lkdGg9IjY0IiB2aWV3Qm94PSIwIDAgNjQgNjQiPg0KICA8cG9seWdvbiBmaWxsPSIjNmJhMmM3IiBwb2ludHM9IjMwLDQgNCw2MCA2MCw2MCI+PC9wb2x5Z29uPg0KPC9zdmc+DQo=');
 $sortDescendingIconBlue: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIGhlaWdodD0iNjQiIHdpZHRoPSI2NCIgdmlld0JveD0iMCAwIDY0IDY0Ij4KICA8cG9seWdvbiBmaWxsPSIjNmJhMmM3IiBwb2ludHM9IjMwLDYwIDYwLDQgNCw0Ij48L3BvbHlnb24+Cjwvc3ZnPgo=');
@@ -72,14 +72,14 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 
 .input-clear-growing {
   position: relative;
-  background-color: var(--jp-layout-color0);
+  background-color: $background;
   border: $gridBorder;
 
   input {
     width: 85%;
     padding-left: 20px;
-    color: var(--jp-ui-font-color0);
-    background-color: var(--jp-layout-color0);
+    color: $font;
+    background-color: $background;
     border: none;
   }
 
@@ -90,7 +90,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 
 .input-clear {
   position: relative;
-  background-color: var(--jp-layout-color0);
+  background-color: $background;
 
   &.editing {
     position: absolute;
@@ -102,8 +102,8 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
   input {
     width: 85%;
     padding-left: 20px;
-    color: var(--jp-ui-font-color0);
-    background-color: var(--jp-layout-color0);
+    color: $font;
+    background-color: $background;
     border: none;
   }
 
@@ -113,7 +113,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
     bottom: 0;
     height: 14px;
     margin: auto;
-    color: var(--jp-ui-font-color0);
+    color: $font;
 
     &.clear-filter {
       right: 5px;
@@ -121,7 +121,7 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 
       &:hover {
         opacity: 0.8;
-        color: $highlightBlue;
+        color: $buttonHover;
       }
     }
 
@@ -139,7 +139,7 @@ div.dtmenu {
   overflow: hidden;
 
   &:hover {
-    background-color: $highlightBlue;
+    background-color: $buttonHover;
   }
 }
 
@@ -327,7 +327,7 @@ a.dtmenu {
 }
 
 .bko-table-menu {
-  background-color: var(--jp-layout-color1);
+  background-color: $background;
   border-radius: 2px;
   -webkit-box-shadow: 0 6px 12px var(--jp-layout-color2);
   box-shadow: 0 6px 12px var(--jp-layout-color2);
@@ -346,12 +346,12 @@ a.dtmenu {
       display: block;
       font-weight: normal;
       line-height: 1.42857143;
-      color: var(--jp-ui-font-color1);
+      color: $font;
       cursor: pointer;
 
       &:hover {
-        color: var(--jp-ui-font-color0);
-        background-color: var(--jp-layout-color1);
+        color: $font;
+        background-color: $buttonHover;
       }
     }
 
@@ -390,7 +390,7 @@ a.dtmenu {
         display: block;
         content: "\f0da";
         float: right;
-        color: var(--jp-ui-font-color3);
+        color: $font;
         margin-top: 2px;
       }
     }
@@ -444,7 +444,7 @@ a.dtmenu {
     padding: 0;
 
     &:hover {
-      background-color: $highlightBlue;
+      background-color: $buttonHover;
       background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAWCAYAAADjGu3TAAAAI0lEQVQoFWP8DwQMWAATFjGwED0kcNmNW5xx1B/ogUPFiAIAYSAMFvNwTdIAAAAASUVORK5CYII=');
     }
 
@@ -496,9 +496,9 @@ a.dtmenu {
 }
 
 .p-DataGrid-tooltip {
-  color: var(--jp-ui-font-color0);
-  background-color: var(--jp-layout-color2);
-  box-shadow: 0 0 3px var(--jp-layout-color3);
+  color: $font;
+  background-color: $backgroundDetail;
+  box-shadow: 0 0 2px $shadow;
   border-radius: 3px;
   padding: 5px 10px;
   opacity: 0;
@@ -517,11 +517,11 @@ a.dtmenu {
 
 .p-DataGrid-viewport {
   border: $gridBorder;
-  background-color: $gridBackgroundColor;
+  background-color: $background;
 }
 
 .p-DataGrid-scrollCorner {
-  background-color: $gallery;
+  background-color: $backgroundDetail;
   border-right: $gridBorder;
   border-bottom: $gridBorder;
 }
@@ -533,11 +533,11 @@ a.dtmenu {
   left: 0;
   width: 1px;
   height: 1px;
-  background-color: $borderColor;
+  background-color: $backgroundDetail;
 }
 
 .p-ScrollBar {
-  background-color: $gallery;
+  background-color: $backgroundDetail;
 
   .p-ScrollBar-button {
     font: normal normal normal 14px/1 'Font Awesome 5 Free', FontAwesome;
@@ -577,7 +577,7 @@ a.dtmenu {
 }
 
 .lm-ScrollBar {
-  background-color: $gallery;
+  background-color: $backgroundDetail;
 
   &[data-orientation='horizontal'] {
     border: $gridBorder;
@@ -591,39 +591,40 @@ a.dtmenu {
 }
 
 .p-ScrollBar-button {
-  background-color: $gridBackgroundColor;
+  background-color: $buttonBackground;
   background-position: center center;
+  color: $buttonDetail;
   min-height: 15px;
   max-height: 15px;
   min-width: 15px;
   max-width: 15px;
 
   &:hover {
-    background-color: $alto;
+    cursor: pointer;
   }
 
   &.p-mod-active {
-    background-color: $buttonActive;
+    cursor: pointer;
   }
 }
 
 .p-ScrollBar-track {
-  background: $gridBackgroundColor;
+  background: $buttonBackground;
 }
 
 .p-ScrollBar-thumb {
-  background: $silver;
+  background: $buttonDetail;
 
   &:hover {
-    background: $silver;
+    cursor: pointer;
   }
 
   &.p-mod-active {
-    background: $silverChalice;
+    cursor: pointer;
   }
 }
 
 .bko-dragged-header {
   position: absolute;
-  box-shadow: 0 0 3px var(--jp-layout-color2);
+  box-shadow: 0 0 2px $shadow;
 }

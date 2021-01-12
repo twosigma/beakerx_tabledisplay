@@ -85,47 +85,31 @@ const defaults: { [keys: string]: string; } = {
 
 };
 
-export function formatColor(color: string, factor = 1): string {
+export function formatColor(color: string): string {
   const rgba = color.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(\d+\.?\d*)\)/);
   if (rgba) {
     const r: number = Math.ceil(Number.parseInt(rgba[1], 10));
     const g: number = Math.ceil(Number.parseInt(rgba[2], 10));
     const b: number = Math.ceil(Number.parseInt(rgba[3], 10));
-    const a: number = Math.ceil(Number.parseInt(rgba[4], 10)) * factor;
+    const a: number = Math.ceil(Number.parseInt(rgba[4], 10));
     return CommonUtils.rgbaToHex(r, g, b, a);
   } 
   
   const rgb = color.match(/rgb\((\d+),\s?(\d+),\s?(\d+)\)/);
   if (rgb) {
-    const r: number = Math.ceil(Number.parseInt(rgba[1], 10)) * factor;
-    const g: number = Math.ceil(Number.parseInt(rgba[2], 10)) * factor;
-    const b: number = Math.ceil(Number.parseInt(rgba[3], 10)) * factor;
+    const r: number = Math.ceil(Number.parseInt(rgba[1], 10));
+    const g: number = Math.ceil(Number.parseInt(rgba[2], 10));
+    const b: number = Math.ceil(Number.parseInt(rgba[3], 10));
     return CommonUtils.rgbaToHex(r, g, b);
-  }
-
-  const hex = color.match(/#(\w{2}|\w)?(\w{2}|\w)?(\w{2}|\w)?(\w{2}|\w)?/);
-  if (factor !== 1 && hex) {
-    if (hex[4]) {
-      const r: number = parseInt(hex[1] || '00', 16);
-      const g: number = parseInt(hex[2] || '00', 16);
-      const b: number = parseInt(hex[3] || '00', 16);
-      const a: number = parseInt(hex[4] || '00', 16) * factor;
-      return CommonUtils.rgbaToHex(r, g, b, a);
-    } else {
-      const r: number = parseInt(hex[1] || '00', 16) * factor;
-      const g: number = parseInt(hex[2] || '00', 16) * factor;
-      const b: number = parseInt(hex[3] || '00', 16) * factor;
-      return CommonUtils.rgbaToHex(r, g, b);
-    }
   }
 
   return color;
 }
 
-export function evaluateCSSVariable(name: string, factor = 1): string {
+export function evaluateCSSVariable(name: string): string {
   const value = window.getComputedStyle(document.documentElement).getPropertyValue(name);
   if (value) {
-    return formatColor(value, factor);
+    return formatColor(value);
   } else {
     return defaults[name];
   }
@@ -141,13 +125,13 @@ export class Theme {
 
     // Cell color
     this.DEFAULT_DATA_FONT_COLOR = evaluateCSSVariable('--jp-ui-font-color0');
-    this.DEFAULT_CELL_BACKGROUND = evaluateCSSVariable('--jp-rendermime-table-row-background');
+    this.DEFAULT_CELL_BACKGROUND = evaluateCSSVariable('--jp-layout-color1');
     this.FOCUSED_CELL_BACKGROUND = evaluateCSSVariable('--jp-accent-color2');
     this.SELECTED_CELL_BACKGROUND = evaluateCSSVariable('--jp-brand-color1');
     this.DATA_BARS_COLOR = evaluateCSSVariable('--md-blue-A200');
     this.DEFAULT_HIGHLIGHT_COLOR = evaluateCSSVariable('--jp-warn-color0');
-    this.HIGHLIGHTED_CELL_BACKGROUND_EVEN = evaluateCSSVariable('--jp-success-color1');
-    this.HIGHLIGHTED_CELL_BACKGROUND_ODD = evaluateCSSVariable('--jp-info-color1');
+    this.HIGHLIGHTED_CELL_BACKGROUND_EVEN = evaluateCSSVariable('--jp-layout-color3');
+    this.HIGHLIGHTED_CELL_BACKGROUND_ODD = evaluateCSSVariable('--jp-layout-color4');
     this.MIN_LIGHTNESS_VALUE = 25;
     this.MIN_SATURATION_VALUE = 25;
   }
@@ -159,8 +143,8 @@ export class Theme {
       backgroundColor: evaluateCSSVariable('--jp-layout-color1'),
       rowBackgroundColor: (i) => {
         return i % 2 === 0 ? 
-          evaluateCSSVariable('--jp-rendermime-table-row-background') :
-          evaluateCSSVariable('--jp-rendermime-table-row-background', 0.7);
+          evaluateCSSVariable('--jp-layout-color1') :
+          evaluateCSSVariable('--jp-layout-color2');
       },
       gridLineColor: evaluateCSSVariable('--jp-border-color3'),
       headerBackgroundColor: evaluateCSSVariable('--jp-layout-color3'),
@@ -175,13 +159,13 @@ export class Theme {
 
   // Cell color
   public static DEFAULT_DATA_FONT_COLOR: string = evaluateCSSVariable('--jp-ui-font-color0');
-  public static DEFAULT_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-rendermime-table-row-background');
+  public static DEFAULT_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-layout-color1');
   public static FOCUSED_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-accent-color2');
   public static SELECTED_CELL_BACKGROUND: string = evaluateCSSVariable('--jp-brand-color1');
   public static DATA_BARS_COLOR: string = evaluateCSSVariable('--md-blue-A200');
   public static DEFAULT_HIGHLIGHT_COLOR: string = evaluateCSSVariable('--jp-warn-color0');
-  public static HIGHLIGHTED_CELL_BACKGROUND_EVEN: string = evaluateCSSVariable('--jp-success-color1');
-  public static HIGHLIGHTED_CELL_BACKGROUND_ODD: string = evaluateCSSVariable('--jp-info-color1');
+  public static HIGHLIGHTED_CELL_BACKGROUND_EVEN: string = evaluateCSSVariable('--jp-layout-color3');
+  public static HIGHLIGHTED_CELL_BACKGROUND_ODD: string = evaluateCSSVariable('--jp-layout-color4');
   public static MIN_LIGHTNESS_VALUE: number = 25;
   public static MIN_SATURATION_VALUE: number = 25;
 }
