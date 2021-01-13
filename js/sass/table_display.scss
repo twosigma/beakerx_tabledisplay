@@ -17,14 +17,14 @@
 @import '~@lumino/widgets/style/menu.css';
 
 //Colors
-$background: var(--jp-layout-color0);// on hover scroll bar button
-$backgroundDetail: var(--jp-layout-color2);
-$shadow: var(--jp-inverse-layout-color0);
-$buttonBackground: var(--jp-layout-color2);
-$buttonDetail: var(--jp-layout-color3);
-$buttonHover: var(--jp-layout-color4);
-$border: var(--jp-border-color0);
-$font: var(--jp-ui-font-color0);
+$background: var(--jp-layout-color0, #ffffff);// on hover scroll bar button
+$backgroundDetail: var(--jp-layout-color2, #eeeeee);
+$shadow: var(--jp-inverse-layout-color0, #111111);
+$buttonBackground: var(--jp-layout-color2, #eeeeee);
+$buttonDetail: var(--jp-layout-color3, #bdbdbd);
+$buttonHover: var(--jp-layout-color4, #757575);
+$border: var(--jp-border-color0, #9e9e9e);
+$font: var(--jp-ui-font-color0, #00000000);
 
 $gridBorder: 1px solid $border;
 $tooltipTransition: opacity 300ms ease-in-out 300ms;
@@ -329,8 +329,8 @@ a.dtmenu {
 .bko-table-menu {
   background-color: $background;
   border-radius: 2px;
-  -webkit-box-shadow: 0 6px 12px var(--jp-layout-color2);
-  box-shadow: 0 6px 12px var(--jp-layout-color2);
+  -webkit-box-shadow: 0 6px 12px $shadow;
+  box-shadow: 0 6px 12px $shadow;
   background-clip: padding-box;
 
   .p-Menu-content {
@@ -536,9 +536,11 @@ a.dtmenu {
   background-color: $backgroundDetail;
 }
 
+.lm-ScrollBar,
 .p-ScrollBar {
   background-color: $backgroundDetail;
 
+  .lm-ScrollBar-button,
   .p-ScrollBar-button {
     font: normal normal normal 14px/1 'Font Awesome 5 Free', FontAwesome;
     font-weight: 900;
@@ -576,20 +578,7 @@ a.dtmenu {
   }
 }
 
-.lm-ScrollBar {
-  background-color: $backgroundDetail;
-
-  &[data-orientation='horizontal'] {
-    border: $gridBorder;
-    border-top: none;
-  }
-
-  &[data-orientation='vertical'] {
-    border: $gridBorder;
-    border-left: none;
-  }
-}
-
+.lm-ScrollBar-button,
 .p-ScrollBar-button {
   background-color: $buttonBackground;
   background-position: center center;

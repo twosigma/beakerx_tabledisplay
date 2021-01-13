@@ -108,6 +108,7 @@ export function formatColor(color: string): string {
 
 export function evaluateCSSVariable(name: string): string {
   const value = window.getComputedStyle(document.documentElement).getPropertyValue(name);
+
   if (value) {
     return formatColor(value);
   } else {
@@ -121,11 +122,14 @@ export class Theme {
     // Header color
     this._default_header_font_color = evaluateCSSVariable('--jp-ui-font-color1');
     this._default_header_background = evaluateCSSVariable('--jp-layout-color3');
+    this._default_header_border = evaluateCSSVariable('--jp-border-color3');
     this._default_color = '';
 
     // Cell color
     this._default_data_font_color = evaluateCSSVariable('--jp-ui-font-color0');
     this._default_cell_background = evaluateCSSVariable('--jp-layout-color1');
+    this._default_cell_background_2 = evaluateCSSVariable('--jp-layout-color2');
+    this._default_cell_border = evaluateCSSVariable('--jp-border-color2');
     this._focused_cell_backgraund = evaluateCSSVariable('--jp-accent-color2');
     this._selected_cell_backgraund = evaluateCSSVariable('--jp-brand-color1');
     this._data_bars_color = evaluateCSSVariable('--md-blue-A200');
@@ -139,16 +143,16 @@ export class Theme {
   public static getStyle(): DataGrid.Style {
     return {
       ...DataGrid.defaultStyle,
-      voidColor: evaluateCSSVariable('--jp-layout-color0'),
-      backgroundColor: evaluateCSSVariable('--jp-layout-color1'),
+      voidColor: this._default_data_font_color, //evaluateCSSVariable('--jp-layout-color0'),
+      backgroundColor: this._default_cell_background, //evaluateCSSVariable('--jp-layout-color1'),
       rowBackgroundColor: (i) => {
         return i % 2 === 0 ? 
-          evaluateCSSVariable('--jp-layout-color1') :
-          evaluateCSSVariable('--jp-layout-color2');
+          this._default_cell_background : //evaluateCSSVariable('--jp-layout-color1') :
+          this._default_cell_background_2; // evaluateCSSVariable('--jp-layout-color2');
       },
-      gridLineColor: evaluateCSSVariable('--jp-border-color3'),
-      headerBackgroundColor: evaluateCSSVariable('--jp-layout-color3'),
-      headerGridLineColor: evaluateCSSVariable('--jp-border-color3'),
+      gridLineColor: this._default_cell_border, //evaluateCSSVariable('--jp-border-color2'),
+      headerBackgroundColor: this._default_header_background, //evaluateCSSVariable('--jp-layout-color3'),
+      headerGridLineColor: this._default_header_border, //evaluateCSSVariable('--jp-border-color3'),
     };
   }
 
@@ -158,6 +162,9 @@ export class Theme {
   }
   public static get DEFAULT_HEADER_BACKGROUND(): string {
     return this._default_header_background;
+  }
+  public static get DEFAULT_HEADER_BORDER(): string {
+    return this._default_header_border;
   }
   public static get DEFAULT_COLOR(): string {
     return this._default_color;
@@ -169,6 +176,12 @@ export class Theme {
   }
   public static get DEFAULT_CELL_BACKGROUND(): string {
     return this._default_cell_background;
+  }
+  public static get DEFAULT_CELL_BACKGROUND_2(): string {
+    return this._default_cell_background_2;
+  }
+  public static get DEFAULT_CELL_BORDER(): string {
+    return this._default_cell_border;
   }
   public static get FOCUSED_CELL_BACKGROUND(): string {
     return this._focused_cell_backgraund;
@@ -198,11 +211,14 @@ export class Theme {
   // Header color
   private static _default_header_font_color: string;
   private static _default_header_background: string;
+  private static _default_header_border: string;
   private static _default_color: string;
 
   // Cell color
   private static _default_data_font_color: string;
   private static _default_cell_background: string;
+  private static _default_cell_background_2: string;
+  private static _default_cell_border: string;
   private static _focused_cell_backgraund: string;
   private static _selected_cell_backgraund: string;
   private static _data_bars_color: string;

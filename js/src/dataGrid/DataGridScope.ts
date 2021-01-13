@@ -46,6 +46,7 @@ export class DataGridScope {
     this.element = options.element;
     this.tableDisplayModel = options.widgetModel;
     this.tableDisplayView = options.widgetView;
+    Theme.updateStyle();
     this._dataGrid = new BeakerXDataGrid(
       {
         style: Theme.getStyle(),
