@@ -121,21 +121,21 @@ export class Theme {
   public static updateStyle(): void {
     // Header color
     this._default_header_font_color = evaluateCSSVariable('--jp-ui-font-color1');
-    this._default_header_background = evaluateCSSVariable('--jp-layout-color3');
-    this._default_header_border = evaluateCSSVariable('--jp-border-color3');
+    this._default_header_background = evaluateCSSVariable('--jp-layout-color2');
+    this._default_header_border = evaluateCSSVariable('--jp-border-color0');
     this._default_color = '';
 
     // Cell color
     this._default_data_font_color = evaluateCSSVariable('--jp-ui-font-color0');
-    this._default_cell_background = evaluateCSSVariable('--jp-layout-color1');
-    this._default_cell_background_2 = evaluateCSSVariable('--jp-layout-color2');
-    this._default_cell_border = evaluateCSSVariable('--jp-border-color2');
-    this._focused_cell_backgraund = evaluateCSSVariable('--jp-accent-color2');
-    this._selected_cell_backgraund = evaluateCSSVariable('--jp-brand-color1');
+    this._default_cell_background = evaluateCSSVariable('--jp-layout-color0');
+    this._default_cell_background_2 = evaluateCSSVariable('--jp-rendermime-table-row-background');
+    this._default_cell_border = evaluateCSSVariable('--jp-border-color1');
+    this._focused_cell_backgraund = evaluateCSSVariable('--jp-layout-color4');
+    this._selected_cell_backgraund = evaluateCSSVariable('--md-blue-A100');
     this._data_bars_color = evaluateCSSVariable('--md-blue-A200');
-    this._default_highlight = evaluateCSSVariable('--jp-warn-color0');
-    this._highlighted_cell_dackgraund_even = evaluateCSSVariable('--jp-layout-color3');
-    this._highlighted_cell_dackgraund_odd = evaluateCSSVariable('--jp-layout-color4');
+    this._default_highlight = evaluateCSSVariable('--jp-info-color0');
+    this._highlighted_cell_dackgraund_even = evaluateCSSVariable('--jp-layout-color2');
+    this._highlighted_cell_dackgraund_odd = evaluateCSSVariable('--jp-layout-color3');
     this._min_lightness_value = 25;
     this._min_saturation_value = 25;
   }

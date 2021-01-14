@@ -18,13 +18,14 @@
 
 //Colors
 $background: var(--jp-layout-color0, #ffffff);// on hover scroll bar button
-$backgroundDetail: var(--jp-layout-color2, #eeeeee);
+$backgroundDetail: var(--jp-layout-color1, #ffffff);
 $shadow: var(--jp-inverse-layout-color0, #111111);
 $buttonBackground: var(--jp-layout-color2, #eeeeee);
 $buttonDetail: var(--jp-layout-color3, #bdbdbd);
 $buttonHover: var(--jp-layout-color4, #757575);
 $border: var(--jp-border-color0, #9e9e9e);
-$font: var(--jp-ui-font-color0, #00000000);
+$font: var(--jp-ui-font-color1, #000000CC);
+$fontHover: var(--jp-ui-font-color0, #00000000);
 
 $gridBorder: 1px solid $border;
 $tooltipTransition: opacity 300ms ease-in-out 300ms;
@@ -72,15 +73,11 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 
 .input-clear-growing {
   position: relative;
-  background-color: $background;
-  border: $gridBorder;
 
   input {
-    width: 85%;
-    padding-left: 20px;
-    color: $font;
-    background-color: $background;
-    border: none;
+    border: $gridBorder;
+    padding-right: 20px;
+    width: 100%;
   }
 
   .hidden-length, .hidden-filter-input {
@@ -89,8 +86,8 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 }
 
 .input-clear {
-  position: relative;
   background-color: $background;
+  position: relative;
 
   &.editing {
     position: absolute;
@@ -100,11 +97,9 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
   }
 
   input {
-    width: 85%;
-    padding-left: 20px;
-    color: $font;
-    background-color: $background;
-    border: none;
+    border: $gridBorder;
+    padding: 0 20px 0 15px;
+    width: 100%;
   }
 
   span {
@@ -121,7 +116,6 @@ $sortDescendingIconWhite: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4
 
       &:hover {
         opacity: 0.8;
-        color: $buttonHover;
       }
     }
 
@@ -329,8 +323,8 @@ a.dtmenu {
 .bko-table-menu {
   background-color: $background;
   border-radius: 2px;
-  -webkit-box-shadow: 0 6px 12px $shadow;
-  box-shadow: 0 6px 12px $shadow;
+  -webkit-box-shadow: 0 6px 10px $shadow;
+  box-shadow: 0 6px 10px $shadow;
   background-clip: padding-box;
 
   .p-Menu-content {
@@ -350,8 +344,8 @@ a.dtmenu {
       cursor: pointer;
 
       &:hover {
-        color: $font;
-        background-color: $buttonHover;
+        color: $fontHover;
+        background-color: $buttonBackground;
       }
     }
 
@@ -496,8 +490,7 @@ a.dtmenu {
 }
 
 .p-DataGrid-tooltip {
-  color: $font;
-  background-color: $backgroundDetail;
+  background-color: $buttonBackground;
   box-shadow: 0 0 2px $shadow;
   border-radius: 3px;
   padding: 5px 10px;
@@ -517,7 +510,6 @@ a.dtmenu {
 
 .p-DataGrid-viewport {
   border: $gridBorder;
-  background-color: $background;
 }
 
 .p-DataGrid-scrollCorner {
@@ -533,15 +525,12 @@ a.dtmenu {
   left: 0;
   width: 1px;
   height: 1px;
-  background-color: $backgroundDetail;
+  background-color: $buttonDetail;
 }
 
-.lm-ScrollBar,
 .p-ScrollBar {
-  background-color: $backgroundDetail;
-
-  .lm-ScrollBar-button,
   .p-ScrollBar-button {
+    color: $buttonHover;
     font: normal normal normal 14px/1 'Font Awesome 5 Free', FontAwesome;
     font-weight: 900;
     text-align: center;
@@ -551,8 +540,9 @@ a.dtmenu {
     min-height: 16px;
     max-height: 16px;
     min-width: 45px;
-    border: $gridBorder;
-    border-top: none;
+    border-bottom: $gridBorder;
+    border-left: $gridBorder;
+    border-right: $gridBorder;
 
     .p-ScrollBar-thumb {
       height: 100%;
@@ -560,14 +550,29 @@ a.dtmenu {
       border-left: $gridBorder;
       border-right: $gridBorder;
     }
+
+    .p-ScrollBar-button {
+      &[data-action='increment'] {
+        &:before {
+          content: "\f0da";
+        }
+      }
+
+      &[data-action='decrement'] {
+        &:before {
+          content: "\f0d9";
+        }
+      }
+    }
   }
 
   &[data-orientation='vertical'] {
     min-width: 16px;
     max-width: 16px;
     min-height: 45px;
-    border: $gridBorder;
-    border-left: none;
+    border-right: $gridBorder;
+    border-top: $gridBorder;
+    border-bottom: $gridBorder;
 
     .p-ScrollBar-thumb {
       width: 100%;
@@ -575,24 +580,39 @@ a.dtmenu {
       border-top: $gridBorder;
       border-bottom: $gridBorder;
     }
+
+
+    .p-ScrollBar-button {
+      &[data-action='increment'] {
+        &:before {
+          content: "\f0d7";
+        }
+      }
+
+      &[data-action='decrement'] {
+        &:before {
+          content: "\f0d8";
+        }
+      }
+    }
   }
 }
 
-.lm-ScrollBar-button,
 .p-ScrollBar-button {
   background-color: $buttonBackground;
   background-position: center center;
-  color: $buttonDetail;
   min-height: 15px;
   max-height: 15px;
   min-width: 15px;
   max-width: 15px;
 
   &:hover {
+    background-color: $buttonDetail;
     cursor: pointer;
   }
 
   &.p-mod-active {
+    background-color: $buttonDetail;
     cursor: pointer;
   }
 }
@@ -605,10 +625,12 @@ a.dtmenu {
   background: $buttonDetail;
 
   &:hover {
+    background: $buttonDetail;
     cursor: pointer;
   }
 
   &.p-mod-active {
+    background: $buttonDetail;
     cursor: pointer;
   }
 }
