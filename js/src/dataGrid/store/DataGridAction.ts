@@ -14,15 +14,14 @@
  *  limitations under the License.
  */
 
-import { Action } from '@phosphor/datastore';
 import { COLUMN_TYPES } from '../column/enums';
 
-export class DataGridAction extends Action<string> {
+export class DataGridAction {
   payload: any;
+  type: string;
 
   constructor(type: string, payload: any) {
-    super(type);
-
+    this.type = type;
     this.payload = payload;
   }
 }

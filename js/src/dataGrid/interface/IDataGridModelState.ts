@@ -15,8 +15,9 @@
  */
 
 import { IHighlighterState } from './IHighlighterState';
+import {JSONObject} from "@lumino/coreutils";
 
-export interface IDataGridModelState {
+export interface IDataGridModelState extends JSONObject{
   alignmentForColumn?: Record<string, string>;
   alignmentForType?: Record<string, string>;
   cellHighlighters: IHighlighterState[];
@@ -25,7 +26,7 @@ export interface IDataGridModelState {
   columnsFrozen?: Record<string, boolean>;
   columnsVisible: Record<string, boolean>;
   contextMenuItems?: string[];
-  contextMenuTags?: unknown;
+  contextMenuTags?: string;
   dataFontSize?: number | null;
   doubleClickTag?: string | null;
   fontColor?: string[];
@@ -36,8 +37,8 @@ export interface IDataGridModelState {
   headersVertical?: boolean;
   rendererForColumn?: Record<string, any>;
   rendererForType?: Record<string, any>;
-  stringFormatForColumn: unknown;
-  stringFormatForType?: unknown;
+  stringFormatForColumn: Record<string, any>;
+  stringFormatForType?: Record<string, any>;
   subtype?: string;
   timeZone?: string;
   timeStrings?: any;
@@ -45,7 +46,7 @@ export interface IDataGridModelState {
   tooltips: string[][];
   type?: string;
   types: string[];
-  values: any;
+  values: any[];
   rowsToShow: number;
   auto_link_table_links: boolean;
   show_publication: boolean;

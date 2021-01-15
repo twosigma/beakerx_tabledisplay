@@ -14,11 +14,11 @@
  *  limitations under the License.
  */
 
-declare let lab: { contextMenu: PhosphorContextMenu };
+declare let lab: { contextMenu: LuminoContextMenu };
 
-import { CommandRegistry } from '@phosphor/commands';
-import { IDisposable } from '@phosphor/disposable';
-import { ContextMenu as PhosphorContextMenu, Menu } from '@phosphor/widgets';
+import { CommandRegistry } from '@lumino/commands';
+import { IDisposable } from '@lumino/disposable';
+import { ContextMenu as LuminoContextMenu, Menu } from '@lumino/widgets';
 import { IContextMenuItem } from './IContextMenuItem';
 import { IMenu } from './IMenu';
 import { IMenuItem } from './IMenuItem';
@@ -36,7 +36,7 @@ export abstract class ContextMenu implements IMenu {
   protected inLab: boolean;
   protected disposables: IDisposable[] = [];
 
-  public contextMenu: PhosphorContextMenu;
+  public contextMenu: LuminoContextMenu;
 
   constructor(scope: any) {
     this.inLab = this.isInLab();
@@ -52,7 +52,7 @@ export abstract class ContextMenu implements IMenu {
     let inLab = false;
 
     try {
-      inLab = lab && lab.contextMenu instanceof PhosphorContextMenu;
+      inLab = lab && lab.contextMenu instanceof LuminoContextMenu;
       // eslint-disable-next-line no-empty
     } catch (e) {}
 
@@ -83,7 +83,7 @@ export abstract class ContextMenu implements IMenu {
 
   protected buildBkoMenu(): void {
     this.commands = new CommandRegistry();
-    this.contextMenu = new PhosphorContextMenu({ commands: this.commands });
+    this.contextMenu = new LuminoContextMenu({ commands: this.commands });
     this.contextMenu.menu.addClass('bko-table-menu');
   }
 

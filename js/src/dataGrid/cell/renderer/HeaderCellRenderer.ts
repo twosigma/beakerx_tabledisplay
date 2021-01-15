@@ -14,18 +14,17 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext } from '@phosphor/datagrid';
-import { Theme } from '../../../utils/Theme';
-import { selectHeadersVertical } from '../../model/selectors';
+import { CellRenderer, GraphicsContext } from '@lumino/datagrid';
+import { Theme } from '../../../utils';
 import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 
 export class HeaderCellRenderer extends BeakerXCellRenderer {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getBackgroundColor(config: CellRenderer.ICellConfig): string {
+  getBackgroundColor(config: CellRenderer.CellConfig): string {
     return Theme.DEFAULT_CELL_BACKGROUND;
   }
 
-  drawText(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
+  drawText(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     const options = this.getOptions(config);
 
     if (!options.font || !options.color || options.boxHeight <= 0 || options.text === null) {
@@ -42,7 +41,7 @@ export class HeaderCellRenderer extends BeakerXCellRenderer {
       gc.clip();
     }
 
-    const verticalHeader = selectHeadersVertical(this.store.state);
+    const verticalHeader = this.store.selectHeadersVertical();
 
     // Set the gc state.
     gc.textBaseline = 'bottom';

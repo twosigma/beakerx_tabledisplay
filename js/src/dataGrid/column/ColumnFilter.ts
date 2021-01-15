@@ -14,12 +14,11 @@
  *  limitations under the License.
  */
 
-import { Widget } from '@phosphor/widgets';
+import { Widget } from '@lumino/widgets';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
 import { KEYBOARD_KEYS } from '../event/enums';
 import { DataGridHelpers } from '../Helpers';
 import { DataGridColumn } from './DataGridColumn';
-import { selectColumnWidth } from './selectors';
 
 export const FILTER_INPUT_TOOLTIP =
   'filter with an expression with a variable defined for each column and $ means the current column.  eg "$ > 5".';
@@ -74,7 +73,7 @@ export class ColumnFilter {
   updateInputNode() {
     this.filterNode.style.height = this.getInputHeight();
     this.filterInput.style.height = this.getInputHeight();
-    this.filterNode.style.width = `${selectColumnWidth(this.dataGrid.store.state, this.column)}px`;
+    this.filterNode.style.width = `${this.dataGrid.store.selectColumnWidth(this.column)}px`;
     this.updateInputPosition();
   }
 
@@ -102,7 +101,7 @@ export class ColumnFilter {
     const offset = this.dataGrid.getColumnOffset(position.value, position.region);
 
     this.filterNode.style.left = `${offset}px`;
-    this.filterNode.style.top = `${this.dataGrid.baseColumnHeaderSize - 1}px`;
+    this.filterNode.style.top = `${this.dataGrid.defaultSizes.columnHeaderHeight - 1}px`;
   }
 
   private showInput(shouldFocus: boolean): void {
@@ -200,11 +199,12 @@ export class ColumnFilter {
     };
 
     this.filterInput.addEventListener('keyup', DataGridHelpers.throttle(this.filterHandler, 100, this), true);
+    this.filterInput.addEventListener('keydown', (event: KeyboardEvent) => { event.stopPropagation(); }, true);
     this.filterInput.addEventListener('mousedown', handleMouseDown, true);
     this.filterNode.addEventListener('mousedown', handleMouseDown, true);
   }
 
   private getInputHeight() {
-    return `${this.dataGrid.baseRowSize}px`;
+    return `${this.dataGrid.defaultSizes.rowHeight}px`;
   }
 }

@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext } from '@phosphor/datagrid';
+import { CellRenderer, GraphicsContext } from '@lumino/datagrid';
 import { RENDERER_TYPE } from '../../interface/IRenderer';
 import { DataGridCell } from '../DataGridCell';
 import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 
 export class DefaultCellRenderer extends BeakerXCellRenderer {
-  drawText(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
+  drawText(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     const options = this.getOptions(config);
     const renderer = this.getRenderer(config);
 

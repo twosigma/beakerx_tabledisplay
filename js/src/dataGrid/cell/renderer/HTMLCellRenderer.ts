@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { CellRenderer, GraphicsContext, TextRenderer } from '@phosphor/datagrid';
+import { CellRenderer, GraphicsContext, TextRenderer } from '@lumino/datagrid';
 import { BeakerXCellRenderer } from './BeakerXCellRenderer';
 import { LatexCellRenderer } from './LatexCellRenderer';
 
@@ -24,7 +24,7 @@ import LatoBlack from './../../../../fonts/lato/Lato-Black.woff';
 export class HTMLCellRenderer extends BeakerXCellRenderer {
   dataCache = new Map<string, string>();
 
-  drawText(gc: GraphicsContext, config: CellRenderer.ICellConfig): void {
+  drawText(gc: GraphicsContext, config: CellRenderer.CellConfig): void {
     const font = CellRenderer.resolveOption(this.font, config);
 
     if (!font) {
@@ -75,7 +75,7 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
     img.src = data;
 
     if (!img.complete) {
-      img.onload = this.repaintCellCallback(config.x, config.y, config.width, config.height);
+      img.onload = this.repaintCellCallback(config.row, config.column);
     } else {
       gc.drawImage(img, x, y, width, height);
     }
@@ -95,7 +95,7 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
     }`;
   }
 
-  getSVGData(text: string, config: CellRenderer.ICellConfig, vAlign, hAlign): string {
+  getSVGData(text: string, config: CellRenderer.CellConfig, vAlign, hAlign): string {
     const cacheKey = this.getCacheKey(config, vAlign, hAlign);
 
     if (this.dataCache.has(cacheKey)) {
@@ -125,8 +125,10 @@ export class HTMLCellRenderer extends BeakerXCellRenderer {
     return `${JSON.stringify(config)}|${vAlign}|${hAlign}`;
   }
 
-  private repaintCellCallback(x: number, y: number, width: number, height: number) {
-    return () => this.dataGrid.repaint(x, y, width, height);
+  private repaintCellCallback(row: number, column: number) {
+    return () => {
+      this.dataGrid.repaintRegion('body', row, column, row, column);
+    };
   }
 
   private getHTMLImageData(

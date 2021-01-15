@@ -14,14 +14,14 @@
  *  limitations under the License.
  */
 
-import { DataGrid } from '@phosphor/datagrid';
+import { DataGrid } from '@lumino/datagrid';
 
 export class Theme {
   public static get isDark(): boolean {
-    return document.body.classList.contains('bx-dark-theme');
+    return document.body.getAttribute('data-jp-theme-light') == 'false';
   }
 
-  public static getStyle(): DataGrid.IStyle & { isDark: boolean } {
+  public static getStyle(): DataGrid.Style & { isDark: boolean } {
     return this.isDark ? this.getDarkStyle() : this.getLightStyle();
   }
 
@@ -65,7 +65,7 @@ export class Theme {
     return this.isDark ? 15 : 35;
   }
 
-  private static getDarkStyle(): DataGrid.IStyle & { isDark: boolean } {
+  private static getDarkStyle(): DataGrid.Style & { isDark: boolean } {
     return {
       ...DataGrid.defaultStyle,
       voidColor: '#636363',
@@ -78,7 +78,7 @@ export class Theme {
     };
   }
 
-  private static getLightStyle(): DataGrid.IStyle & { isDark: boolean } {
+  private static getLightStyle(): DataGrid.Style & { isDark: boolean } {
     return {
       ...DataGrid.defaultStyle,
       voidColor: '#ffffff',

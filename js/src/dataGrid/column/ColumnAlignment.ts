@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { TextRenderer } from '@phosphor/datagrid';
+import { TextRenderer } from '@lumino/datagrid';
 import { ALL_TYPES } from '../dataTypes';
 
 export const LEFT: TextRenderer.HorizontalAlignment = 'left';

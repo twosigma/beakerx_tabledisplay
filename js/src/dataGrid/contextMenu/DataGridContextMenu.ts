@@ -19,14 +19,13 @@ import { createHeaderContextMenuItems } from './createHeaderContextMenuItems';
 import { createCellContextMenuItems } from './createCellContextMenuItems';
 import { createPublishMenuItems } from './createPublishMenuItem';
 import { DataGridScope } from '../DataGridScope';
-import { selectShowPublication } from '../model/selectors';
 
 export class DataGridContextMenu extends ContextMenu {
   private readonly showPublication: boolean = true;
 
   constructor(scope: DataGridScope) {
     super({ ...scope, element: [scope.dataGrid.node], dataGrid: scope.dataGrid });
-    this.showPublication = selectShowPublication(scope.dataGrid.store.state);
+    this.showPublication = scope.dataGrid.store.selectShowPublication();
   }
 
   protected buildMenu(): void {

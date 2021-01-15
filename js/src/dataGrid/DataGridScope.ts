@@ -14,8 +14,8 @@
  *  limitations under the License.
  */
 
-import { RendererMap } from '@phosphor/datagrid';
-import { Widget } from '@phosphor/widgets';
+import { RendererMap } from '@lumino/datagrid';
+import { Widget } from '@lumino/widgets';
 import { TableDisplayView } from '../TableDisplayView';
 import { Theme } from '../utils/Theme';
 import { BeakerXDataGrid } from './BeakerXDataGrid';
@@ -23,8 +23,7 @@ import { DataGridContextMenu } from './contextMenu/DataGridContextMenu';
 import { IDataGridModelState } from './interface/IDataGridModelState';
 import IDataGridScopeOptions from './interface/IDataGridScopeOptions';
 import { ColumnLimitModal } from './modal/ColumnLimitModal';
-import { selectModel } from './model/selectors';
-import { BeakerXDataStore, createStore } from './store/BeakerXDataStore';
+import { BeakerXDataStore } from './store/BeakerXDataStore';
 
 export class DataGridScope {
   contextMenu: DataGridContextMenu;
@@ -43,14 +42,14 @@ export class DataGridScope {
     if (Object.keys(options.data).length === 0 && options.data.constructor === Object) {
       throw new Error('options.data can not be empty');
     }
-    this.store = createStore(options.data);
+    this.store = new BeakerXDataStore(options.data);
     this.element = options.element;
     this.tableDisplayModel = options.widgetModel;
     this.tableDisplayView = options.widgetView;
     this._dataGrid = new BeakerXDataGrid(
       {
         style: Theme.getStyle(),
-        cellRenderers: new RendererMap({ priority: ['body|{dataType: html}', 'body|'] }),
+        cellRenderers: new RendererMap({ /*priority: ['body|{dataType: html}', 'body|']*/ }),
       },
       this.store,
       this.tableDisplayView,
@@ -63,8 +62,8 @@ export class DataGridScope {
     this.initColumnLimitModal();
   }
 
-  get state(): IDataGridModelState {
-    return selectModel(this.store.state);
+  get state() : IDataGridModelState {
+    return this.store.selectModel();
   }
 
   render(): void {

@@ -14,13 +14,13 @@
  *  limitations under the License.
  */
 
-import { filter, iter, MapIterator, toArray } from '@phosphor/algorithm';
+import { filter, iter, MapIterator, toArray } from '@lumino/algorithm';
 import { Theme } from '../../utils/Theme';
 import { ColumnFilter } from '../column/ColumnFilter';
 import { ColumnManager } from '../column/ColumnManager';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { COLUMN_TYPES, SORT_ORDER } from '../column/enums';
-import { selectFontColor, selectValues } from '../model/selectors';
+// import { selectFontColor, selectValues } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridCellValue } from './DataGridCellValue';
 import { DataGridRow } from './DataGridRow';
@@ -55,7 +55,7 @@ export class RowManager {
   }
 
   private createCellValue(store: BeakerXDataStore) {
-    let data = selectValues(store.state);
+    let data = store.selectValues();
     const fontFun = this.defineFontFun(store, data);
     const newData = [];
     for (let i = 0; i < data.length; i++) {
@@ -71,7 +71,7 @@ export class RowManager {
   }
 
   private defineFontFun(store: BeakerXDataStore, data) {
-    const fontColors = selectFontColor(store.state);
+    const fontColors = store.selectFontColor();
 
     if (fontColors && fontColors.length == data.length) {
       return (row: number, col: number): string => fontColors[row][col];

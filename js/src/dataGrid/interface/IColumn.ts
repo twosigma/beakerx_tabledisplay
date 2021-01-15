@@ -14,10 +14,11 @@
  *  limitations under the License.
  */
 
-import { DataModel, TextRenderer } from '@phosphor/datagrid';
+import { DataModel, TextRenderer } from '@lumino/datagrid';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { COLUMN_TYPES, SORT_ORDER } from '../column/enums';
 import { ALL_TYPES } from '../dataTypes';
+import {JSONObject} from "@lumino/coreutils";
 
 export interface IColumn {
   index: number;
@@ -34,9 +35,8 @@ export interface IColumns {
   [key: number]: DataGridColumn[];
 }
 
-export type IColumnsState = Map<string, IColumnState>;
-
-export interface IColumnState {
+export interface IColumnState extends JSONObject{
+  key: string;
   name: string;
   index: number;
   columnType: COLUMN_TYPES;
@@ -53,7 +53,7 @@ export interface IColumnState {
   renderer?: number;
 }
 
-export interface IColumnPosition {
+export interface IColumnPosition extends JSONObject {
   value: number;
   region: DataModel.ColumnRegion;
 }
