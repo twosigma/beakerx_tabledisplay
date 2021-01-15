@@ -41,19 +41,18 @@ jobs:
       shell: bash
       run:
         conda env create -n beakerx -f configuration.yml
-    - name: Build BeakerX Base
+    - name: Install jupyterlab2
       shell: bash -l {0}
       run: |
         conda activate beakerx
-        cd $GITHUB_WORKSPACE/beakerx_base
-        pip install -e .
+        conda install -y -c conda-forge jupyterlab=2
+        jupyter labextension install @jupyter-widgets/jupyterlab-manager
     - name: Build BeakerX tabledisplay
       shell: bash -l {0}
       run: |
         conda activate beakerx
-        cd beakerx_tabledisplay
-        pip install -e .
-        beakerx_tabledisplay install
+        (cd beakerx_tabledisplay; pip install -e .)
+        (cd js; jupyter labextension install .)
     - name: Run e2e tests (table v1)
       shell: bash -l {0}
       run: |
@@ -61,10 +60,11 @@ jobs:
         chmod +x gradlew
         conda activate beakerx
         pip install psutil
-        python ci_tests.py --app=notebook --tbl=v1 --tst=python.Table*
+        python ci_tests.py --app=lab --tbl=v1 --tst=python.Table*
     - name: Archive screenshot results
       uses: actions/upload-artifact@v1
       if: always()
       with:
         name: screenshots
         path: ${{ github.workspace }}/beakerx_tests/autotests/resources/img/python
+
