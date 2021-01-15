@@ -45,7 +45,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate beakerx
-        conda install -y -c conda-forge jupyterlab=1
+        conda install -y -c conda-forge jupyterlab=2
         jupyter labextension install @jupyter-widgets/jupyterlab-manager
     - name: Build BeakerX tabledisplay
       shell: bash -l {0}
