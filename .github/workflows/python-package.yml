@@ -45,7 +45,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda activate beakerx
-        conda install -y -c conda-forge jupyterlab=2
+        conda install -y -c conda-forge jupyterlab=1
         jupyter labextension install @jupyter-widgets/jupyterlab-manager
     - name: Build BeakerX tabledisplay
       shell: bash -l {0}
@@ -60,7 +60,7 @@ jobs:
         chmod +x gradlew
         conda activate beakerx
         pip install psutil
-        python ci_tests.py --app=lab --tbl=v1 --tst=python.Table*
+        python ci_tests.py --app=lab --tbl=v1 --exp=yes --tst=python.Table*
     - name: Archive screenshot results
       uses: actions/upload-artifact@v1
       if: always()
