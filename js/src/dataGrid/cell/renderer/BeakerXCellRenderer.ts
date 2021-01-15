@@ -66,7 +66,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (renderer && renderer.type === RENDERER_TYPE.DataBars && !isHeaderCell) {
       const barWidth = (config.width / 2) * renderer.percent;
 
-      gc.fillStyle = Theme.DEFAULT_HIGHLIGHT_COLOR;
+      gc.fillStyle = Theme.DATA_BARS_COLOR;
       gc.fillRect(
         config.x + config.width / 2 - (renderer.direction === 'RIGHT' ? 0 : barWidth),
         config.y,
@@ -126,14 +126,13 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     const highlighterColor = this.dataGrid.highlighterManager.getCellBackground(config);
     const focusedColor = this.dataGrid.cellFocusManager.getFocussedCellBackground(config);
     const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
-
+    
     return (
-      (focusedColor && initialColor && DataGridStyle.darken(initialColor)) ||
       focusedColor ||
-      initialColor ||
-      highlighterColor ||
       selectionColor ||
-      Theme.DEFAULT_CELL_BACKGROUND
+      highlighterColor ||
+      initialColor ||
+      Theme.DEFAULT_COLOR
     );
   }
 
@@ -159,18 +158,24 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
   }
 
   getTextColor(config): string {
-    if (config.region === 'row-header') {
-      return Theme.DEFAULT_DATA_FONT_COLOR;
+    if (
+      config.region === 'row-header' ||
+      config.region === 'column-header' ||
+      config.region === 'corner-header'
+    ) {
+      return Theme.DEFAULT_HEADER_FONT_COLOR;
     }
+    
+    if (
+      config.region === 'body' &&
+      this.dataGrid.rowManager.rows[config.row] &&
+      this.dataGrid.rowManager.rows[config.row].cells &&
+      this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor
+    ) {
+      return DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor);
+    } 
 
-    const dataFontColor =
-      this.dataGrid.rowManager.rows[config.row] && this.dataGrid.rowManager.rows[config.row].cells
-        ? DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor)
-        : Theme.DEFAULT_DATA_FONT_COLOR;
-
-    return config.region === 'column-header' || config.region === 'corner-header'
-      ? Theme.DEFAULT_HEADER_FONT_COLOR
-      : dataFontColor;
+    return Theme.DEFAULT_DATA_FONT_COLOR;
   }
 
   getRenderer(config: CellRenderer.CellConfig): IRenderer | undefined {
@@ -195,7 +200,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (!result.font) {
       return result;
     }
-
+    
     // Resolve the text color for the cell.
     result.color = CellRenderer.resolveOption(this.textColor, config);
 

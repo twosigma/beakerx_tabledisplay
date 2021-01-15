@@ -72,12 +72,11 @@ export class RowManager {
 
   private defineFontFun(store: BeakerXDataStore, data) {
     const fontColors = store.selectFontColor();
-
     if (fontColors && fontColors.length == data.length) {
       return (row: number, col: number): string => fontColors[row][col];
     } else {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return (row: number, col: number): string => Theme.DEFAULT_DATA_FONT_COLOR;
+      return (row: number, col: number): string => Theme.DEFAULT_COLOR;
     }
   }
 

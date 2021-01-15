@@ -31,7 +31,7 @@ export class ValueHighlighter extends Highlighter {
 
   getBackgroundColor(config: CellRenderer.CellConfig) {
     return (
-      (this.state.colors && DataGridStyle.formatColor(this.state.colors[config.row])) || Theme.DEFAULT_CELL_BACKGROUND
+      (this.state.colors && DataGridStyle.formatColor(this.state.colors[config.row])) || Theme.DEFAULT_COLOR
     );
   }
 }

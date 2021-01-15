@@ -307,7 +307,7 @@ export class BeakerXDataStore {
     return ALL_TYPES[types[names.indexOf(name)]];
   }
 
-// Returns the map columnIndex => position
+  // Returns the map columnIndex => position
   selectInitialColumnPositions() {
     const columnOrder = this.selectColumnOrder();
     const allColumnNames = this.selectColumnNames();

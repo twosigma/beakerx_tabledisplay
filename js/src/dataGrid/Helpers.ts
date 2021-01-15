@@ -216,11 +216,10 @@ export class DataGridHelpers {
     const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
 
     return (
-      (focusedColor && initialColor && DataGridStyle.darken(initialColor)) ||
       focusedColor ||
-      initialColor ||
-      highlighterColor ||
       selectionColor ||
+      highlighterColor ||
+      initialColor ||
       Theme.DEFAULT_CELL_BACKGROUND
     );
   }

@@ -15,77 +15,216 @@
  */
 
 import { DataGrid } from '@lumino/datagrid';
+import { CommonUtils } from './CommonUtils';
+
+const defaults: { [keys: string]: string; } = {
+  '--jp-layout-color0': '#ffffff',
+  '--jp-layout-color1': '#ffffff',
+  '--jp-layout-color2': '#eeeeee',
+  '--jp-layout-color3': '#bdbdbd',
+  '--jp-layout-color4': '#757575',
+
+  '--jp-inverse-layout-color0': '#111111',
+  '--jp-inverse-layout-color1': '#212121',
+  '--jp-inverse-layout-color2': '#424242',
+  '--jp-inverse-layout-color3': '#616161',
+  '--jp-inverse-layout-color4': '#757575',
+
+  '--jp-border-color0': '#9e9e9e',
+  '--jp-border-color1': '#bdbdbd',
+  '--jp-border-color2': '#e0e0e0',
+  '--jp-border-color3': '#eeeeee',
+
+  '--jp-ui-font-color0': '#00000000',
+  '--jp-ui-font-color1': '#000000CC',
+  '--jp-ui-font-color2': '#0000007F',
+  '--jp-ui-font-color3': '#0000004C',
+
+  '--jp-ui-inverse-font-color0': '#ffffffff',
+  '--jp-ui-inverse-font-color1': '#ffffffD8',
+  '--jp-ui-inverse-font-color2': '#ffffff8C',
+  '--jp-ui-inverse-font-color3': '#ffffff66',
+
+  '--jp-rendermime-table-row-background': '#F5F5F5',
+
+  '--jp-brand-color0': '#455a64',
+  '--jp-brand-color1': '#607d8b',
+  '--jp-brand-color2': '#90a4ae',
+  '--jp-brand-color3': '#cfd8dc',
+  '--jp-brand-color4': '#eceff1',
+
+  '--jp-accent-color0': '#388e3c',
+  '--jp-accent-color1': '#4caf50',
+  '--jp-accent-color2': '#81c784',
+  '--jp-accent-color3': '#c8e6c9',
+
+  '--jp-warn-color0': '#f57c00',
+  '--jp-warn-color1': '#ff9800',
+  '--jp-warn-color2': '#ffb74d',
+  '--jp-warn-color3': '#ffe0b2',
+
+  '--jp-error-color0': '#d32f2f',
+  '--jp-error-color1': '#f44336',
+  '--jp-error-color2': '#e57373',
+  '--jp-error-color3': '#ffcdd2',
+
+  '--jp-success-color0': '#388e3c',
+  '--jp-success-color1': '#4caf50',
+  '--jp-success-color2': '#81c784',
+  '--jp-success-color3': '#c8e6c9',
+
+  '--jp-info-color0': '#0097a7',
+  '--jp-info-color1': '#00bcd4',
+  '--jp-info-color2': '#4dd0e1',
+  '--jp-info-color3': '#b2ebf2',
+
+  '--md-blue-A100': '#82b1ff',
+  '--md-blue-A200': '#448aff',
+  '--md-blue-A400': '#2979ff',
+  '--md-blue-A700': '#2962ff',
+
+};
+
+export function formatColor(color: string): string {
+  const rgba = color.match(/rgba\((\d+),\s?(\d+),\s?(\d+),\s?(\d+\.?\d*)\)/);
+  if (rgba) {
+    const r: number = Math.ceil(Number.parseInt(rgba[1], 10));
+    const g: number = Math.ceil(Number.parseInt(rgba[2], 10));
+    const b: number = Math.ceil(Number.parseInt(rgba[3], 10));
+    const a: number = Math.ceil(Number.parseInt(rgba[4], 10));
+    return CommonUtils.rgbaToHex(r, g, b, a);
+  } 
+  
+  const rgb = color.match(/rgb\((\d+),\s?(\d+),\s?(\d+)\)/);
+  if (rgb) {
+    const r: number = Math.ceil(Number.parseInt(rgba[1], 10));
+    const g: number = Math.ceil(Number.parseInt(rgba[2], 10));
+    const b: number = Math.ceil(Number.parseInt(rgba[3], 10));
+    return CommonUtils.rgbaToHex(r, g, b);
+  }
+
+  return color;
+}
+
+export function evaluateCSSVariable(name: string): string {
+  const value = window.getComputedStyle(document.documentElement).getPropertyValue(name);
+
+  if (value) {
+    return formatColor(value);
+  } else {
+    return defaults[name];
+  }
+}
 
 export class Theme {
-  public static get isDark(): boolean {
-    return document.body.getAttribute('data-jp-theme-light') == 'false';
+
+  public static updateStyle(): void {
+    // Header color
+    this._default_header_font_color = evaluateCSSVariable('--jp-ui-font-color1');
+    this._default_header_background = evaluateCSSVariable('--jp-layout-color2');
+    this._default_header_border = evaluateCSSVariable('--jp-border-color0');
+    this._default_color = '';
+
+    // Cell color
+    this._default_data_font_color = evaluateCSSVariable('--jp-ui-font-color0');
+    this._default_cell_background = evaluateCSSVariable('--jp-layout-color0');
+    this._default_cell_background_2 = evaluateCSSVariable('--jp-rendermime-table-row-background');
+    this._default_cell_border = evaluateCSSVariable('--jp-border-color1');
+    this._focused_cell_backgraund = evaluateCSSVariable('--jp-layout-color4');
+    this._selected_cell_backgraund = evaluateCSSVariable('--md-blue-A100');
+    this._data_bars_color = evaluateCSSVariable('--md-blue-A200');
+    this._default_highlight = evaluateCSSVariable('--jp-info-color0');
+    this._highlighted_cell_dackgraund_even = evaluateCSSVariable('--jp-layout-color2');
+    this._highlighted_cell_dackgraund_odd = evaluateCSSVariable('--jp-layout-color3');
+    this._min_lightness_value = 25;
+    this._min_saturation_value = 25;
   }
 
-  public static getStyle(): DataGrid.Style & { isDark: boolean } {
-    return this.isDark ? this.getDarkStyle() : this.getLightStyle();
+  public static getStyle(): DataGrid.Style {
+    return {
+      ...DataGrid.defaultStyle,
+      voidColor: this._default_data_font_color, //evaluateCSSVariable('--jp-layout-color0'),
+      backgroundColor: this._default_cell_background, //evaluateCSSVariable('--jp-layout-color1'),
+      rowBackgroundColor: (i) => {
+        return i % 2 === 0 ? 
+          this._default_cell_background : //evaluateCSSVariable('--jp-layout-color1') :
+          this._default_cell_background_2; // evaluateCSSVariable('--jp-layout-color2');
+      },
+      gridLineColor: this._default_cell_border, //evaluateCSSVariable('--jp-border-color2'),
+      headerBackgroundColor: this._default_header_background, //evaluateCSSVariable('--jp-layout-color3'),
+      headerGridLineColor: this._default_header_border, //evaluateCSSVariable('--jp-border-color3'),
+    };
   }
 
-  public static get DEFAULT_DATA_FONT_COLOR(): string {
-    return this.isDark ? '#ffffff' : '#000000';
-  }
-
+  // Header color
   public static get DEFAULT_HEADER_FONT_COLOR(): string {
-    return this.isDark ? '#ffffff' : '#515a5a';
+    return this._default_header_font_color;
+  }
+  public static get DEFAULT_HEADER_BACKGROUND(): string {
+    return this._default_header_background;
+  }
+  public static get DEFAULT_HEADER_BORDER(): string {
+    return this._default_header_border;
+  }
+  public static get DEFAULT_COLOR(): string {
+    return this._default_color;
   }
 
-  public static get DEFAULT_HIGHLIGHT_COLOR(): string {
-    return this.isDark ? '#dfdfdf' : '#6ba2c7';
+  // Cell color
+  public static get DEFAULT_DATA_FONT_COLOR(): string {
+    return this._default_data_font_color;
   }
-
   public static get DEFAULT_CELL_BACKGROUND(): string {
-    return '';
+    return this._default_cell_background;
   }
-
+  public static get DEFAULT_CELL_BACKGROUND_2(): string {
+    return this._default_cell_background_2;
+  }
+  public static get DEFAULT_CELL_BORDER(): string {
+    return this._default_cell_border;
+  }
   public static get FOCUSED_CELL_BACKGROUND(): string {
-    return this.isDark ? '#66bb6a' : '#c8c8c8';
+    return this._focused_cell_backgraund;
   }
-
   public static get SELECTED_CELL_BACKGROUND(): string {
-    return this.isDark ? '#2196f3' : '#b0bed9';
+    return this._selected_cell_backgraund;
   }
-
+  public static get DATA_BARS_COLOR(): string {
+    return this._data_bars_color;
+  }
+  public static get DEFAULT_HIGHLIGHT_COLOR(): string {
+    return this._default_highlight;
+  }
   public static get HIGHLIGHTED_CELL_BACKGROUND_EVEN(): string {
-    return this.isDark ? 'rgb(34, 34, 34)' : 'rgb(241, 241, 241)';
+    return this._highlighted_cell_dackgraund_even;
   }
-
   public static get HIGHLIGHTED_CELL_BACKGROUND_ODD(): string {
-    return this.isDark ? 'rgb(26, 26, 26)' : 'rgb(249, 249, 249)';
+    return this._highlighted_cell_dackgraund_odd;
   }
-
   public static get MIN_LIGHTNESS_VALUE(): number {
-    return this.isDark ? 15 : 35;
+    return this._min_lightness_value;
   }
-
   public static get MIN_SATURATION_VALUE(): number {
-    return this.isDark ? 15 : 35;
+    return this._min_saturation_value;
   }
 
-  private static getDarkStyle(): DataGrid.Style & { isDark: boolean } {
-    return {
-      ...DataGrid.defaultStyle,
-      voidColor: '#636363',
-      backgroundColor: '#212121',
-      headerBackgroundColor: '#252525',
-      rowBackgroundColor: (i) => (i % 2 === 0 ? '#424242' : ''),
-      gridLineColor: '#626262',
-      headerGridLineColor: '#626262',
-      isDark: true,
-    };
-  }
+  // Header color
+  private static _default_header_font_color: string;
+  private static _default_header_background: string;
+  private static _default_header_border: string;
+  private static _default_color: string;
 
-  private static getLightStyle(): DataGrid.Style & { isDark: boolean } {
-    return {
-      ...DataGrid.defaultStyle,
-      voidColor: '#ffffff',
-      headerBackgroundColor: '#e6e6e6',
-      rowBackgroundColor: (i) => (i % 2 === 0 ? '#f9f9f9' : ''),
-      gridLineColor: '#d4d0d0',
-      isDark: false,
-    };
-  }
+  // Cell color
+  private static _default_data_font_color: string;
+  private static _default_cell_background: string;
+  private static _default_cell_background_2: string;
+  private static _default_cell_border: string;
+  private static _focused_cell_backgraund: string;
+  private static _selected_cell_backgraund: string;
+  private static _data_bars_color: string;
+  private static _default_highlight: string;
+  private static _highlighted_cell_dackgraund_even: string;
+  private static _highlighted_cell_dackgraund_odd: string;
+  private static _min_lightness_value: number;
+  private static _min_saturation_value: number;
 }
