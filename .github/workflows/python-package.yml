@@ -60,7 +60,7 @@ jobs:
         chmod +x gradlew
         conda activate beakerx
         pip install psutil
-        python ci_tests.py --app=lab --tbl=v1 --exp=yes --tst=python.Table*
+        python ci_tests.py --app=lab --tbl=v1 --tst=python.Table*
     - name: Archive screenshot results
       uses: actions/upload-artifact@v1
       if: always()
