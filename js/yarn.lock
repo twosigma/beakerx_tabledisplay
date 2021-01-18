@@ -863,7 +863,7 @@
     jquery-ui "^1.12.1"
     underscore "^1.8.3"
 
-"@jupyterlab/application@^2":
+"@jupyterlab/application@^2.2.6":
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@jupyterlab/application/-/application-2.2.6.tgz#4c505d7196f784c11d533b4539e7b2fbc5d664d6"
   integrity sha512-pW/Cu+t3CYii52YncrbcRWSfAFTIlsDy8yMxgYqkG6TSsImca3Rix3o69jTu264Ct2UQzEWP4+6u2IqF5wziuw==
