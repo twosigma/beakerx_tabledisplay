@@ -15,32 +15,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+from os import path
 
-from setupbase import (
-    create_cmdclass,
-    install_node_modules,
-    get_version,
-    here
+from jupyter_packaging import (
+    create_cmdclass, install_npm, ensure_targets,
+    combine_commands, ensure_python,
+    get_version, skip_if_exists
 )
+
 from setuptools import setup, find_packages
 
-cmdclass = create_cmdclass(develop_wrappers=[
-    'js'
-], distribute_wrappers=[
-    'js'
-])
-cmdclass['js'] = install_node_modules(
-    path='../js',
-    build_dir=os.path.join(here, '../js', 'dist'),
-    source_dir=os.path.join(here, '../js', 'src')
+
+# The name of the project
+name = 'beakerx_tabledisplay'
+npm_name = '@beakerx/beakerx-tabledisplay'
+
+HERE = path.dirname(path.abspath(__file__))
+
+# Ensure a valid python version
+ensure_python('>=3.6')
+
+# Get our version
+version = get_version(path.join(name, '_version.py'))
+
+nb_path = path.join(HERE, 'static')
+lab_path = path.join(HERE, 'labextension')
+
+# Representative files that should exist after a successful build
+jstargets = [
+    path.join(nb_path, 'index.js'),
+    path.join(lab_path, 'package.json'),
+]
+
+package_data_spec = {
+    name: [
+        'nbextension/static/*.*js*',
+        'labextension/*'
+    ]
+}
+
+data_files_spec = [
+    ('share/jupyter/nbextensions/' + npm_name,
+        nb_path, '*.*'),
+    ("share/jupyter/labextensions/" + npm_name, lab_path, "**"),
+    ('etc/jupyter/nbconfig/notebook.d', HERE, 'beakerx_tabledisplay.json')
+]
+
+cmdclass = create_cmdclass('js', package_data_spec=package_data_spec, data_files_spec=data_files_spec)
+js_command = combine_commands(
+    install_npm(
+        path=path.join(HERE, '../js'),
+        npm=["yarn"],
+        build_cmd="build:labextension",
+        build_dir=path.join(HERE, '../js', 'dist'),
+        source_dir=path.join(HERE, '../js', 'src')
+    ),
+    ensure_targets(jstargets),
 )
 
+is_repo = path.exists(path.join(HERE, '.git'))
+if is_repo:
+    cmdclass['js'] = js_command
+else:
+    cmdclass['js'] = skip_if_exists(jstargets, js_command)
+
 setup_args = dict(
-    name='beakerx_tabledisplay',
+    name=name,
     description='BeakerX: Beaker Extensions for Jupyter Notebook',
     long_description='BeakerX: Beaker Extensions for Jupyter Notebook',
-    version=get_version(os.path.join('beakerx_tabledisplay', '_version.py')),
+    version=version,
     author='Two Sigma Open Source, LLC',
     author_email='beakerx-feedback@twosigma.com',
     url='http://beakerx.com',
@@ -56,10 +99,10 @@ setup_args = dict(
         'Intended Audience :: Science/Research',
         'Topic :: Multimedia :: Graphics',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     entry_points={
         'console_scripts': [

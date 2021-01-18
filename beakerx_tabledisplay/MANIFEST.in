@@ -1,5 +1,5 @@
-recursive-include beakerx_tabledisplay/static *
+graft beakerx_tabledisplay/static
+graft beakerx_tabledisplay/labextension
 
 include LICENSE
 include NOTICE
-include setupbase.py
