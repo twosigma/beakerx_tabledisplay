@@ -895,7 +895,7 @@
     jquery "^3.1.1"
     lodash "^4.17.4"
 
-"@jupyter-widgets/controls@^3":
+"@jupyter-widgets/controls@^2 || ^3":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@jupyter-widgets/controls/-/controls-3.0.0.tgz#76e0c343627f0d300908e2dbdb524651f1be6315"
   integrity sha512-VyoBxUp/8pf7IFlM4hriD/UvYpHzXFXrUAaT/NRAhMUFO4Ruh4ALcxeHdWFnqxMjiSyOnWdjzdIeQL0pYi83Gg==
@@ -911,7 +911,7 @@
     jquery-ui "^1.12.1"
     underscore "^1.8.3"
 
-"@jupyterlab/application@^3":
+"@jupyterlab/application@^2 || ^3":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@jupyterlab/application/-/application-3.0.3.tgz#9fc6fe9873842d5a16b205ff9a8bedf76b4456e5"
   integrity sha512-aJDG5A/Rc1bWnKtoMM77k6hmjZrf0jRioYYFSbZrJ63k0KG27lCYR7EK1XNucRPMw2qz3IolfYJFPf+quYW9Iw==
@@ -1524,9 +1524,9 @@
   integrity sha512-3c+yGKvVP5Y9TYBEibGNR+kLtijnj7mYrXRg+WpFb2X9xm04g/DXYkfg4hmzJQosc9snFNUPkbYIhu+KAm6jJw==
 
 "@types/lodash@^4.14.134":
-  version "4.14.167"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.167.tgz#ce7d78553e3c886d4ea643c37ec7edc20f16765e"
-  integrity sha512-w7tQPjARrvdeBkX/Rwg95S592JwxqOjmms3zWQ0XZgSyxSLdzWaYH3vErBhdVS/lRBX7F8aBYcYJYTr5TMGOzw==
+  version "4.14.168"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.168.tgz#fe24632e79b7ade3f132891afff86caa5e5ce008"
+  integrity sha512-oVfRvqHV/V6D1yifJbVRU3TMp8OT6o6BG+U9MkwuJ3U8/CsDHvalRpsxBqivn71ztOFZBTfJMvETbqHiaNSj7Q==
 
 "@types/minimatch@*":
   version "3.0.3"

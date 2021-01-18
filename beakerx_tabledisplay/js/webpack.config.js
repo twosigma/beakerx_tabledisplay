@@ -65,7 +65,7 @@ module.exports = [
     "entry": './lib/extension.js',
     "output": {
       filename: 'extension.js',
-      path: path.resolve(__dirname, '../beakerx_tabledisplay/beakerx_tabledisplay/static'),
+      path: path.resolve(__dirname, '../beakerx_tabledisplay/static'),
       libraryTarget: 'amd',
     },
     devtool: 'inline-source-map',
@@ -77,7 +77,7 @@ module.exports = [
     "entry": './lib/index-classic.js',
     "output": {
       filename: 'index.js',
-      path: path.resolve(__dirname, '../beakerx_tabledisplay/beakerx_tabledisplay/static'),
+      path: path.resolve(__dirname, '../beakerx_tabledisplay/static'),
       libraryTarget: 'amd',
       publicPath: ''
     },

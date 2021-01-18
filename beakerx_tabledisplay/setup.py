@@ -38,8 +38,8 @@ ensure_python('>=3.6')
 # Get our version
 version = get_version(path.join(name, '_version.py'))
 
-nb_path = path.join(HERE, 'static')
-lab_path = path.join(HERE, 'labextension')
+nb_path = path.join(HERE, name, 'static')
+lab_path = path.join(HERE, name, 'labextension')
 
 # Representative files that should exist after a successful build
 jstargets = [
@@ -49,7 +49,7 @@ jstargets = [
 
 package_data_spec = {
     name: [
-        'nbextension/static/*.*js*',
+        'static/*.*js*',
         'labextension/*'
     ]
 }
@@ -64,20 +64,21 @@ data_files_spec = [
 cmdclass = create_cmdclass('js', package_data_spec=package_data_spec, data_files_spec=data_files_spec)
 js_command = combine_commands(
     install_npm(
-        path=path.join(HERE, '../js'),
+        path=path.join(HERE, 'js'),
         npm=["yarn"],
         build_cmd="build:labextension",
-        build_dir=path.join(HERE, '../js', 'dist'),
-        source_dir=path.join(HERE, '../js', 'src')
+        build_dir=path.join(HERE, 'js', 'dist'),
+        source_dir=path.join(HERE, 'js', 'src')
     ),
     ensure_targets(jstargets),
 )
 
-is_repo = path.exists(path.join(HERE, '.git'))
+is_repo = path.exists(path.join(HERE, '..', '.git'))
 if is_repo:
     cmdclass['js'] = js_command
 else:
     cmdclass['js'] = skip_if_exists(jstargets, js_command)
+
 
 setup_args = dict(
     name=name,
