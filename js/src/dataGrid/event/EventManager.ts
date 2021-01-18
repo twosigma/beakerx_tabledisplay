@@ -60,12 +60,6 @@ class MouseEventManager extends BasicMouseHandler {
     this.grid.tableDisplayView.el.addEventListener('mousedown', this.handleMouseDown);
   }
 
-  // TODO Remove this when https://github.com/jupyterlab/lumino/pull/146 is merged and released
-  get pressData () {
-    // @ts-ignore
-    return this._pressData || null;
-  }
-
   get isResizingHeader () {
     return this.pressData !== null && (this.pressData.type == 'column-resize' || this.pressData.type == 'row-resize');
   }
