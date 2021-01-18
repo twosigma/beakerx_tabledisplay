@@ -79,6 +79,7 @@ module.exports = [
       filename: 'index.js',
       path: path.resolve(__dirname, '../beakerx_tabledisplay/beakerx_tabledisplay/static'),
       libraryTarget: 'amd',
+      publicPath: ''
     },
     devtool: 'inline-source-map',
     module: {
