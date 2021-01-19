@@ -29,6 +29,13 @@ def _jupyter_nbextension_paths():
     }]
 
 
+def _jupyter_labextension_paths():
+    return [{
+        'src': 'labextension',
+        'dest': '@beakerx/beakerx-tabledisplay',
+    }]
+
+
 def _jupyter_server_extension_paths():
     return [dict(module="beakerx_tabledisplay")]
 

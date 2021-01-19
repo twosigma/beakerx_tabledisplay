@@ -55,8 +55,7 @@ package_data_spec = {
 }
 
 data_files_spec = [
-    ('share/jupyter/nbextensions/' + npm_name,
-        nb_path, '*.*'),
+    ('share/jupyter/nbextensions/beakerx_tabledisplay', nb_path, '**'),
     ("share/jupyter/labextensions/" + npm_name, lab_path, "**"),
     ('etc/jupyter/nbconfig/notebook.d', HERE, 'beakerx_tabledisplay.json')
 ]
