@@ -24,11 +24,8 @@ except:
 
 
 def install(args):
-    subprocess.check_call(
-        ["jupyter", "nbextension", "install", "beakerx_tabledisplay", "--py", "--symlink", "--sys-prefix"])
-    subprocess.check_call(["jupyter", "nbextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
     subprocess.check_call(["jupyter", "serverextension", "enable", "beakerx_tabledisplay", "--py", "--sys-prefix"])
-    if LAB_VERSION is not None:
+    if LAB_VERSION is not None and LAB_VERSION != 3:
         subprocess.call(["jupyter", "labextension", "install", "@jupyter-widgets/jupyterlab-manager", "--no-build"],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if LAB_VERSION == 1:
