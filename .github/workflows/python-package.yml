@@ -1,4 +1,4 @@
-name: Conda package (Ubuntu Lab2)
+name: Conda package (Ubuntu Lab2 and Lab3)
 
 on:
   push:
@@ -6,65 +6,143 @@ on:
   pull_request:
     branches: [ master ]
 
+defaults:
+  run:
+    shell: bash -l {0}
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Cache Conda
       uses: actions/cache@v1
       with:
         path: ~/.conda
         key: ${{ runner.os }}-mconda-${{ hashFiles('**/configuration.yml') }}
         restore-keys: |
-          ${{ runner.os }}-conda-          
-    - name: Set up Conda
+          ${{ runner.os }}-conda-
+
+    - name: Setup conda
       uses: conda-incubator/setup-miniconda@v2
       with:
+        activate-environment: beakerx_tabledisplay
+        environment-file: configuration.yml
+        auto-activate-base: false
+        channels: conda-forge
         miniconda-version: "latest"
+
     - name: Verify conda version
       shell: bash
       run: conda --version
+
+    - name: Install build dependencies
+      run: conda install jupyterlab=3 jupyter-packaging
+
+    - name: Build BeakerX tabledisplay
+      run: (cd beakerx_tabledisplay; pip install -e .)
+
+    - name: Check installation files (nbextension and lab3 extension)
+      run: |
+        test -d $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/extension.js
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/index.js
+        test -d $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay
+        test -f $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay/package.json
+
+    - name: Check nbextension and labextension (Lab3)
+      run: |
+        jupyter nbextension list 2>&1 | grep -ie "beakerx/beakerx-tabledisplay/extension.*enabled" -
+        jupyter labextension list 2>&1 | grep -ie "@beakerx/beakerx-tabledisplay.*enabled.*ok" -
+
+    - name: Build wheel
+      run: |
+        cd beakerx_tabledisplay
+        python setup.py sdist bdist_wheel
+        cd dist
+        sha256sum * | tee SHA256SUMS
+
+    - name: Upload builds
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist ${{ github.run_number }}
+        path: ./beakerx_tabledisplay/dist
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    strategy:
+      fail-fast: false
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - name: Checkout beakerx_base repo
       uses: actions/checkout@v2
       with:
         repository: twosigma/beakerx_base
         path: beakerx_base
+
     - name: Checkout beakerx_tests repo
       uses: actions/checkout@v2
       with:
         repository: twosigma/beakerx_tests
         path: beakerx_tests
-    - name: Update conda package
-      shell: bash
-      run:
-        conda env create -n beakerx -f configuration.yml
+
+    - uses: actions/download-artifact@v2
+      with:
+        name: dist ${{ github.run_number }}
+        path: ./dist
+
+    - name: Setup conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        activate-environment: beakerx_tabledisplay
+        environment-file: configuration.yml
+        auto-activate-base: false
+        channels: conda-forge
+        miniconda-version: "latest"
+
     - name: Install jupyterlab2
-      shell: bash -l {0}
+      run: conda install jupyterlab=2
+
+    - name: Install the wheel
       run: |
-        conda activate beakerx
-        conda install -y -c conda-forge jupyterlab=2
-        jupyter labextension install @jupyter-widgets/jupyterlab-manager
-    - name: Build BeakerX tabledisplay
-      shell: bash -l {0}
+        cd dist
+        pip install -vv beakerx_tabledisplay*.whl
+
+    - name: Manually install labextension for lab2
+      run: jupyter labextension install @jupyter-widgets/jupyterlab-manager beakerx_tabledisplay/js
+
+    - name: Check installation files (nbextension and lab3 extension)
       run: |
-        conda activate beakerx
-        (cd beakerx_tabledisplay; pip install -e .)
-        (cd js; jupyter labextension install .)
+        test -d $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/extension.js
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/index.js
+        test -d $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay
+        test -f $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay/package.json
+
+    - name: Check nbextension and labextension (Lab2)
+      run: |
+        jupyter nbextension list 2>&1 | grep -ie "beakerx/beakerx-tabledisplay/extension.*enabled" -
+        jupyter labextension list 2>&1 | grep -ie "@beakerx/beakerx-tabledisplay.*enabled.*ok" -
+
     - name: Run e2e tests (table v1)
       shell: bash -l {0}
       run: |
         cd $GITHUB_WORKSPACE/beakerx_tests/autotests
         chmod +x gradlew
-        conda activate beakerx
         pip install psutil
         python ci_tests.py --app=lab --tbl=v1 --exp=yes --tst=python.Table*
+
     - name: Archive screenshot results
       uses: actions/upload-artifact@v1
       if: always()
       with:
         name: screenshots
         path: ${{ github.workspace }}/beakerx_tests/autotests/resources/img/python
-

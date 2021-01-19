@@ -20,7 +20,7 @@ from os import path
 from jupyter_packaging import (
     create_cmdclass, install_npm, ensure_targets,
     combine_commands, ensure_python,
-    get_version, skip_if_exists
+    get_version
 )
 
 from setuptools import setup, find_packages
@@ -62,7 +62,7 @@ data_files_spec = [
 ]
 
 cmdclass = create_cmdclass('js', package_data_spec=package_data_spec, data_files_spec=data_files_spec)
-js_command = combine_commands(
+cmdclass['js'] = combine_commands(
     install_npm(
         path=path.join(HERE, 'js'),
         npm=["yarn"],
@@ -72,13 +72,6 @@ js_command = combine_commands(
     ),
     ensure_targets(jstargets),
 )
-
-is_repo = path.exists(path.join(HERE, '..', '.git'))
-if is_repo:
-    cmdclass['js'] = js_command
-else:
-    cmdclass['js'] = skip_if_exists(jstargets, js_command)
-
 
 setup_args = dict(
     name=name,

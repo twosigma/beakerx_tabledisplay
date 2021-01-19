@@ -1,5 +1,5 @@
 {
     "load_extensions": {
-      "beakerx_tabledisplay/extension": true
+      "@beakerx/beakerx-tabledisplay/extension": true
     }
   }

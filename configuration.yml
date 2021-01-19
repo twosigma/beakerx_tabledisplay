@@ -2,8 +2,8 @@ name: beakerx_tabledisplay
 channels:
   - conda-forge
 dependencies:
-  - ipywidgets>=7.5.1,<8
-  - nodejs
+  - ipywidgets>=7.6,<8
+  - yarn
   - notebook>=5.7.6
   - pandas
   - python=3.7.5
