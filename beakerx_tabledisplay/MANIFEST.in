@@ -1,5 +1,9 @@
 graft beakerx_tabledisplay/static
 graft beakerx_tabledisplay/labextension
 
+graft beakerx_tabledisplay/js
+
 include LICENSE
 include NOTICE
+include pyproject.toml
+include beakerx_tabledisplay.json
