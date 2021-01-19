@@ -47,15 +47,15 @@ jobs:
 
     - name: Check installation files (nbextension and lab3 extension)
       run: |
-        test -d $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay
-        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/extension.js
-        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/index.js
+        test -d $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay/extension.js
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay/index.js
         test -d $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay
         test -f $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay/package.json
 
     - name: Check nbextension and labextension (Lab3)
       run: |
-        jupyter nbextension list 2>&1 | grep -ie "beakerx/beakerx-tabledisplay/extension.*enabled" -
+        jupyter nbextension list 2>&1 | grep -ie "beakerx_tabledisplay/extension.*enabled" -
         jupyter labextension list 2>&1 | grep -ie "@beakerx/beakerx-tabledisplay.*enabled.*ok" -
 
     - name: Build wheel
@@ -121,15 +121,15 @@ jobs:
 
     - name: Check installation files (nbextension and lab3 extension)
       run: |
-        test -d $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay
-        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/extension.js
-        test -f $CONDA_PREFIX/share/jupyter/nbextensions/@beakerx/beakerx-tabledisplay/index.js
+        test -d $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay/extension.js
+        test -f $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay/index.js
         test -d $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay
         test -f $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay/package.json
 
     - name: Check nbextension and labextension (Lab2)
       run: |
-        jupyter nbextension list 2>&1 | grep -ie "beakerx/beakerx-tabledisplay/extension.*enabled" -
+        jupyter nbextension list 2>&1 | grep -ie "beakerx_tabledisplay/extension.*enabled" -
         jupyter labextension list 2>&1 | grep -ie "@beakerx/beakerx-tabledisplay.*enabled.*ok" -
 
     - name: Run e2e tests (table v1)
