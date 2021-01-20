@@ -78,11 +78,6 @@ const defaults: { [keys: string]: string; } = {
   '--jp-info-color2': '#4dd0e1',
   '--jp-info-color3': '#b2ebf2',
 
-  '--md-blue-A100': '#82b1ff',
-  '--md-blue-A200': '#448aff',
-  '--md-blue-A400': '#2979ff',
-  '--md-blue-A700': '#2962ff',
-
 };
 
 export function formatColor(color: string): string {
@@ -93,8 +88,8 @@ export function formatColor(color: string): string {
     const b: number = Math.ceil(Number.parseInt(rgba[3], 10));
     const a: number = Math.ceil(Number.parseInt(rgba[4], 10));
     return CommonUtils.rgbaToHex(r, g, b, a);
-  } 
-  
+  }
+
   const rgb = color.match(/rgb\((\d+),\s?(\d+),\s?(\d+)\)/);
   if (rgb) {
     const r: number = Math.ceil(Number.parseInt(rgba[1], 10));
@@ -127,12 +122,13 @@ export class Theme {
 
     // Cell color
     this._default_data_font_color = evaluateCSSVariable('--jp-ui-font-color0');
+    this._void_color = evaluateCSSVariable('--jp-layout-color0');
     this._default_cell_background = evaluateCSSVariable('--jp-layout-color0');
     this._default_cell_background_2 = evaluateCSSVariable('--jp-rendermime-table-row-background');
     this._default_cell_border = evaluateCSSVariable('--jp-border-color1');
-    this._focused_cell_backgraund = evaluateCSSVariable('--jp-layout-color4');
-    this._selected_cell_backgraund = evaluateCSSVariable('--md-blue-A100');
-    this._data_bars_color = evaluateCSSVariable('--md-blue-A200');
+    this._focused_cell_background = evaluateCSSVariable('--jp-layout-color3');
+    this._selected_cell_background = evaluateCSSVariable('--jp-brand-color2');
+    this._data_bars_color = evaluateCSSVariable('--jp-brand-color1');
     this._default_highlight = evaluateCSSVariable('--jp-info-color0');
     this._highlighted_cell_dackgraund_even = evaluateCSSVariable('--jp-layout-color2');
     this._highlighted_cell_dackgraund_odd = evaluateCSSVariable('--jp-layout-color3');
@@ -143,16 +139,16 @@ export class Theme {
   public static getStyle(): DataGrid.Style {
     return {
       ...DataGrid.defaultStyle,
-      voidColor: this._default_data_font_color, //evaluateCSSVariable('--jp-layout-color0'),
-      backgroundColor: this._default_cell_background, //evaluateCSSVariable('--jp-layout-color1'),
+      voidColor: this._void_color, //('--jp-layout-color0'),
+      backgroundColor: this._default_cell_background, //('--jp-layout-color1'),
       rowBackgroundColor: (i) => {
-        return i % 2 === 0 ? 
-          this._default_cell_background : //evaluateCSSVariable('--jp-layout-color1') :
-          this._default_cell_background_2; // evaluateCSSVariable('--jp-layout-color2');
+        return i % 2 === 0 ?
+          this._default_cell_background : //('--jp-layout-color1') :
+          this._default_cell_background_2; // ('--jp-layout-color2');
       },
-      gridLineColor: this._default_cell_border, //evaluateCSSVariable('--jp-border-color2'),
-      headerBackgroundColor: this._default_header_background, //evaluateCSSVariable('--jp-layout-color3'),
-      headerGridLineColor: this._default_header_border, //evaluateCSSVariable('--jp-border-color3'),
+      gridLineColor: this._default_cell_border, //('--jp-border-color1'),
+      headerBackgroundColor: this._default_header_background, //('--jp-layout-color3'),
+      headerGridLineColor: this._default_header_border, //('--jp-border-color3'),
     };
   }
 
@@ -184,10 +180,10 @@ export class Theme {
     return this._default_cell_border;
   }
   public static get FOCUSED_CELL_BACKGROUND(): string {
-    return this._focused_cell_backgraund;
+    return this._focused_cell_background;
   }
   public static get SELECTED_CELL_BACKGROUND(): string {
-    return this._selected_cell_backgraund;
+    return this._selected_cell_background;
   }
   public static get DATA_BARS_COLOR(): string {
     return this._data_bars_color;
@@ -208,6 +204,8 @@ export class Theme {
     return this._min_saturation_value;
   }
 
+  private static _void_color: string;
+
   // Header color
   private static _default_header_font_color: string;
   private static _default_header_background: string;
@@ -219,8 +217,8 @@ export class Theme {
   private static _default_cell_background: string;
   private static _default_cell_background_2: string;
   private static _default_cell_border: string;
-  private static _focused_cell_backgraund: string;
-  private static _selected_cell_backgraund: string;
+  private static _focused_cell_background: string;
+  private static _selected_cell_background: string;
   private static _data_bars_color: string;
   private static _default_highlight: string;
   private static _highlighted_cell_dackgraund_even: string;
