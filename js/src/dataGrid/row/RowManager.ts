@@ -38,7 +38,6 @@ export class RowManager {
     this.columnManager = columnManager;
     this.rowsToShow = rowsToShow;
     this.createRows(store, hasIndex);
-    this.evaluateSearchExpression = this.evaluateSearchExpression.bind(this);
     this.evaluateFilterExpression = this.evaluateFilterExpression.bind(this);
   }
 
@@ -184,7 +183,7 @@ export class RowManager {
   }
 
   searchRows() {
-    this.filterRows(this.evaluateSearchExpression);
+    this.filterRows(this.evaluateFilterExpression);
   }
 
   filterRows(evalFn?: (row: any, formatFns: any) => any) {
@@ -247,30 +246,6 @@ export class RowManager {
         getValue(index) {
           return this.cells[index].value;
         },
-      };
-      /* eslint-enable @typescript-eslint/no-unused-vars */
-      const result = eval(expression);
-
-      return result !== undefined ? result : true;
-    }.bind({ row });
-
-    return evalInContext(String(`${this.expressionVars} ${this.filterExpression}`));
-  }
-
-  evaluateSearchExpression(row, formatFns) {
-    const evalInContext = function (expression: string) {
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const row = {
-        index: formatFns[COLUMN_TYPES.index][0]({ row: this.row.index, value: this.row.index, column: 0 }),
-        values: this.row.values.map((value, index) =>
-          formatFns[COLUMN_TYPES.body][index]({
-            value,
-            row: this.row.index,
-            column: index,
-          }),
-        ),
       };
       /* eslint-enable @typescript-eslint/no-unused-vars */
       const result = eval(expression);
