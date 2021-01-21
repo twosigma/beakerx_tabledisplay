@@ -25,7 +25,6 @@ import { DataGridStyle } from './style/DataGridStyle';
 
 const DEFAULT_RESIZE_SECTION_SIZE_IN_PX = 6;
 const DEFAULT_ROW_PADDING = 4;
-const SCROLLBAR_WIDTH = 16;
 
 export class DataGridResize {
   dataGrid: BeakerXDataGrid;
@@ -95,15 +94,17 @@ export class DataGridResize {
     if (this.maxWidth === 0) {
       return;
     }
+
+    const bodyColumnCount = this.dataGrid.dataModel.columnCount('body');
+    const scrollBarWidth = hasVScroll ? this.dataGrid['_vScrollBarMinWidth'] : 0;
     const spacing = 2 * DataGridStyle.DEFAULT_GRID_PADDING;
-    const vScrollWidth = hasVScroll ? SCROLLBAR_WIDTH : 0;
-    const width = this.dataGrid.totalWidth + spacing + vScrollWidth;
+    let width = 0;
 
-    if (this.resizedHorizontally && width >= this.dataGrid.node.clientWidth) {
-      this.fitViewport();
-
-      return;
+    for (let i = 0; i < bodyColumnCount; i += 1) {
+      width += this.dataGrid.getColumnSections().sizeOf(i);
     }
+
+    width += this.dataGrid.headerWidth + spacing + scrollBarWidth;
 
     if (this.maxWidth && width >= this.maxWidth) {
       this.dataGrid.node.style.width = `${this.maxWidth}px`;
