@@ -3,20 +3,19 @@
 *.iml
 
 # Javascript compiled files
-beakerx_tabledisplay/static/
-js/css/table_display.css
-js/css/table_display.css.map
-js/dist/
-js/lib/
+beakerx_tabledisplay/js/css
+beakerx_tabledisplay/js/dist
+beakerx_tabledisplay/js/lib
 
 # Karma tests coverage
-js/coverage/
+beakerx_tabledisplay/js/coverage
 
-# Beaker
-/beakerx_tabledisplay/beakerx_tabledisplay/static/
+# JS bundles
+beakerx_tabledisplay/beakerx_tabledisplay/static
+beakerx_tabledisplay/beakerx_tabledisplay/labextension
 
 # Node modules
-node_modules/
+beakerx_tabledisplay/js/node_modules
 
 yarn-error.log
 
