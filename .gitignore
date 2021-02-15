@@ -16,6 +16,7 @@ beakerx_tabledisplay/beakerx_tabledisplay/labextension
 
 # Node modules
 beakerx_tabledisplay/js/node_modules
+beakerx_tabledisplay/beakerx_tabledisplay/node_modules
 
 yarn-error.log
 
