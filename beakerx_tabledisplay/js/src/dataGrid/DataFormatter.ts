@@ -224,6 +224,9 @@ export class DataFormatter {
     if (value === 'NaT') {
       return value;
     }
+    if (value === null) {
+      return 'null';
+    }
     return this.formatDatetime(value, formatForTimes);
   }
 
