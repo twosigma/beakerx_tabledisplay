@@ -33,7 +33,7 @@ npm_name = '@beakerx/beakerx-tabledisplay'
 HERE = path.dirname(path.abspath(__file__))
 
 # Ensure a valid python version
-ensure_python('>=3.6')
+ensure_python('>=3.7')
 
 # Get our version
 version = get_version(path.join(name, '_version.py'))
