@@ -1,0 +1,178 @@
+name: Benchmark Tests
+
+on:
+  pull_request_review:
+
+
+defaults:
+  run:
+    shell: bash -l {0}
+
+jobs:
+  test:
+    name: Execute benchmark tests
+    if: github.event_name == 'pull_request_review' && (github.event.review.state == 'approved' || contains(github.event.review.body, 'please run benchmark'))
+
+    runs-on: ubuntu-20.04
+
+    env:
+      BENCHMARK_NUMBER_SAMPLES: 100
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # Need to fetch enough nodes to get the common ancestor - but don't want to fetch everything
+          fetch-depth: 100
+
+      - name: Get hashes for PR review event
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const child_process = require("child_process");
+            const pull_request = context.payload.pull_request;
+
+            child_process.exec(`git merge-base ${pull_request.head.sha} ${pull_request.base.sha}`, (error, stdout, stderr) => {
+              if (error) {
+                console.log(error);
+                process.exit(1);
+                return;
+              }
+              if (stderr) {
+                console.log(stderr);
+                process.exit(1);
+                return;
+              }
+
+              core.exportVariable('OLD_REF_SHA', stdout.trim());
+              core.exportVariable('NEW_REF_SHA', pull_request.head.sha);
+              core.exportVariable('PULL_REQUEST_ID', pull_request.number);
+            });
+
+      - uses: iterative/setup-cml@v1
+
+      - name: Cache Conda
+        uses: actions/cache@v1
+        with:
+          path: ~/.conda
+          key: ${{ runner.os }}-mconda-${{ hashFiles('**/configuration.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-conda-
+
+      - name: Setup conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: beakerx_tabledisplay
+          environment-file: configuration.yml
+          auto-activate-base: false
+          channels: conda-forge
+          miniconda-version: "latest"
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache yarn
+        uses: actions/cache@v1
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # First run the benchmark on the old reference
+      - name: Checkout old reference
+        run: |
+          echo Checking out ${OLD_REF_SHA}...
+          git checkout ${OLD_REF_SHA}
+
+      - name: Install dependencies
+        run: |
+          set -eux
+          conda install jupyterlab=3 jupyter-packaging
+
+          pip install beakerx_tabledisplay
+          beakerx_tabledisplay install
+
+      - name: Install browser
+        working-directory: ui-tests
+        run: |
+          yarn install
+          # Install only Chromium browser
+          yarn playwright install chromium
+
+      - name: Execute benchmark tests on reference
+        continue-on-error: true
+        working-directory: ui-tests
+        run: |
+          yarn run test -u
+
+      # Second run the benchmark on the new reference
+      - name: Checkout latest version
+        run: |
+          echo Checking out ${NEW_REF_SHA}...
+          git checkout ${NEW_REF_SHA}
+
+      - name: Install dependencies
+        run: |
+          set -eux
+          # Reset installation
+          beakerx_tabledisplay uninstall
+          pip uninstall -y beakerx-tabledisplay
+
+          conda env update -f configuration.yml
+          pip install beakerx_tabledisplay
+          beakerx_tabledisplay install
+
+      - name: Install browser
+        working-directory: ui-tests
+        run: |
+          yarn install
+          # Install only Chromium browser
+          yarn playwright install chromium
+
+      - name: Execute benchmark tests on PR
+        continue-on-error: true
+        working-directory: ui-tests
+        run: |
+          yarn run test
+
+      - name: Generate the report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT: ./benchmark-results/beakerx-benchmark.md
+        working-directory: ui-tests
+        run: |
+          set -eux
+          # Publish image to cml.dev
+          echo "" >> ${REPORT}
+          cml-publish ./benchmark-results/beakerx-benchmark.png --md >> ${REPORT}
+          echo "" >> ${REPORT}
+
+          # Test if metadata have changed
+          export METADATA_DIFF="/tmp/metadata.diff"
+          diff -u <(jq --sort-keys .metadata benchmark-results/beakerx-benchmark.json) <(jq --sort-keys .metadata beakerx-benchmark-expected.json) > ${METADATA_DIFF} || true
+          if [[ -s ${METADATA_DIFF} ]]; then
+            echo "<details><summary>:exclamation: Test metadata have changed</summary>" >> ${REPORT}
+            echo "" >> ${REPORT}
+            echo "\`\`\`diff" >> ${REPORT}
+            cat ${METADATA_DIFF} >> ${REPORT}
+            echo "\`\`\`" >> ${REPORT}
+            echo "" >> ${REPORT}
+            echo "</details>" >> ${REPORT}
+          fi
+
+          # Copy the reference data to upload it as artifact
+          cp beakerx-benchmark-expected.json ./benchmark-results/
+
+          # Save PR number for comment publication
+          echo "${PULL_REQUEST_ID}" > ./benchmark-results/NR
+
+      - name: Upload Benchmark Assets
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark-assets
+          path: |
+            ui-tests/benchmark-results
+            ui-tests/test-results

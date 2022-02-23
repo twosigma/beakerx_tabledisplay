@@ -39,3 +39,10 @@ gradlew.bat
 
 # conda
 dist
+
+# Integration tests
+node_modules/
+test-results/
+benchmark-results/
+playwright-report/
+ui-tests/lab-benchmark-expected.json
