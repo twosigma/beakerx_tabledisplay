@@ -45,4 +45,4 @@ node_modules/
 test-results/
 benchmark-results/
 playwright-report/
-ui-tests/lab-benchmark-expected.json
+ui-tests/bearkerx-benchmark-expected.json
