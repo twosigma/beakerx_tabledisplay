@@ -70,11 +70,13 @@ export class ColumnFilter {
     this.filterInput.value = '';
   }
 
-  updateInputNode() {
-    this.filterNode.style.height = this.getInputHeight();
-    this.filterInput.style.height = this.getInputHeight();
-    this.filterNode.style.width = `${this.dataGrid.store.selectColumnWidth(this.column)}px`;
-    this.updateInputPosition();
+  updateInputNode(force = true) {
+    if (this.filterWidget.isVisible || force) {
+      this.filterNode.style.height = this.getInputHeight();
+      this.filterInput.style.height = this.getInputHeight();
+      this.filterNode.style.width = `${this.dataGrid.store.selectColumnWidth(this.column)}px`;
+      this.updateInputPosition();
+    }
   }
 
   attach(node: HTMLElement) {
@@ -199,7 +201,13 @@ export class ColumnFilter {
     };
 
     this.filterInput.addEventListener('keyup', DataGridHelpers.throttle(this.filterHandler, 100, this), true);
-    this.filterInput.addEventListener('keydown', (event: KeyboardEvent) => { event.stopPropagation(); }, true);
+    this.filterInput.addEventListener(
+      'keydown',
+      (event: KeyboardEvent) => {
+        event.stopPropagation();
+      },
+      true,
+    );
     this.filterInput.addEventListener('mousedown', handleMouseDown, true);
     this.filterNode.addEventListener('mousedown', handleMouseDown, true);
   }
