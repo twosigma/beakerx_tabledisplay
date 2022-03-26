@@ -147,8 +147,8 @@ export class ColumnManager {
   }
 
   updateColumnFilterNodes() {
-    this.bodyColumns.forEach((column) => column.columnFilter.updateInputNode());
-    this.indexColumns.forEach((column) => column.columnFilter.updateInputNode());
+    this.bodyColumns.forEach((column) => column.columnFilter.updateInputNode(false));
+    this.indexColumns.forEach((column) => column.columnFilter.updateInputNode(false));
   }
 
   updateColumnMenuTriggers() {
