@@ -1,9 +1,23 @@
+include setup.py
 graft beakerx_tabledisplay/static
 graft beakerx_tabledisplay/labextension
 
-graft beakerx_tabledisplay/js
+# Javascript files
+graft js
+prune **/node_modules
+prune js/lib
+prune js/css
+prune js/dist
 
 include LICENSE
 include NOTICE
 include pyproject.toml
 include beakerx_tabledisplay.json
+
+# Patterns to exclude from any directory
+global-exclude *~
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude .git
+global-exclude .ipynb_checkpoints
+
