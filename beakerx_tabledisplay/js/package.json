@@ -2,13 +2,17 @@
   "name": "@beakerx/beakerx-tabledisplay",
   "version": "2.3.12",
   "description": "BeakerX: Beaker TableDisplay Extension for Jupyter Notebook and Lab",
+  "homepage": "http://beakerx.com/",
   "keywords": [
     "jupyter",
     "jupyterlab",
     "jupyterlab notebook",
     "jupyterlab-extension"
   ],
-  "author": "Two Sigma Open Source, LLC",
+  "author": {
+    "name": "Two Sigma Open Source, LLC",
+    "email": "beakerx-feedback@twosigma.com"
+  },
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "repository": {
