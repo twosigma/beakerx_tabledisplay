@@ -51,9 +51,7 @@ declare global {
 }
 
 export class BeakerXDataGrid extends DataGrid {
-  id: string;
   store: BeakerXDataStore;
-  dataModel: BeakerXDataGridModel;
   highlighterManager: HighlighterManager;
   columnManager: ColumnManager;
   columnPosition: ColumnPosition;
@@ -113,6 +111,14 @@ export class BeakerXDataGrid extends DataGrid {
     this.addCellRenderers();
 
     this.columnManager.createColumnMenus();
+  }
+
+  get dataModel(): BeakerXDataGridModel {
+    return super.dataModel as BeakerXDataGridModel;
+  }
+
+  set dataModel(value: BeakerXDataGridModel) {
+    super.dataModel = value;
   }
 
   scrollTo(x: number, y: number): void {

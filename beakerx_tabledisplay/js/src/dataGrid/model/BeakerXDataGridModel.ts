@@ -14,7 +14,6 @@
  *  limitations under the License.
  */
 
-import { iter, MapIterator } from '@lumino/algorithm';
 import { DataModel } from '@lumino/datagrid';
 import { ColumnManager } from '../column/ColumnManager';
 import { COLUMN_TYPES } from '../column/enums';
@@ -22,7 +21,6 @@ import { DataFormatter } from '../DataFormatter';
 import { ALL_TYPES } from '../dataTypes';
 import { IColumn } from '../interface/IColumn';
 import { IDataGridModelState } from '../interface/IDataGridModelState';
-import { DataGridRow } from '../row/DataGridRow';
 import { RowManager } from '../row/RowManager';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridAction } from '../store/DataGridAction';
@@ -167,12 +165,14 @@ export class BeakerXDataGridModel extends DataModel {
     this.reset();
   }
 
-  getColumnValuesIterator(column: IColumn): MapIterator<number, number> {
-    if (column.type === COLUMN_TYPES.index) {
-      return new MapIterator<DataGridRow, any>(iter(this.rowManager.rows), (row) => row.index);
+  *getColumnValuesIterator(column: IColumn): Generator<any> {
+    for (const row of this.rowManager.rows) {
+      if (column.type === COLUMN_TYPES.index) {
+        yield row.index;
+      } else {
+        yield row.getValue(column.index);
+      }
     }
-
-    return new MapIterator(iter(this.rowManager.rows), (row) => row.getValue(column.index));
   }
 
   setHeaderTextVertical(headersVertical: boolean) {

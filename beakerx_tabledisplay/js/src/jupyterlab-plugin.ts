@@ -28,19 +28,19 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   activate: (app: JupyterFrontEnd, widgets: IJupyterWidgetRegistry, themeManager: IThemeManager | null): void => {
     class TableDisplayView extends beakerx_tabledisplay.TableDisplayView {
-      constructor(options?: WidgetView.InitializeParameters) {
+      constructor(options?: WidgetView.IInitializeParameters) {
         super(options);
-        
+
         if (themeManager) {
           themeManager.themeChanged.connect(this._onThemeChanged, this);
         }
       }
-    
+
       protected _onThemeChanged(): void {
         // Recompute CSS variables and redraw
         this.currentScope.computeCSSVariablesAndRedraw();
       }
-    
+
       public remove(): void {
         if (themeManager) {
           themeManager.themeChanged.disconnect(this._onThemeChanged, this);
@@ -57,7 +57,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         TableDisplayView
       }
     });
-    
+
   }
 };
 

@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "start": "jupyter lab --config jupyter_server_test_config.py",
-    "test": "yarn playwright test"
+    "test": "npx playwright test"
   },
   "devDependencies": {
     "@jupyterlab/galata": "^4.1.0",

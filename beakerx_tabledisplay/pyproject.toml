@@ -1,5 +1,5 @@
 [build-system]
-requires = ["jupyter_packaging~=0.10,<2", "jupyterlab~=3.1"]
+requires = ["jupyter_packaging~=0.10,<2", "jupyterlab>4,<5"]
 build-backend = "jupyter_packaging.build_api"
 
 [tool.jupyter-packaging.options]
@@ -10,7 +10,7 @@ factory = "jupyter_packaging.npm_builder"
 
 [tool.jupyter-packaging.build-args]
 path = "js"
-build_cmd = "build:labextension"
-npm = ["yarn"]
+build_cmd = "build"
+npm = ["jlpm"]
 build_dir = "js/dist"
 source_dir = "js/src"

@@ -102,10 +102,10 @@ try:
 
     post_develop = npm_builder(
         path=str(pkg_json_path.parent),
-        build_cmd="build:labextension",
+        build_cmd="build",
         source_dir=str(pkg_json_path.parent / "src"),
         build_dir=str(pkg_json_path.parent / "dist"),
-        npm=["yarn"],
+        npm=["jlpm"],
     )
     setup_args["cmdclass"] = wrap_installers(
         post_develop=post_develop, ensured_targets=ensured_targets

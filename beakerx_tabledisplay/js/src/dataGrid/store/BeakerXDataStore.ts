@@ -18,7 +18,6 @@ import * as moment from 'moment-timezone/builds/moment-timezone-with-data';
 import {COLUMN_TYPES, SORT_ORDER} from '../column/enums';
 import {ALL_TYPES, getDisplayType, getTypeByName} from '../dataTypes';
 import {IDataGridModelState} from '../interface/IDataGridModelState';
-import {Datastore, Fields} from "@lumino/datastore";
 import {IColumnPosition, IColumnState} from "../interface/IColumn";
 import {BeakerXDataGridModel} from "../model/BeakerXDataGridModel";
 import {DEFAULT_PAGE_LENGTH, TIME_UNIT_FORMATS} from "../consts";
@@ -37,6 +36,7 @@ import {
   UPDATE_MODEL_VALUES
 } from "../model/BeakerXDataGridModel";
 import {IHighlighterState} from "../interface/IHighlighterState";
+import {Datastore, Fields} from "./datastore";
 
 
 const DEFAULT_INDEX_COLUMN_NAME = '';

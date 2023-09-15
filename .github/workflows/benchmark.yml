@@ -97,15 +97,15 @@ jobs:
       - name: Install browser
         working-directory: ui-tests
         run: |
-          yarn install
+          jlpm install
           # Install only Chromium browser
-          yarn playwright install chromium
+          jlpm playwright install chromium
 
       - name: Execute benchmark tests on reference
         continue-on-error: true
         working-directory: ui-tests
         run: |
-          yarn run test -u
+          jlpm run test -u
 
       # Second run the benchmark on the new reference
       - name: Checkout latest version
@@ -127,15 +127,15 @@ jobs:
       - name: Install browser
         working-directory: ui-tests
         run: |
-          yarn install
+          jlpm install
           # Install only Chromium browser
-          yarn playwright install chromium
+          jlpm playwright install chromium
 
       - name: Execute benchmark tests on PR
         continue-on-error: true
         working-directory: ui-tests
         run: |
-          yarn run test
+          jlpm run test
 
       - name: Generate the report
         env:
