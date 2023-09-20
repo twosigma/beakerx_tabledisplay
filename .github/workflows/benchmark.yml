@@ -59,14 +59,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-conda-
 
-      - name: Setup conda
-        uses: conda-incubator/setup-miniconda@v2
+      - name: Install Conda environment with Micromamba
+        uses: mamba-org/provision-with-micromamba@main
         with:
-          activate-environment: beakerx_tabledisplay
+          environment-name: beakerx_tabledisplay
           environment-file: configuration.yml
-          auto-activate-base: false
           channels: conda-forge
-          miniconda-version: "latest"
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
