@@ -18,27 +18,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Cache Conda
-      uses: actions/cache@v1
-      with:
-        path: ~/.conda
-        key: ${{ runner.os }}-mconda-${{ hashFiles('**/configuration.yml') }}
-        restore-keys: |
-          ${{ runner.os }}-conda-
-
     - name: Install Conda environment with Micromamba
       uses: mamba-org/provision-with-micromamba@main
       with:
         environment-name: beakerx_tabledisplay
         environment-file: configuration.yml
         channels: conda-forge
-
-    - name: Verify conda version
-      shell: bash
-      run: conda --version
-
-    - name: Install build dependencies
-      run: conda install jupyterlab=3 jupyter-packaging
 
     - name: Build BeakerX tabledisplay
       run: (cd beakerx_tabledisplay; pip install .)

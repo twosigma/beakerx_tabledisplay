@@ -87,7 +87,6 @@ jobs:
       - name: Install dependencies
         run: |
           set -eux
-          conda install jupyterlab=3 jupyter-packaging
 
           pip install beakerx_tabledisplay
           beakerx_tabledisplay install
