@@ -41,7 +41,7 @@ jobs:
       run: conda install jupyterlab=3 jupyter-packaging
 
     - name: Build BeakerX tabledisplay
-      run: (cd beakerx_tabledisplay; pip install -e .)
+      run: (cd beakerx_tabledisplay; pip install .)
 
     - name: Check installation files (nbextension and lab3 extension)
       run: |
