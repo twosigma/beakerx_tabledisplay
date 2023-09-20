@@ -99,18 +99,12 @@ jobs:
         environment-file: configuration.yml
         channels: conda-forge
 
-    - name: Install jupyterlab2
-      run: conda install jupyterlab=2
-
     - name: Install the wheel
       run: |
         cd dist
         pip install -vv beakerx_tabledisplay*.whl
 
-    - name: Manually install labextension for lab2
-      run: jupyter labextension install @jupyter-widgets/jupyterlab-manager beakerx_tabledisplay/js
-
-    - name: Check installation files (nbextension and lab3 extension)
+    - name: Check installation files (nbextension and lab extension)
       run: |
         test -d $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay
         test -f $CONDA_PREFIX/share/jupyter/nbextensions/beakerx_tabledisplay/extension.js
@@ -118,9 +112,8 @@ jobs:
         test -d $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay
         test -f $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay/package.json
 
-    - name: Check nbextension and labextension (Lab2)
+    - name: Check nbextension and labextension
       run: |
-        jupyter nbextension list 2>&1 | grep -ie "beakerx_tabledisplay/extension.*enabled" -
         jupyter labextension list 2>&1 | grep -ie "@beakerx/beakerx-tabledisplay.*enabled.*ok" -
 
     - name: Run e2e tests (table v1)
