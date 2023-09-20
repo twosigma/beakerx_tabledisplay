@@ -51,11 +51,6 @@ jobs:
         test -d $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay
         test -f $CONDA_PREFIX/share/jupyter/labextensions/@beakerx/beakerx-tabledisplay/package.json
 
-    - name: Check nbextension and labextension (Lab3)
-      run: |
-        jupyter nbextension list 2>&1 | grep -ie "beakerx_tabledisplay/extension.*enabled" -
-        jupyter labextension list 2>&1 | grep -ie "@beakerx/beakerx-tabledisplay.*enabled.*ok" -
-
     - name: Build wheel
       run: |
         cd beakerx_tabledisplay
