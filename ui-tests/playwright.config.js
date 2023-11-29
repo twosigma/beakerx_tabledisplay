@@ -7,7 +7,7 @@ module.exports = {
   ...baseConfig,
   use: {},
   webServer: {
-    command: "yarn start",
+    command: "jlpm start",
     url: "http://localhost:8888/lab",
     timeout: 120 * 1000,
     reuseExistingServer: !process.env.CI,

@@ -33,9 +33,9 @@ jupyter lab --config ./ui-tests/jupyter_server_test_config.py
 
 ```sh
 cd ./ui-tests
-yarn install
-yarn playwright install
-yarn playwright test
+jlpm install
+npx playwright install
+npx playwright test
 ```
 
 The report will be opened in your browser at the end of the tests execution.
@@ -61,9 +61,9 @@ jupyter lab --config ./ui-tests/jupyter_server_test_config.py
 
 ```sh
 cd ./ui-tests
-yarn install
-yarn playwright install
-yarn playwright test -u
+jlpm install
+npx playwright install
+npx playwright test -u
 ```
 
 > Some discrepancy may occurs between the snapshots generated on your computer and
@@ -91,9 +91,9 @@ jupyter lab --config ./ui-tests/jupyter_server_test_config.py
 
 ```sh
 cd ./ui-tests
-yarn install
-yarn playwright install
-yarn playwright codegen localhost:8888
+jlpm install
+npx playwright install
+npx playwright codegen localhost:8888
 ```
 
 ## Debug tests
@@ -117,7 +117,7 @@ jupyter lab --config ./ui-tests/jupyter_server_test_config.py
 
 ```sh
 cd ./ui-tests
-yarn install
-yarn playwright install
+jlpm install
+npx playwright install
 PWDEBUG=1 yarn playwright test
 ```

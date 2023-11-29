@@ -14,19 +14,19 @@
  *  limitations under the License.
  */
 
-import { filter, iter, MapIterator, toArray } from '@lumino/algorithm';
+import { filter, toArray } from '@lumino/algorithm';
 import { Theme } from '../../utils/Theme';
 import { ColumnFilter } from '../column/ColumnFilter';
 import { ColumnManager } from '../column/ColumnManager';
 import { DataGridColumn } from '../column/DataGridColumn';
 import { COLUMN_TYPES, SORT_ORDER } from '../column/enums';
-// import { selectFontColor, selectValues } from '../model/selectors';
 import { BeakerXDataStore } from '../store/BeakerXDataStore';
 import { DataGridCellValue } from './DataGridCellValue';
 import { DataGridRow } from './DataGridRow';
 
 export class RowManager {
-  rowsIterator: MapIterator<any[], DataGridRow>;
+  _cellValues: any[];
+  _hasIndex = false;
   rows: DataGridRow[];
   filterExpression: string;
   expressionVars: string;
@@ -45,12 +45,12 @@ export class RowManager {
     this.rows = [];
     this.sortedBy = null;
     this.columnManager = null;
-    this.rowsIterator = null;
   }
 
   createRows(store: BeakerXDataStore, hasIndex) {
-    const cellValues = this.createCellValue(store);
-    hasIndex ? this.createRowsWithIndex(cellValues) : this.createRowsWithGeneratedIndex(cellValues);
+    this._cellValues = this.createCellValue(store);
+    this._hasIndex = hasIndex;
+    this.resetRows();
   }
 
   private createCellValue(store: BeakerXDataStore) {
@@ -79,21 +79,34 @@ export class RowManager {
     }
   }
 
-  createRowsWithGeneratedIndex(data) {
-    this.rowsIterator = new MapIterator<any[], DataGridRow>(
-      iter(data),
-      (values, index) => new DataGridRow(index, values),
-    );
-    this.rows = toArray(this.rowsIterator.clone());
+  get rowsIterator(): Generator<any> {
+    return this._rowsIterator();
   }
 
-  createRowsWithIndex(data) {
-    this.rowsIterator = new MapIterator<any[], DataGridRow>(
-      iter(data),
-      (values) => new DataGridRow(values[0].value, values.slice(1)),
-    );
+  private *_rowsIterator() {
+    if (this._hasIndex) {
+      for (const values of this._cellValues) {
+        yield new DataGridRow(values[0].value, values.slice(1));
+      }
+    } else {
+      let index = 0;
+      for (const values of this._cellValues) {
+        yield new DataGridRow(index, values);
+        index++;
+      }
+    }
+  }
 
-    this.rows = toArray(this.rowsIterator.clone());
+  applyFilterToRows(evalFn, formatFns) {
+    this.rows = toArray(
+      filter(this.rowsIterator, (row) =>
+        evalFn ? evalFn(row, formatFns) : this.evaluateFilterExpression(row, formatFns),
+      ),
+    );
+  }
+
+  resetRows() {
+    this.rows = toArray(this.rowsIterator);
   }
 
   keepSorting() {
@@ -192,7 +205,7 @@ export class RowManager {
     this.createFilterExpression();
 
     if (!this.filterExpression) {
-      this.rows = toArray(this.rowsIterator.clone());
+      this.resetRows();
       this.columnManager.dataGrid.resize();
 
       return;
@@ -203,11 +216,7 @@ export class RowManager {
     formatFns[COLUMN_TYPES.body] = columns[COLUMN_TYPES.body].map((column) => column.formatFn);
 
     try {
-      this.rows = toArray(
-        filter(this.rowsIterator.clone(), (row) =>
-          evalFn ? evalFn(row, formatFns) : this.evaluateFilterExpression(row, formatFns),
-        ),
-      );
+      this.applyFilterToRows(evalFn, formatFns);
       this.sortedBy && this.sortByColumn(this.sortedBy);
       this.columnManager.dataGrid.resize();
       // eslint-disable-next-line no-empty

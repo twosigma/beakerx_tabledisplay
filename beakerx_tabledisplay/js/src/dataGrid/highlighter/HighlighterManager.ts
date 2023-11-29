@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { each, filter, iter, toArray } from '@lumino/algorithm';
+import { each, filter, toArray } from '@lumino/algorithm';
 import { CellRenderer } from '@lumino/datagrid';
 import { Theme } from '../../utils/Theme';
 import { BeakerXDataGrid } from '../BeakerXDataGrid';
@@ -95,7 +95,7 @@ export class HighlighterManager {
 
   getColumnHighlighters(column, highlighterType?: HIGHLIGHTER_TYPE): Highlighter[] {
     return toArray(
-      filter(iter(this.highlighters), (highlighter: Highlighter) => {
+      filter(this.highlighters, (highlighter: Highlighter) => {
         return highlighterType
           ? highlighter.column === column && highlighter.state.type === highlighterType
           : highlighter.column === column;
@@ -174,7 +174,7 @@ export class HighlighterManager {
     let background = Theme.DEFAULT_COLOR;
     const column = this.dataGrid.getColumn(config);
 
-    each(iter(this.highlighters), (highlighter) => {
+    each(this.highlighters, (highlighter: Highlighter) => {
       if (highlighter.column === column || highlighter.state.style === HIGHLIGHTER_STYLE.FULL_ROW) {
         background = highlighter.getBackgroundColor(config);
       }
