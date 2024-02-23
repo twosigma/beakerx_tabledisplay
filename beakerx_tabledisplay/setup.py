@@ -71,7 +71,7 @@ setup_args = dict(
     license_file="LICENSE",
     long_description=pkg_json["description"],
     packages=setuptools.find_packages(),
-    install_requires=["beakerx_base>=2.0.1", "numpy", "pandas"],
+    install_requires=["beakerx_base>=2.3,<3", "numpy", "pandas"],
     zip_safe=False,
     include_package_data=True,
     python_requires=">=3",
