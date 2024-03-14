@@ -316,7 +316,10 @@ a.dtmenu {
   }
 }
 
-.p-Menu.bko-header-menu {
+/* <DEPRECATED> */
+.p-Menu.bko-header-menu,
+/* </DEPRECATED> */
+.lm-Menu.bko-header-menu {
   overflow: visible;
 }
 
@@ -327,7 +330,10 @@ a.dtmenu {
   box-shadow: 0 6px 10px $shadow;
   background-clip: padding-box;
 
-  .p-Menu-content {
+  /* <DEPRECATED> */
+  .p-Menu-content,
+  /* </DEPRECATED> */
+  .lm-Menu-content {
     border-collapse: collapse;
     display: block;
     position: relative;
@@ -336,7 +342,10 @@ a.dtmenu {
     overflow: visible;
     width: 100%;
 
-    .p-Menu-item {
+    /* <DEPRECATED> */
+    .p-Menu-item,
+    /* </DEPRECATED> */
+    .lm-Menu-item {
       display: block;
       font-weight: normal;
       line-height: 1.42857143;
@@ -349,21 +358,33 @@ a.dtmenu {
       }
     }
 
-    .p-Menu-itemLabel {
+    /* <DEPRECATED> */
+    .p-Menu-itemLabel,
+    /* </DEPRECATED> */
+    .lm-Menu-itemLabel {
       padding: 3px;
       white-space: nowrap;
       display: inline-block;
     }
 
+    /* <DEPRECATED> */
     .p-Menu-itemIcon,
-    .p-Menu-itemShortcut {
+    /* </DEPRECATED> */
+    .lm-Menu-itemIcon,
+    /* <DEPRECATED> */
+    .p-Menu-itemShortcut,
+    /* </DEPRECATED> */
+    .lm-Menu-itemShortcut {
       min-width: 22px;
       position: static;
       padding: 4px;
       display: inline-block;
     }
 
-    .p-Menu-itemSubmenuIcon {
+    /* <DEPRECATED> */
+    .p-Menu-itemSubmenuIcon,
+    /* </DEPRECATED> */
+    .lm-Menu-itemSubmenuIcon {
       display: inline-block;
       position: absolute;
       right: 0px;
@@ -371,7 +392,10 @@ a.dtmenu {
       margin-top: 3px;
     }
 
-    [data-type="submenu"] > .p-Menu-itemSubmenuIcon {
+    /* <DEPRECATED> */
+    [data-type="submenu"] > .p-Menu-itemSubmenuIcon,
+    /* </DEPRECATED> */
+    [data-type="submenu"] > .lm-Menu-itemSubmenuIcon {
       background: none;
 
       &:after {
@@ -417,7 +441,10 @@ a.dtmenu {
   }
 }
 
-.p-DataGrid {
+/* <DEPRECATED> */
+.p-DataGrid,
+/* </DEPRECATED> */
+.lm-DataGrid {
   min-width: 64px;
   max-width: 100%;
   min-height: 330px;
@@ -489,7 +516,10 @@ a.dtmenu {
   }
 }
 
-.p-DataGrid-tooltip {
+/* <DEPRECATED> */
+.p-DataGrid-tooltip,
+/* </DEPRECATED> */
+.lm-DataGrid-tooltip {
   background-color: $buttonBackground;
   box-shadow: 0 0 2px $shadow;
   border-radius: 3px;
@@ -508,17 +538,26 @@ a.dtmenu {
   }
 }
 
-.p-DataGrid-viewport {
+/* <DEPRECATED> */
+.p-DataGrid-viewport,
+/* </DEPRECATED> */
+.lm-DataGrid-viewport {
   border: $gridBorder;
 }
 
-.p-DataGrid-scrollCorner {
+/* <DEPRECATED> */
+.p-DataGrid-scrollCorner,
+/* </DEPRECATED> */
+.lm-DataGrid-scrollCorner {
   background-color: $buttonDetail;
   border-right: $gridBorder;
   border-bottom: $gridBorder;
 }
 
-.p-DataGrid-scrollCorner::after {
+/* <DEPRECATED> */
+.p-DataGrid-scrollCorner::after,
+/* </DEPRECATED> */
+.lm-DataGrid-scrollCorner::after {
   content: '';
   position: absolute;
   top: 0;
@@ -528,8 +567,14 @@ a.dtmenu {
   background-color: $buttonDetail;
 }
 
-.p-ScrollBar {
-  .p-ScrollBar-button {
+/* <DEPRECATED> */
+.p-ScrollBar,
+/* </DEPRECATED> */
+.lm-ScrollBar {
+  /* <DEPRECATED> */
+  .p-ScrollBar-button,
+  /* </DEPRECATED> */
+  .lm-ScrollBar-button {
     color: $buttonHover;
     font: normal normal normal 14px/1 'Font Awesome 5 Free', FontAwesome;
     font-weight: 900;
@@ -544,14 +589,20 @@ a.dtmenu {
     border-left: $gridBorder;
     border-right: $gridBorder;
 
-    .p-ScrollBar-thumb {
+    /* <DEPRECATED> */
+    .p-ScrollBar-thumb,
+    /* </DEPRECATED> */
+    .lm-ScrollBar-thumb {
       height: 100%;
       min-width: 15px;
       border-left: $gridBorder;
       border-right: $gridBorder;
     }
 
-    .p-ScrollBar-button {
+    /* <DEPRECATED> */
+    .p-ScrollBar-button,
+    /* </DEPRECATED> */
+    .lm-ScrollBar-button {
       &[data-action='increment'] {
         &:before {
           content: "\f0da";
@@ -574,15 +625,20 @@ a.dtmenu {
     border-top: $gridBorder;
     border-bottom: $gridBorder;
 
-    .p-ScrollBar-thumb {
+    /* <DEPRECATED> */
+    .p-ScrollBar-thumb,
+    /* </DEPRECATED> */
+    .lm-ScrollBar-thumb {
       width: 100%;
       min-height: 15px;
       border-top: $gridBorder;
       border-bottom: $gridBorder;
     }
 
-
-    .p-ScrollBar-button {
+    /* <DEPRECATED> */
+    .p-ScrollBar-button,
+    /* </DEPRECATED> */
+    .lm-ScrollBar-button {
       &[data-action='increment'] {
         &:before {
           content: "\f0d7";
@@ -598,7 +654,10 @@ a.dtmenu {
   }
 }
 
-.p-ScrollBar-button {
+/* <DEPRECATED> */
+.p-ScrollBar-button,
+/* </DEPRECATED> */
+.lm-ScrollBar-button {
   background-color: $buttonBackground;
   background-position: center center;
   min-height: 15px;
@@ -617,11 +676,17 @@ a.dtmenu {
   }
 }
 
-.p-ScrollBar-track {
+/* <DEPRECATED> */
+.p-ScrollBar-track,
+/* </DEPRECATED> */
+.lm-ScrollBar-track {
   background: $buttonBackground;
 }
 
-.p-ScrollBar-thumb {
+/* <DEPRECATED> */
+.p-ScrollBar-thumb,
+/* </DEPRECATED> */
+.lm-ScrollBar-thumb {
   background: $buttonDetail;
 
   &:hover {
@@ -629,7 +694,10 @@ a.dtmenu {
     cursor: pointer;
   }
 
-  &.p-mod-active {
+  /* <DEPRECATED> */
+  &.p-mod-active,
+  /* </DEPRECATED> */
+  &.lm-mod-active {
     background: $buttonDetail;
     cursor: pointer;
   }
