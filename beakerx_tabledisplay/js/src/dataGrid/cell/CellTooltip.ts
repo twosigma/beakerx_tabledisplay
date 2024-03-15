@@ -26,7 +26,7 @@ export class CellTooltip {
     this.node = document.createElement('div');
     this.node.style.position = 'absolute';
     this.node.style.visibility = 'visible';
-    this.node.classList.add('p-DataGrid-tooltip');
+    this.node.classList.add('lm-DataGrid-tooltip');
 
     if (text) {
       this.node.innerText = text;
