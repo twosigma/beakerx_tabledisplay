@@ -126,7 +126,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     const highlighterColor = this.dataGrid.highlighterManager.getCellBackground(config);
     const focusedColor = this.dataGrid.cellFocusManager.getFocussedCellBackground(config);
     const initialColor = selectionColor && highlighterColor && DataGridStyle.darken(highlighterColor);
-    
+
     return (
       focusedColor ||
       selectionColor ||
@@ -165,7 +165,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     ) {
       return Theme.DEFAULT_HEADER_FONT_COLOR;
     }
-    
+
     if (
       config.region === 'body' &&
       this.dataGrid.rowManager.rows[config.row] &&
@@ -173,7 +173,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
       this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor
     ) {
       return DataGridStyle.formatColor(this.dataGrid.rowManager.rows[config.row].cells[config.column].fontColor);
-    } 
+    }
 
     return Theme.DEFAULT_DATA_FONT_COLOR;
   }
@@ -200,7 +200,7 @@ export abstract class BeakerXCellRenderer extends TextRenderer {
     if (!result.font) {
       return result;
     }
-    
+
     // Resolve the text color for the cell.
     result.color = CellRenderer.resolveOption(this.textColor, config);
 

@@ -43,7 +43,7 @@ export class UniqueEntriesHighlighter extends Highlighter {
     const generateColor = this.getColorGenerationFn(1, 1);
 
     reduce(
-      this.model.getColumnValuesIterator(this.column),
+      Array.from(this.model.getColumnValuesIterator(this.column)),
       (acc, value) => {
         if (acc.indexOf(value) === -1) {
           acc.push(value);
