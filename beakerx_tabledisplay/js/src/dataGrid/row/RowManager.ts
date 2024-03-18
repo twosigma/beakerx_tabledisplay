@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-import { filter, toArray } from '@lumino/algorithm';
+import { filter } from '@lumino/algorithm';
 import { Theme } from '../../utils/Theme';
 import { ColumnFilter } from '../column/ColumnFilter';
 import { ColumnManager } from '../column/ColumnManager';
@@ -98,15 +98,15 @@ export class RowManager {
   }
 
   applyFilterToRows(evalFn, formatFns) {
-    this.rows = toArray(
-      filter(this.rowsIterator, (row) =>
+    this.rows = Array.from(
+      filter(Array.from(this.rowsIterator), (row) =>
         evalFn ? evalFn(row, formatFns) : this.evaluateFilterExpression(row, formatFns),
       ),
     );
   }
 
   resetRows() {
-    this.rows = toArray(this.rowsIterator);
+    this.rows = Array.from(this.rowsIterator);
   }
 
   keepSorting() {

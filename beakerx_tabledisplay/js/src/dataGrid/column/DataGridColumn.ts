@@ -300,26 +300,24 @@ export class DataGridColumn {
     let minMax;
     const dataType = this.getDataType();
     const displayType = this.getDisplayType();
-    const valuesIterator = () => {
-      return this.dataGrid.dataModel.getColumnValuesIterator(this);
-    };
+    const values = Array.from(this.dataGrid.dataModel.getColumnValuesIterator(this));
     const valueResolver = this.dataGrid.dataModel.getColumnValueResolver(
       displayType === ALL_TYPES.html ? displayType : dataType,
     );
 
     if (dataType === ALL_TYPES.html || displayType === ALL_TYPES.html) {
-      this.resizeHTMLRows(valuesIterator());
+      this.resizeHTMLRows(values);
     } else if (dataType === ALL_TYPES['formatted integer']) {
-      stringMinMax = minmax(valuesIterator(), ColumnValuesIterator.longestString(valueResolver));
+      stringMinMax = minmax(values, ColumnValuesIterator.longestString(valueResolver));
     } else if (dataType === ALL_TYPES.string) {
       minMax = minmax(
-        filter(valuesIterator(), (value) => this.canStringBeConvertedToNumber(value)),
+        filter(values, (value) => this.canStringBeConvertedToNumber(value)),
         ColumnValuesIterator.minMax(this.dataGrid.dataModel.getColumnValueResolver(ALL_TYPES.double)),
       );
-      stringMinMax = minmax(valuesIterator(), ColumnValuesIterator.longestString(valueResolver));
+      stringMinMax = minmax(values, ColumnValuesIterator.longestString(valueResolver));
     } else {
       minMax = minmax(
-        filter(valuesIterator(), (value) => !Number.isNaN(valueResolver(value))),
+        filter(values, (value) => !Number.isNaN(valueResolver(value))),
         ColumnValuesIterator.minMax(valueResolver),
       );
     }
