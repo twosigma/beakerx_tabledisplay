@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@jupyter-widgets/controls": "^5",
-    "@jupyterlab/builder": "^4",
+    "@jupyterlab/builder": "^3 || ^4",
     "@types/chai": "^4.2.11",
     "@types/expect.js": "^0.3.29",
     "@types/mocha": "^7.0.2",
