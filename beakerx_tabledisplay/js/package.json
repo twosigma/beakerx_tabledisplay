@@ -1,6 +1,6 @@
 {
   "name": "@beakerx/beakerx-tabledisplay",
-  "version": "2.4.2",
+  "version": "2.4.3",
   "description": "BeakerX: Beaker TableDisplay Extension for Jupyter Notebook and Lab",
   "homepage": "http://beakerx.com/",
   "keywords": [
