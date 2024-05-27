@@ -13,13 +13,13 @@
 # limitations under the License.
 
 from beakerx_tabledisplay import TableDisplay
-from IPython.display import display_html
+from IPython.display import display
 import pandas
 
 class TableDisplayWrapper(object):
     def __get__(self, model_instance, model_class):
         def f():
-            display_html(TableDisplay(model_instance))
+            display(TableDisplay(model_instance))
 
         return f
 
